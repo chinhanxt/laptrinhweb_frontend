@@ -1,0 +1,2718 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX MOTORS – Luxury Redefined</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --dark: #050508;
+    --dark2: #0d0d14;
+    --dark3: #12121c;
+    --silver: #a8a8b8;
+    --white: #f0f0f5;
+    --red: #c0392b;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0.6;
+  }
+  body:hover .cursor-ring { opacity: 1; }
+
+  /* LOADING SCREEN */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--dark);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 0.3em;
+    color: var(--white);
+    overflow: hidden;
+  }
+  .loader-logo span {
+    display: inline-block;
+    animation: slideUp 0.8s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .loader-bar {
+    width: 200px; height: 1px;
+    background: var(--dark3);
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .loader-bar::after {
+    content: '';
+    position: absolute;
+    left: -100%; top: 0;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: loadBar 1.5s ease forwards 0.5s;
+  }
+  @keyframes loadBar {
+    to { left: 100%; }
+  }
+  .loader-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--silver);
+    margin-top: 1rem;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.5rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(5,5,8,0.95), transparent);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.25em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links {
+    display: flex; gap: 3rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--silver);
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--dark);
+    background: var(--gold);
+    padding: 0.7rem 1.5rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* 3D SCENE */
+  .scene-3d {
+    position: absolute;
+    inset: 0;
+    perspective: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* SVG CAR */
+  .car-wrapper {
+    position: relative;
+    width: 700px;
+    animation: floatCar 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 40px 80px rgba(201,168,76,0.15));
+  }
+  @keyframes floatCar {
+    0%,100% { transform: translateY(0) rotateY(-5deg); }
+    50% { transform: translateY(-20px) rotateY(5deg); }
+  }
+
+  .car-svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,0.8));
+  }
+
+  /* Headlight glow */
+  .headlight-glow {
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,240,180,0.8) 0%, transparent 70%);
+    animation: glowPulse 2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes glowPulse {
+    0%,100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Ground reflection */
+  .ground-reflection {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.2) 0%, transparent 70%);
+    filter: blur(10px);
+    animation: reflectionPulse 6s ease-in-out infinite;
+  }
+  @keyframes reflectionPulse {
+    0%,100% { opacity: 0.5; width: 600px; }
+    50% { opacity: 0.8; width: 700px; }
+  }
+
+  /* Grid floor */
+  .grid-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(600px) rotateX(60deg);
+    transform-origin: bottom;
+    mask-image: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+  }
+
+  /* Particle field */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: particleDrift linear infinite;
+    opacity: 0;
+  }
+  @keyframes particleDrift {
+    0% { opacity: 0; transform: translateY(100vh) translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-20px) translateX(var(--drift)); }
+  }
+
+  /* Ambient light rays */
+  .light-ray {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.15), transparent);
+    transform-origin: top center;
+    animation: rayPulse 4s ease-in-out infinite;
+    filter: blur(3px);
+  }
+  @keyframes rayPulse {
+    0%,100% { opacity: 0.3; transform: scaleX(1); }
+    50% { opacity: 0.8; transform: scaleX(3); }
+  }
+
+  /* Hero content */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+    padding: 2rem;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease both 0.2s;
+    opacity: 0;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: 0.05em;
+    animation: fadeInUp 1s ease both 0.4s;
+    opacity: 0;
+    mix-blend-mode: overlay;
+    color: rgba(255,255,255,0.15);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    white-space: nowrap;
+    pointer-events: none;
+    width: max-content;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInUp 1s ease both 1.5s;
+    opacity: 0;
+  }
+  .scroll-hint span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%,100% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+  }
+
+  /* ====== SECTIONS ====== */
+  section { position: relative; overflow: hidden; }
+
+  /* MARQUEE STRIP */
+  .marquee-strip {
+    background: var(--gold);
+    padding: 0.8rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-flex;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-track span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    color: var(--dark);
+    padding: 0 3rem;
+  }
+  .marquee-dot { display: inline-block; width: 6px; height: 6px; background: var(--dark); border-radius: 50%; vertical-align: middle; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* INTRO SECTION */
+  #intro {
+    padding: 10rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    background: var(--dark2);
+  }
+  .intro-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(6rem, 15vw, 12rem);
+    color: var(--dark3);
+    line-height: 1;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.2);
+    user-select: none;
+  }
+  .intro-text h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .intro-text h2 em {
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+  }
+  .intro-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--silver);
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+  .stat-row {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid rgba(201,168,76,0.2);
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+
+  /* CARS GRID */
+  #cars {
+    padding: 8rem 4rem;
+    background: var(--dark);
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 5rem;
+  }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-tag::before {
+    content: '';
+    display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+  .view-all {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--silver);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--silver);
+    padding-bottom: 3px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .view-all:hover { color: var(--gold); border-color: var(--gold); }
+
+  .cars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .car-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.05);
+    overflow: hidden;
+    position: relative;
+    cursor: none;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.3s;
+  }
+  .car-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(201,168,76,0.3);
+  }
+  .car-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.03) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .car-card:hover::before { opacity: 1; }
+
+  /* Featured card */
+  .car-card.featured {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .car-img-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    background: var(--dark3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .car-card.featured .car-img-wrap { height: 300px; }
+
+  .car-img-wrap svg {
+    width: 85%;
+    height: auto;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+  }
+  .car-card:hover .car-img-wrap svg { transform: scale(1.05) translateY(-5px); }
+
+  .car-badge {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    background: var(--gold);
+    color: var(--dark);
+    z-index: 2;
+  }
+  .car-badge.new { background: var(--red); color: var(--white); }
+
+  .car-info {
+    padding: 1.5rem;
+  }
+  .car-brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .car-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+  .car-card.featured .car-name { font-size: 2.5rem; }
+  .car-specs {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .spec {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .spec-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--white);
+  }
+  .spec-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+  .car-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .car-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+  }
+  .price-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    color: var(--silver);
+    text-transform: uppercase;
+    display: block;
+  }
+  .btn-detail {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--gold);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    cursor: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-detail:hover { background: var(--gold-light); transform: scale(1.03); }
+
+  /* EXPERIENCE SECTION */
+  #experience {
+    padding: 10rem 4rem;
+    background: var(--dark2);
+    position: relative;
+    overflow: hidden;
+  }
+  #experience::before {
+    content: 'APEX';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30vw;
+    color: rgba(201,168,76,0.03);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 0.1em;
+  }
+  .experience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+    position: relative;
+  }
+  .exp-visual {
+    position: relative;
+  }
+  /* 3D rotating cube car display */
+  .cube-container {
+    width: 350px;
+    height: 350px;
+    perspective: 800px;
+    margin: 0 auto;
+  }
+  .cube {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: rotateCube 12s ease-in-out infinite;
+    position: relative;
+  }
+  @keyframes rotateCube {
+    0%,100% { transform: rotateY(0deg) rotateX(5deg); }
+    25% { transform: rotateY(90deg) rotateX(5deg); }
+    50% { transform: rotateY(180deg) rotateX(-5deg); }
+    75% { transform: rotateY(270deg) rotateX(5deg); }
+  }
+  .cube-face {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border: 1px solid rgba(201,168,76,0.15);
+    background: rgba(13,13,20,0.7);
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+  }
+  .cube-face.front  { transform: translateZ(175px); }
+  .cube-face.back   { transform: rotateY(180deg) translateZ(175px); }
+  .cube-face.left   { transform: rotateY(-90deg) translateZ(175px); }
+  .cube-face.right  { transform: rotateY(90deg) translateZ(175px); }
+  .cube-face.top    { transform: rotateX(90deg) translateZ(175px); }
+  .cube-face.bottom { transform: rotateX(-90deg) translateZ(175px); }
+  .cube-face svg { width: 80%; opacity: 0.9; }
+  .cube-face.top svg, .cube-face.bottom svg { opacity: 0.2; }
+
+  .exp-content h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 2rem;
+  }
+  .exp-content h2 em {
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    display: block;
+  }
+  .exp-features {
+    list-style: none;
+    margin: 2.5rem 0;
+  }
+  .exp-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 1rem;
+    color: var(--silver);
+    line-height: 1.6;
+    transition: color 0.3s;
+  }
+  .exp-features li:hover { color: var(--white); }
+  .exp-features li::before {
+    content: '→';
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: transform 0.3s;
+  }
+  .exp-features li:hover::before { transform: translateX(5px); }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--gold);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .btn-primary::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateX(3px); }
+  .btn-primary:hover::after { transform: translateX(4px); }
+
+  /* TESTIMONIALS */
+  #testimonials {
+    padding: 8rem 4rem;
+    background: var(--dark);
+    overflow: hidden;
+  }
+  .testimonials-track {
+    display: flex;
+    gap: 2rem;
+    animation: slideTesti 30s linear infinite;
+    width: max-content;
+  }
+  @keyframes slideTesti {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .testi-card {
+    width: 380px;
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 2.5rem;
+    flex-shrink: 0;
+  }
+  .testi-stars {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 1.5rem;
+  }
+  .star { color: var(--gold); font-size: 0.9rem; }
+  .testi-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--silver);
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .author-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--dark3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--dark);
+  }
+  .author-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.2rem;
+  }
+  .author-loc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+
+  /* CONTACT / CTA */
+  #contact {
+    padding: 10rem 4rem;
+    background: var(--dark2);
+    position: relative;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: start;
+  }
+  .contact-left h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .contact-left p {
+    color: var(--silver);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1.2rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: border-color 0.3s;
+  }
+  .info-item:hover { border-color: rgba(201,168,76,0.3); }
+  .info-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .info-val {
+    font-size: 1rem;
+    color: var(--white);
+  }
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .form-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+  .form-input, .form-select, .form-textarea {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--white);
+    padding: 0.9rem 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+    cursor: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+  }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-select option { background: var(--dark3); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .btn-submit {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--gold);
+    border: none;
+    padding: 1.1rem 2rem;
+    cursor: none;
+    width: 100%;
+    transition: background 0.3s;
+    margin-top: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--gold-light); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 4rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer-brand .nav-logo {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .footer-tagline {
+    font-size: 0.95rem;
+    color: var(--silver);
+    font-style: italic;
+    max-width: 250px;
+    line-height: 1.6;
+  }
+  .footer-links {
+    display: flex;
+    gap: 6rem;
+  }
+  .footer-col h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+  .footer-col a {
+    font-size: 0.9rem;
+    color: var(--silver);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .footer-socials a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--silver);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .footer-socials a:hover { color: var(--gold); }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Tilt effect */
+  .tilt { transform-style: preserve-3d; }
+
+  @media (max-width: 1024px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { gap: 1.5rem; }
+    #intro, .experience-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .cars-grid { grid-template-columns: 1fr 1fr; }
+    .car-card.featured { grid-column: span 2; }
+    .footer-links { gap: 2rem; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1rem; }
+    .nav-links { display: none; }
+    .cars-grid { grid-template-columns: 1fr; }
+    .car-card.featured { grid-column: span 1; }
+    #intro, #cars, #experience, #contact { padding: 5rem 1.5rem; }
+    footer { padding: 3rem 1.5rem; }
+    .footer-top { flex-direction: column; gap: 2rem; }
+    .footer-links { flex-direction: column; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; }
+    .car-wrapper { width: 90vw; }
+    .cube-container { width: 250px; height: 250px; }
+    .cube-face { width: 250px; height: 250px; }
+    .cube-face.front  { transform: translateZ(125px); }
+    .cube-face.back   { transform: rotateY(180deg) translateZ(125px); }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(125px); }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(125px); }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(125px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(125px); }
+  }
+
+  /* ============================================================
+     CAR CUSTOMIZER SECTION
+  ============================================================ */
+  #customizer {
+    background: var(--dark2);
+    padding: 8rem 0 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #customizer::before {
+    content: 'CUSTOM';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28vw;
+    color: rgba(201,168,76,0.025);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .customizer-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+  }
+  .customizer-header .section-tag { justify-content: center; }
+  .customizer-header .section-tag::before { display: none; }
+  .customizer-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.05em;
+    margin-top: 0.8rem;
+  }
+
+  /* STAGE */
+  .customizer-stage {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* The big car SVG viewport */
+  .stage-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.04) 0%, transparent 70%);
+    border: 1px solid rgba(201,168,76,0.08);
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  /* Zoom overlay — darkens surroundings during zoom */
+  .zoom-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background: radial-gradient(ellipse var(--vx,50%) var(--vy,50%) at var(--cx,50%) var(--cy,50%),
+      transparent 0%, rgba(5,5,8,0.82) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .zoom-vignette.active { opacity: 1; }
+
+  /* Spotlight ring that follows zoom */
+  .zoom-spotlight {
+    position: absolute;
+    pointer-events: none;
+    z-index: 6;
+    border: 1.5px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(1.4);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    box-shadow: 0 0 30px rgba(201,168,76,0.2), inset 0 0 30px rgba(201,168,76,0.05);
+  }
+  .zoom-spotlight.active {
+    opacity: 1;
+    transform: translate(-50%,-50%) scale(1);
+  }
+
+  /* Zoom label */
+  .zoom-label {
+    position: absolute;
+    z-index: 7;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(5,5,8,0.85);
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+    pointer-events: none;
+  }
+  .zoom-label.active { opacity: 1; transform: translateY(0); }
+
+  /* The main car SVG inside the stage */
+  #customizerSVG {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: 50% 60%;
+  }
+
+  /* Accessory highlight ring (inside SVG — drawn as foreignObject won't work, so we overlay) */
+  .acc-hotspot {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(201,168,76,0.3);
+    pointer-events: none;
+    transition: opacity 0.3s;
+    animation: hotspotPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes hotspotPulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.4; }
+    50% { transform: translate(-50%,-50%) scale(1.15); opacity: 0.8; }
+  }
+
+  /* CONTROLS PANEL */
+  .customizer-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 2.5rem auto 0;
+    padding: 0 2rem;
+  }
+
+  .ctrl-panel {
+    background: rgba(13,13,20,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 1.8rem;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .ctrl-panel:hover { border-color: rgba(201,168,76,0.2); }
+
+  .ctrl-panel-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .ctrl-panel-title::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: var(--gold);
+  }
+
+  /* Color swatches */
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+  .swatch {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: none;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.2), 0 0 14px rgba(201,168,76,0.3);
+    transform: scale(1.1);
+  }
+  .swatch[title]::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .swatch:hover::after { opacity: 1; }
+
+  /* Roof color */
+  .roof-swatches { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1rem; }
+  .ctrl-sub-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    color: var(--silver);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  /* Accessories */
+  .acc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .acc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: none;
+    transition: border-color 0.25s, background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .acc-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.3s;
+  }
+  .acc-item:hover { border-color: rgba(201,168,76,0.25); background: rgba(201,168,76,0.03); }
+  .acc-item:hover::before { transform: scaleY(1); }
+  .acc-item.active { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.06); }
+  .acc-item.active::before { transform: scaleY(1); }
+
+  .acc-info { display: flex; flex-direction: column; gap: 0.2rem; }
+  .acc-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+  .acc-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+  }
+  .acc-emoji { font-size: 1.1rem; flex-shrink: 0; }
+
+  /* Toggle switch */
+  .toggle {
+    width: 36px; height: 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.3s;
+    cursor: none;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--silver);
+    top: 3px; left: 3px;
+    transition: transform 0.3s, background 0.3s;
+  }
+  .acc-item.active .toggle { background: rgba(201,168,76,0.4); }
+  .acc-item.active .toggle::after { transform: translateX(16px); background: var(--gold); }
+
+  /* Summary bar */
+  .customizer-summary {
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1.2rem 2rem;
+  }
+  .summary-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+  .summary-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    transition: transform 0.3s;
+  }
+  .summary-price.bump {
+    animation: priceBump 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  @keyframes priceBump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.12); color: #e8c97a; }
+    100% { transform: scale(1); }
+  }
+  .btn-configure {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 0.8rem 1.8rem;
+    cursor: none;
+    transition: background 0.2s;
+  }
+  .btn-configure:hover { background: var(--gold-light); }
+
+  @media (max-width: 768px) {
+    .customizer-controls { grid-template-columns: 1fr; }
+    .customizer-summary { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">
+    <span style="animation-delay:0s">A</span><span style="animation-delay:0.05s">P</span><span style="animation-delay:0.1s">E</span><span style="animation-delay:0.15s">X</span>
+    &nbsp;
+    <span style="animation-delay:0.25s">M</span><span style="animation-delay:0.3s">O</span><span style="animation-delay:0.35s">T</span><span style="animation-delay:0.4s">O</span><span style="animation-delay:0.45s">R</span><span style="animation-delay:0.5s">S</span>
+  </div>
+  <div class="loader-bar"></div>
+  <div class="loader-text">Initializing showroom...</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">APEX<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#cars">Bộ sưu tập</a></li>
+    <li><a href="#customizer">Tùy chỉnh</a></li>
+    <li><a href="#experience">Trải nghiệm</a></li>
+    <li><a href="#testimonials">Đánh giá</a></li>
+    <li><a href="#contact">Liên hệ</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Đặt lịch lái thử</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="particles" id="particles"></div>
+
+  <!-- Light rays -->
+  <div class="light-ray" style="left:20%;animation-delay:0s;animation-duration:3s"></div>
+  <div class="light-ray" style="left:40%;animation-delay:1s;animation-duration:4s"></div>
+  <div class="light-ray" style="left:60%;animation-delay:0.5s;animation-duration:3.5s"></div>
+  <div class="light-ray" style="left:80%;animation-delay:2s;animation-duration:5s"></div>
+
+  <div class="grid-floor"></div>
+
+  <div class="hero-title">APEX MOTORS</div>
+
+  <div class="scene-3d">
+    <div class="car-wrapper" id="heroCar">
+      <!-- SVG Luxury Car -->
+      <svg class="car-svg" viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bodyGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#2a2a3a"/>
+            <stop offset="100%" stop-color="#0a0a12"/>
+          </radialGradient>
+          <radialGradient id="wheelGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1a1a28"/>
+            <stop offset="60%" stop-color="#111118"/>
+            <stop offset="100%" stop-color="#080810"/>
+          </radialGradient>
+          <linearGradient id="roofGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1e1e30"/>
+            <stop offset="100%" stop-color="#0d0d18"/>
+          </linearGradient>
+          <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(150,190,230,0.4)"/>
+            <stop offset="100%" stop-color="rgba(100,140,190,0.1)"/>
+          </linearGradient>
+          <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="20%" stop-color="#c9a84c"/>
+            <stop offset="80%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="softGlow">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Shadow -->
+        <ellipse cx="400" cy="335" rx="320" ry="15" fill="rgba(0,0,0,0.5)"/>
+
+        <!-- Main body -->
+        <path d="M80 240 Q80 200 140 195 L200 195 Q250 140 320 125 L480 120 Q560 120 620 145 L700 170 Q740 180 745 200 L750 240 Z"
+              fill="url(#bodyGrad)" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+
+        <!-- Roof -->
+        <path d="M210 195 Q260 140 325 125 L475 120 Q545 120 610 145 L650 165 Q680 175 695 195 Z"
+              fill="url(#roofGrad)"/>
+
+        <!-- Gold accent stripe -->
+        <path d="M100 218 L745 218" stroke="url(#goldLine)" stroke-width="1.5" opacity="0.7"/>
+
+        <!-- Windshield -->
+        <path d="M310 128 Q290 165 250 195 L430 195 L480 130 Z"
+              fill="url(#glassGrad)" stroke="rgba(150,190,230,0.2)" stroke-width="1"/>
+
+        <!-- Side windows -->
+        <path d="M480 130 L435 195 L560 195 L610 145 Z"
+              fill="url(#glassGrad)" opacity="0.7"/>
+        <path d="M610 145 L565 195 L650 195 L655 163 Z"
+              fill="url(#glassGrad)" opacity="0.5"/>
+
+        <!-- Window frames (gold) -->
+        <path d="M310 128 Q290 165 250 195" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" fill="none"/>
+        <path d="M480 130 L435 195" stroke="rgba(201,168,76,0.3)" stroke-width="1" fill="none"/>
+        <path d="M610 145 L565 195" stroke="rgba(201,168,76,0.2)" stroke-width="1" fill="none"/>
+
+        <!-- Front bumper detail -->
+        <path d="M80 240 Q75 255 90 265 L160 268 L160 240 Z" fill="#111118" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+
+        <!-- Front grille -->
+        <rect x="88" y="220" width="65" height="30" rx="3" fill="#080810" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <line x1="88" y1="230" x2="153" y2="230" stroke="rgba(201,168,76,0.15)" stroke-width="0.8"/>
+        <line x1="88" y1="240" x2="153" y2="240" stroke="rgba(201,168,76,0.15)" stroke-width="0.8"/>
+        <line x1="105" y1="220" x2="105" y2="250" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
+        <line x1="122" y1="220" x2="122" y2="250" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
+        <line x1="137" y1="220" x2="137" y2="250" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
+
+        <!-- Headlights -->
+        <path d="M83 200 Q78 210 80 225 L155 225 L158 200 Z" fill="#0a0a15" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <!-- DRL strips -->
+        <line x1="84" y1="208" x2="152" y2="206" stroke="rgba(255,240,150,0.9)" stroke-width="2.5" filter="url(#glow)"/>
+        <line x1="86" y1="215" x2="150" y2="213" stroke="rgba(255,240,150,0.5)" stroke-width="1.5" filter="url(#glow)"/>
+
+        <!-- Fog lights -->
+        <ellipse cx="110" cy="258" rx="18" ry="8" fill="rgba(255,240,100,0.08)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+
+        <!-- Rear lights -->
+        <path d="M720 195 Q748 200 750 230 L740 240 L700 235 L698 198 Z" fill="#150005" stroke="rgba(200,50,50,0.3)" stroke-width="1"/>
+        <line x1="700" y1="200" x2="747" y2="205" stroke="rgba(220,50,50,0.8)" stroke-width="2.5" filter="url(#glow)"/>
+        <line x1="700" y1="210" x2="748" y2="215" stroke="rgba(200,30,30,0.5)" stroke-width="1.5"/>
+        <line x1="700" y1="220" x2="748" y2="224" stroke="rgba(200,30,30,0.3)" stroke-width="1"/>
+
+        <!-- Door lines -->
+        <line x1="250" y1="195" x2="252" y2="258" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+        <line x1="435" y1="195" x2="437" y2="258" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+        <line x1="565" y1="195" x2="567" y2="255" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+
+        <!-- Door handles -->
+        <rect x="330" y="210" width="30" height="6" rx="3" fill="rgba(201,168,76,0.4)" stroke="rgba(201,168,76,0.6)" stroke-width="0.5"/>
+        <rect x="470" y="210" width="30" height="6" rx="3" fill="rgba(201,168,76,0.4)" stroke="rgba(201,168,76,0.6)" stroke-width="0.5"/>
+
+        <!-- Body reflection line -->
+        <path d="M160 200 Q400 185 650 198" stroke="rgba(255,255,255,0.06)" stroke-width="2" fill="none"/>
+
+        <!-- Side skirt -->
+        <rect x="165" y="255" width="520" height="12" rx="2" fill="#0a0a12" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+
+        <!-- Front wheel -->
+        <circle cx="215" cy="278" r="52" fill="url(#wheelGrad)" stroke="rgba(201,168,76,0.15)" stroke-width="1.5"/>
+        <circle cx="215" cy="278" r="42" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+        <circle cx="215" cy="278" r="16" fill="#0a0a12" stroke="rgba(201,168,76,0.3)" stroke-width="2"/>
+        <!-- Spokes -->
+        <g stroke="rgba(201,168,76,0.35)" stroke-width="1.5" fill="none">
+          <line x1="215" y1="236" x2="215" y2="262"/>
+          <line x1="215" y1="294" x2="215" y2="320"/>
+          <line x1="173" y1="278" x2="199" y2="278"/>
+          <line x1="231" y1="278" x2="257" y2="278"/>
+          <line x1="186" y1="249" x2="204" y2="267"/>
+          <line x1="226" y1="289" x2="244" y2="307"/>
+          <line x1="244" y1="249" x2="226" y2="267"/>
+          <line x1="204" y1="289" x2="186" y2="307"/>
+        </g>
+        <circle cx="215" cy="278" r="7" fill="rgba(201,168,76,0.5)"/>
+
+        <!-- Rear wheel -->
+        <circle cx="575" cy="278" r="52" fill="url(#wheelGrad)" stroke="rgba(201,168,76,0.15)" stroke-width="1.5"/>
+        <circle cx="575" cy="278" r="42" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+        <circle cx="575" cy="278" r="16" fill="#0a0a12" stroke="rgba(201,168,76,0.3)" stroke-width="2"/>
+        <g stroke="rgba(201,168,76,0.35)" stroke-width="1.5" fill="none">
+          <line x1="575" y1="236" x2="575" y2="262"/>
+          <line x1="575" y1="294" x2="575" y2="320"/>
+          <line x1="533" y1="278" x2="559" y2="278"/>
+          <line x1="591" y1="278" x2="617" y2="278"/>
+          <line x1="546" y1="249" x2="564" y2="267"/>
+          <line x1="586" y1="289" x2="604" y2="307"/>
+          <line x1="604" y1="249" x2="586" y2="267"/>
+          <line x1="564" y1="289" x2="546" y2="307"/>
+        </g>
+        <circle cx="575" cy="278" r="7" fill="rgba(201,168,76,0.5)"/>
+
+        <!-- Exhaust -->
+        <ellipse cx="710" cy="268" rx="8" ry="5" fill="#050508" stroke="rgba(100,100,120,0.3)" stroke-width="1"/>
+        <ellipse cx="724" cy="268" rx="8" ry="5" fill="#050508" stroke="rgba(100,100,120,0.3)" stroke-width="1"/>
+
+        <!-- Brand badge -->
+        <circle cx="155" cy="195" r="12" fill="#080810" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+        <text x="155" y="199" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="9" font-family="serif" font-weight="bold">A</text>
+      </svg>
+
+      <div class="ground-reflection"></div>
+    </div>
+  </div>
+
+  <!-- Hero text overlay -->
+  <div class="hero-content" style="position:absolute;bottom:20%;left:8%;text-align:left;animation:fadeInUp 1s ease both 0.8s;opacity:0">
+    <div class="hero-eyebrow" style="animation:none;opacity:1">2025 Collection</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.5rem);letter-spacing:0.1em;line-height:1.1;margin-top:0.5rem">
+      Luxury &<br>Performance
+    </div>
+  </div>
+
+  <div class="hero-content" style="position:absolute;bottom:20%;right:8%;text-align:right;animation:fadeInUp 1s ease both 1s;opacity:0">
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--silver);margin-bottom:0.5rem">BẮT ĐẦU TỪ</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--gold)">1,850,000,000 ₫</div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Cuộn xuống</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span>APEX MOTORS</span><span class="marquee-dot"></span>
+    <span>LUXURY REDEFINED</span><span class="marquee-dot"></span>
+    <span>PERFORMANCE UNLEASHED</span><span class="marquee-dot"></span>
+    <span>DRIVE BEYOND</span><span class="marquee-dot"></span>
+    <span>APEX MOTORS</span><span class="marquee-dot"></span>
+    <span>LUXURY REDEFINED</span><span class="marquee-dot"></span>
+    <span>PERFORMANCE UNLEASHED</span><span class="marquee-dot"></span>
+    <span>DRIVE BEYOND</span><span class="marquee-dot"></span>
+    <span>APEX MOTORS</span><span class="marquee-dot"></span>
+    <span>LUXURY REDEFINED</span><span class="marquee-dot"></span>
+    <span>PERFORMANCE UNLEASHED</span><span class="marquee-dot"></span>
+    <span>DRIVE BEYOND</span><span class="marquee-dot"></span>
+    <span>APEX MOTORS</span><span class="marquee-dot"></span>
+    <span>LUXURY REDEFINED</span><span class="marquee-dot"></span>
+    <span>PERFORMANCE UNLEASHED</span><span class="marquee-dot"></span>
+    <span>DRIVE BEYOND</span><span class="marquee-dot"></span>
+  </div>
+</div>
+
+<!-- ===== CAR CUSTOMIZER ===== -->
+<section id="customizer">
+  <div class="customizer-header reveal">
+    <div class="section-tag">Phòng tùy chỉnh</div>
+    <h2>Thiết kế xe <em style="font-style:italic;font-family:'Cormorant Garamond',serif;color:var(--gold)">theo ý bạn</em></h2>
+  </div>
+
+  <!-- STAGE -->
+  <div class="customizer-stage reveal">
+    <div class="stage-viewport" id="stageViewport">
+      <!-- Vignette overlay for zoom -->
+      <div class="zoom-vignette" id="zoomVignette"></div>
+      <!-- Spotlight circle -->
+      <div class="zoom-spotlight" id="zoomSpotlight"></div>
+      <!-- Label -->
+      <div class="zoom-label" id="zoomLabel"></div>
+
+      <!-- Main customizer SVG car -->
+      <svg id="customizerSVG" viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cBodyGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#2a2a3a" id="cBodyStop0"/>
+            <stop offset="100%" stop-color="#0a0a12" id="cBodyStop1"/>
+          </radialGradient>
+          <radialGradient id="cRoofGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#1e1e30" id="cRoofStop0"/>
+            <stop offset="100%" stop-color="#0d0d18" id="cRoofStop1"/>
+          </radialGradient>
+          <radialGradient id="cWheelGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1a1a28"/>
+            <stop offset="60%" stop-color="#111118"/>
+            <stop offset="100%" stop-color="#080810"/>
+          </radialGradient>
+          <linearGradient id="cGlassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(150,190,230,0.4)"/>
+            <stop offset="100%" stop-color="rgba(100,140,190,0.1)"/>
+          </linearGradient>
+          <linearGradient id="cGoldLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="20%" stop-color="#c9a84c"/>
+            <stop offset="80%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+          <filter id="cGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <!-- Spoiler gradient -->
+          <linearGradient id="spoilerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1a1a28"/>
+            <stop offset="100%" stop-color="#080810"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Shadow -->
+        <ellipse cx="400" cy="335" rx="320" ry="15" fill="rgba(0,0,0,0.5)"/>
+
+        <!-- ── BODY (color-changeable) ── -->
+        <path id="cBody" d="M80 240 Q80 200 140 195 L200 195 Q250 140 320 125 L480 120 Q560 120 620 145 L700 170 Q740 180 745 200 L750 240 Z"
+              fill="url(#cBodyGrad)" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+
+        <!-- ── ROOF (color-changeable separately) ── -->
+        <path id="cRoof" d="M210 195 Q260 140 325 125 L475 120 Q545 120 610 145 L650 165 Q680 175 695 195 Z"
+              fill="url(#cRoofGrad)"/>
+
+        <!-- Gold accent stripe -->
+        <path d="M100 218 L745 218" stroke="url(#cGoldLine)" stroke-width="1.5" opacity="0.7"/>
+
+        <!-- ── WINDSHIELD ── -->
+        <path d="M310 128 Q290 165 250 195 L430 195 L480 130 Z"
+              fill="url(#cGlassGrad)" stroke="rgba(150,190,230,0.2)" stroke-width="1"/>
+
+        <!-- Side windows -->
+        <path d="M480 130 L435 195 L560 195 L610 145 Z" fill="url(#cGlassGrad)" opacity="0.7"/>
+        <path d="M610 145 L565 195 L650 195 L655 163 Z" fill="url(#cGlassGrad)" opacity="0.5"/>
+
+        <!-- Window frames -->
+        <path d="M310 128 Q290 165 250 195" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" fill="none"/>
+        <path d="M480 130 L435 195" stroke="rgba(201,168,76,0.3)" stroke-width="1" fill="none"/>
+        <path d="M610 145 L565 195" stroke="rgba(201,168,76,0.2)" stroke-width="1" fill="none"/>
+
+        <!-- Front bumper -->
+        <path d="M80 240 Q75 255 90 265 L160 268 L160 240 Z" fill="#111118" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+
+        <!-- Front grille -->
+        <rect x="88" y="220" width="65" height="30" rx="3" fill="#080810" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <line x1="88" y1="230" x2="153" y2="230" stroke="rgba(201,168,76,0.15)" stroke-width="0.8"/>
+        <line x1="88" y1="240" x2="153" y2="240" stroke="rgba(201,168,76,0.15)" stroke-width="0.8"/>
+        <line x1="105" y1="220" x2="105" y2="250" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
+        <line x1="122" y1="220" x2="122" y2="250" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
+        <line x1="137" y1="220" x2="137" y2="250" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
+
+        <!-- Headlights -->
+        <path d="M83 200 Q78 210 80 225 L155 225 L158 200 Z" fill="#0a0a15" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="84" y1="208" x2="152" y2="206" stroke="rgba(255,240,150,0.9)" stroke-width="2.5" filter="url(#cGlow)"/>
+        <line x1="86" y1="215" x2="150" y2="213" stroke="rgba(255,240,150,0.5)" stroke-width="1.5" filter="url(#cGlow)"/>
+
+        <!-- ── FOG LIGHTS (accessory target) ── -->
+        <g id="accFogLights" opacity="0.3">
+          <ellipse cx="102" cy="257" rx="14" ry="7" fill="rgba(255,240,100,0.06)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <ellipse cx="128" cy="257" rx="14" ry="7" fill="rgba(255,240,100,0.06)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        </g>
+
+        <!-- Rear lights -->
+        <path d="M720 195 Q748 200 750 230 L740 240 L700 235 L698 198 Z" fill="#150005" stroke="rgba(200,50,50,0.3)" stroke-width="1"/>
+        <line x1="700" y1="200" x2="747" y2="205" stroke="rgba(220,50,50,0.8)" stroke-width="2.5" filter="url(#cGlow)"/>
+        <line x1="700" y1="210" x2="748" y2="215" stroke="rgba(200,30,30,0.5)" stroke-width="1.5"/>
+        <line x1="700" y1="220" x2="748" y2="224" stroke="rgba(200,30,30,0.3)" stroke-width="1"/>
+
+        <!-- Door lines -->
+        <line x1="250" y1="195" x2="252" y2="258" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+        <line x1="435" y1="195" x2="437" y2="258" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+        <line x1="565" y1="195" x2="567" y2="255" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+
+        <!-- Door handles -->
+        <rect x="330" y="210" width="30" height="6" rx="3" fill="rgba(201,168,76,0.4)" stroke="rgba(201,168,76,0.6)" stroke-width="0.5"/>
+        <rect x="470" y="210" width="30" height="6" rx="3" fill="rgba(201,168,76,0.4)" stroke="rgba(201,168,76,0.6)" stroke-width="0.5"/>
+
+        <!-- Body reflection -->
+        <path d="M160 200 Q400 185 650 198" stroke="rgba(255,255,255,0.06)" stroke-width="2" fill="none"/>
+
+        <!-- Side skirt -->
+        <rect x="165" y="255" width="520" height="12" rx="2" fill="#0a0a12" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+
+        <!-- ── SIDE SKIRT UPGRADE (accessory) ── -->
+        <g id="accSideSkirt" opacity="0">
+          <rect x="165" y="255" width="520" height="16" rx="3" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+          <line x1="200" y1="263" x2="650" y2="263" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
+        </g>
+
+        <!-- ── FRONT WHEELS ── -->
+        <circle id="cWheel1Rim" cx="215" cy="278" r="52" fill="url(#cWheelGrad)" stroke="rgba(201,168,76,0.15)" stroke-width="1.5"/>
+        <circle cx="215" cy="278" r="42" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+        <circle cx="215" cy="278" r="16" fill="#0a0a12" stroke="rgba(201,168,76,0.3)" stroke-width="2"/>
+        <g id="cSpokes1" stroke="rgba(201,168,76,0.35)" stroke-width="1.5" fill="none">
+          <line x1="215" y1="236" x2="215" y2="262"/>
+          <line x1="215" y1="294" x2="215" y2="320"/>
+          <line x1="173" y1="278" x2="199" y2="278"/>
+          <line x1="231" y1="278" x2="257" y2="278"/>
+          <line x1="186" y1="249" x2="204" y2="267"/>
+          <line x1="226" y1="289" x2="244" y2="307"/>
+          <line x1="244" y1="249" x2="226" y2="267"/>
+          <line x1="204" y1="289" x2="186" y2="307"/>
+        </g>
+        <circle cx="215" cy="278" r="7" fill="rgba(201,168,76,0.5)"/>
+
+        <!-- ── REAR WHEELS ── -->
+        <circle id="cWheel2Rim" cx="575" cy="278" r="52" fill="url(#cWheelGrad)" stroke="rgba(201,168,76,0.15)" stroke-width="1.5"/>
+        <circle cx="575" cy="278" r="42" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+        <circle cx="575" cy="278" r="16" fill="#0a0a12" stroke="rgba(201,168,76,0.3)" stroke-width="2"/>
+        <g id="cSpokes2" stroke="rgba(201,168,76,0.35)" stroke-width="1.5" fill="none">
+          <line x1="575" y1="236" x2="575" y2="262"/>
+          <line x1="575" y1="294" x2="575" y2="320"/>
+          <line x1="533" y1="278" x2="559" y2="278"/>
+          <line x1="591" y1="278" x2="617" y2="278"/>
+          <line x1="546" y1="249" x2="564" y2="267"/>
+          <line x1="586" y1="289" x2="604" y2="307"/>
+          <line x1="604" y1="249" x2="586" y2="267"/>
+          <line x1="564" y1="289" x2="546" y2="307"/>
+        </g>
+        <circle cx="575" cy="278" r="7" fill="rgba(201,168,76,0.5)"/>
+
+        <!-- ── SPORT WHEEL upgrade (overlay, hidden by default) ── -->
+        <g id="accSportWheels" opacity="0">
+          <!-- front sport rim -->
+          <circle cx="215" cy="278" r="52" fill="none" stroke="rgba(220,220,255,0.4)" stroke-width="2"/>
+          <g stroke="rgba(200,220,255,0.6)" stroke-width="2" fill="none">
+            <line x1="215" y1="230" x2="215" y2="258"/><line x1="215" y1="298" x2="215" y2="326"/>
+            <line x1="167" y1="278" x2="195" y2="278"/><line x1="235" y1="278" x2="263" y2="278"/>
+            <line x1="181" y1="244" x2="201" y2="264"/><line x1="229" y1="292" x2="249" y2="312"/>
+            <line x1="249" y1="244" x2="229" y2="264"/><line x1="201" y1="292" x2="181" y2="312"/>
+            <line x1="215" y1="234" x2="195" y2="258"/><line x1="235" y1="258" x2="215" y2="234"/>
+          </g>
+          <circle cx="215" cy="278" r="10" fill="rgba(200,220,255,0.15)" stroke="rgba(200,220,255,0.5)" stroke-width="1.5"/>
+          <!-- rear sport rim -->
+          <circle cx="575" cy="278" r="52" fill="none" stroke="rgba(220,220,255,0.4)" stroke-width="2"/>
+          <g stroke="rgba(200,220,255,0.6)" stroke-width="2" fill="none">
+            <line x1="575" y1="230" x2="575" y2="258"/><line x1="575" y1="298" x2="575" y2="326"/>
+            <line x1="527" y1="278" x2="555" y2="278"/><line x1="595" y1="278" x2="623" y2="278"/>
+            <line x1="541" y1="244" x2="561" y2="264"/><line x1="589" y1="292" x2="609" y2="312"/>
+            <line x1="609" y1="244" x2="589" y2="264"/><line x1="561" y1="292" x2="541" y2="312"/>
+          </g>
+          <circle cx="575" cy="278" r="10" fill="rgba(200,220,255,0.15)" stroke="rgba(200,220,255,0.5)" stroke-width="1.5"/>
+        </g>
+
+        <!-- ── REAR SPOILER (accessory, hidden by default) ── -->
+        <g id="accSpoiler" opacity="0">
+          <!-- Spoiler blade -->
+          <rect x="630" y="104" width="95" height="10" rx="3" fill="url(#spoilerGrad)" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+          <!-- Left strut -->
+          <rect x="638" y="114" width="6" height="22" rx="2" fill="#0d0d18" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <!-- Right strut -->
+          <rect x="714" y="114" width="6" height="22" rx="2" fill="#0d0d18" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <!-- End plates -->
+          <rect x="630" y="100" width="10" height="18" rx="2" fill="#0a0a15" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <rect x="718" y="100" width="10" height="18" rx="2" fill="#0a0a15" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <!-- Accent line on blade -->
+          <line x1="632" y1="109" x2="723" y2="109" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+        </g>
+
+        <!-- ── CARBON HOOD (accessory) ── -->
+        <g id="accCarbonHood" opacity="0">
+          <!-- Carbon fiber pattern over upper hood area -->
+          <path d="M200 195 Q250 140 320 125 L380 120 L360 195 Z" fill="none"
+                stroke="rgba(80,80,100,0.0)" stroke-width="0"/>
+          <clipPath id="hoodClip">
+            <path d="M160 195 Q200 160 280 140 L360 130 L340 196 Z"/>
+          </clipPath>
+          <g clip-path="url(#hoodClip)">
+            <!-- Carbon weave pattern -->
+            <rect x="155" y="125" width="200" height="75" fill="rgba(30,30,40,0.7)"/>
+            <g stroke="rgba(60,60,80,0.6)" stroke-width="0.5" fill="none">
+              <line x1="155" y1="130" x2="355" y2="130"/><line x1="155" y1="140" x2="355" y2="140"/>
+              <line x1="155" y1="150" x2="355" y2="150"/><line x1="155" y1="160" x2="355" y2="160"/>
+              <line x1="155" y1="170" x2="355" y2="170"/><line x1="155" y1="180" x2="355" y2="180"/>
+              <line x1="155" y1="190" x2="355" y2="190"/>
+              <line x1="165" y1="125" x2="165" y2="200"/><line x1="175" y1="125" x2="175" y2="200"/>
+              <line x1="185" y1="125" x2="185" y2="200"/><line x1="195" y1="125" x2="195" y2="200"/>
+              <line x1="205" y1="125" x2="205" y2="200"/><line x1="215" y1="125" x2="215" y2="200"/>
+              <line x1="225" y1="125" x2="225" y2="200"/><line x1="235" y1="125" x2="235" y2="200"/>
+              <line x1="245" y1="125" x2="245" y2="200"/><line x1="255" y1="125" x2="255" y2="200"/>
+              <line x1="265" y1="125" x2="265" y2="200"/><line x1="275" y1="125" x2="275" y2="200"/>
+              <line x1="285" y1="125" x2="285" y2="200"/><line x1="295" y1="125" x2="295" y2="200"/>
+              <line x1="305" y1="125" x2="305" y2="200"/><line x1="315" y1="125" x2="315" y2="200"/>
+              <line x1="325" y1="125" x2="325" y2="200"/><line x1="335" y1="125" x2="335" y2="200"/>
+              <line x1="345" y1="125" x2="345" y2="200"/>
+            </g>
+            <!-- Diagonal weave -->
+            <g stroke="rgba(50,50,65,0.4)" stroke-width="0.8" fill="none">
+              <line x1="155" y1="125" x2="215" y2="200"/><line x1="175" y1="125" x2="235" y2="200"/>
+              <line x1="195" y1="125" x2="255" y2="200"/><line x1="215" y1="125" x2="275" y2="200"/>
+              <line x1="235" y1="125" x2="295" y2="200"/><line x1="255" y1="125" x2="315" y2="200"/>
+              <line x1="275" y1="125" x2="335" y2="200"/>
+            </g>
+          </g>
+          <!-- Carbon trim border -->
+          <path d="M160 195 Q200 160 280 140 L360 130 L340 196" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1.2"/>
+        </g>
+
+        <!-- ── TINTED WINDOWS (accessory) ── -->
+        <g id="accTintedWindows" opacity="0">
+          <path d="M310 128 Q290 165 250 195 L430 195 L480 130 Z" fill="rgba(0,0,20,0.55)"/>
+          <path d="M480 130 L435 195 L560 195 L610 145 Z" fill="rgba(0,0,20,0.6)"/>
+          <path d="M610 145 L565 195 L650 195 L655 163 Z" fill="rgba(0,0,20,0.65)"/>
+        </g>
+
+        <!-- Exhaust -->
+        <ellipse cx="710" cy="268" rx="8" ry="5" fill="#050508" stroke="rgba(100,100,120,0.3)" stroke-width="1"/>
+        <ellipse cx="724" cy="268" rx="8" ry="5" fill="#050508" stroke="rgba(100,100,120,0.3)" stroke-width="1"/>
+
+        <!-- ── SPORT EXHAUST (accessory) ── -->
+        <g id="accSportExhaust" opacity="0">
+          <ellipse cx="700" cy="268" rx="10" ry="7" fill="#020205" stroke="rgba(180,180,200,0.5)" stroke-width="1.5"/>
+          <ellipse cx="700" cy="268" rx="6" ry="4" fill="rgba(20,20,30,0.8)" stroke="rgba(150,150,170,0.3)" stroke-width="0.8"/>
+          <ellipse cx="722" cy="268" rx="10" ry="7" fill="#020205" stroke="rgba(180,180,200,0.5)" stroke-width="1.5"/>
+          <ellipse cx="722" cy="268" rx="6" ry="4" fill="rgba(20,20,30,0.8)" stroke="rgba(150,150,170,0.3)" stroke-width="0.8"/>
+          <ellipse cx="744" cy="266" rx="8" ry="6" fill="#020205" stroke="rgba(180,180,200,0.4)" stroke-width="1.2"/>
+          <!-- Exhaust glow -->
+          <ellipse cx="711" cy="268" rx="14" ry="9" fill="rgba(255,120,20,0.04)" filter="url(#cGlow)"/>
+        </g>
+
+        <!-- Brand badge -->
+        <circle cx="155" cy="195" r="12" fill="#080810" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+        <text x="155" y="199" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="9" font-family="serif" font-weight="bold">A</text>
+      </svg>
+    </div><!-- end stage-viewport -->
+  </div><!-- end customizer-stage -->
+
+  <!-- CONTROLS -->
+  <div class="customizer-controls">
+
+    <!-- LEFT: Color picker -->
+    <div class="ctrl-panel reveal">
+      <div class="ctrl-panel-title">Màu sắc xe</div>
+
+      <div class="ctrl-sub-title">Thân xe</div>
+      <div class="color-swatches" id="bodySwatches">
+        <div class="swatch active" data-color="dark"    data-hex0="#2a2a3a" data-hex1="#0a0a12" title="Obsidian"  style="background:linear-gradient(135deg,#2a2a3a,#0a0a12)"></div>
+        <div class="swatch"        data-color="crimson" data-hex0="#4a0808" data-hex1="#1a0202" title="Crimson"   style="background:linear-gradient(135deg,#6b1010,#2a0404)"></div>
+        <div class="swatch"        data-color="navy"    data-hex0="#0a1530" data-hex1="#040810" title="Midnight"  style="background:linear-gradient(135deg,#102060,#04080f)"></div>
+        <div class="swatch"        data-color="forest"  data-hex0="#0a1f0a" data-hex1="#040a04" title="Racing Green" style="background:linear-gradient(135deg,#183518,#060c06)"></div>
+        <div class="swatch"        data-color="silver"  data-hex0="#484858" data-hex1="#2a2a35" title="Titanium"  style="background:linear-gradient(135deg,#686878,#2a2a35)"></div>
+        <div class="swatch"        data-color="gold"    data-hex0="#3a2a08" data-hex1="#1a1004" title="Champagne" style="background:linear-gradient(135deg,#6a5010,#2a1c04)"></div>
+        <div class="swatch"        data-color="white"   data-hex0="#d8d8e8" data-hex1="#a8a8c0" title="Pearl White" style="background:linear-gradient(135deg,#e8e8f5,#b8b8d0)"></div>
+        <div class="swatch"        data-color="orange"  data-hex0="#3a1800" data-hex1="#180800" title="Sunset Orange" style="background:linear-gradient(135deg,#a03008,#480f02)"></div>
+      </div>
+
+      <div class="ctrl-sub-title">Mui xe</div>
+      <div class="color-swatches" id="roofSwatches">
+        <div class="swatch active" data-color="dark"   data-hex0="#1e1e30" data-hex1="#0d0d18" title="Match Body"  style="background:linear-gradient(135deg,#1e1e30,#0d0d18)"></div>
+        <div class="swatch"        data-color="black"  data-hex0="#080810" data-hex1="#020205" title="Piano Black" style="background:linear-gradient(135deg,#141420,#020205)"></div>
+        <div class="swatch"        data-color="carbon" data-hex0="#181820" data-hex1="#0a0a10" title="Carbon Fiber" style="background:repeating-linear-gradient(45deg,#1a1a24 0,#1a1a24 4px,#0e0e16 4px,#0e0e16 8px)"></div>
+        <div class="swatch"        data-color="white"  data-hex0="#ccccdd" data-hex1="#9090a8" title="Pearl White"  style="background:linear-gradient(135deg,#dddded,#9090a8)"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Accessories -->
+    <div class="ctrl-panel reveal reveal-delay-1">
+      <div class="ctrl-panel-title">Phụ kiện</div>
+      <div class="acc-list">
+
+        <div class="acc-item" data-acc="accSpoiler" data-zoom="680,112,80,50"
+             data-label="Rear Spoiler" data-price="85000000">
+          <div class="acc-emoji">🏎</div>
+          <div class="acc-info">
+            <div class="acc-name">Spoiler thể thao</div>
+            <div class="acc-price">+85,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="acc-item" data-acc="accSportWheels" data-zoom="215,278,80,80"
+             data-label="Sport Wheels" data-price="120000000">
+          <div class="acc-emoji">⚙️</div>
+          <div class="acc-info">
+            <div class="acc-name">Mâm sport 21"</div>
+            <div class="acc-price">+120,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="acc-item" data-acc="accCarbonHood" data-zoom="230,160,120,70"
+             data-label="Carbon Hood" data-price="65000000">
+          <div class="acc-emoji">🪶</div>
+          <div class="acc-info">
+            <div class="acc-name">Nắp capo carbon</div>
+            <div class="acc-price">+65,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="acc-item" data-acc="accTintedWindows" data-zoom="370,160,140,70"
+             data-label="Tinted Glass" data-price="25000000">
+          <div class="acc-emoji">🕶</div>
+          <div class="acc-info">
+            <div class="acc-name">Kính cách nhiệt</div>
+            <div class="acc-price">+25,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="acc-item" data-acc="accSideSkirt" data-zoom="400,262,220,30"
+             data-label="Side Skirts" data-price="45000000">
+          <div class="acc-emoji">🔧</div>
+          <div class="acc-info">
+            <div class="acc-name">Body kit side skirt</div>
+            <div class="acc-price">+45,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="acc-item" data-acc="accFogLights" data-zoom="112,258,50,30"
+             data-label="Fog Lights" data-price="18000000">
+          <div class="acc-emoji">💡</div>
+          <div class="acc-info">
+            <div class="acc-name">Đèn sương mù LED</div>
+            <div class="acc-price">+18,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="acc-item" data-acc="accSportExhaust" data-zoom="718,266,60,20"
+             data-label="Sport Exhaust" data-price="95000000">
+          <div class="acc-emoji">💨</div>
+          <div class="acc-info">
+            <div class="acc-name">Ống xả thể thao</div>
+            <div class="acc-price">+95,000,000 ₫</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY BAR -->
+  <div class="customizer-summary reveal" style="margin:1.5rem auto 0;max-width:900px;padding:0 2rem">
+    <div style="display:flex;flex-direction:column;gap:0.3rem">
+      <span class="summary-label">Giá cơ bản Porsche 911</span>
+      <span class="summary-label" style="color:var(--silver)">+ Phụ kiện đã chọn</span>
+    </div>
+    <div style="text-align:center">
+      <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--silver);margin-bottom:0.3rem">TỔNG GIÁ TRỊ</div>
+      <div class="summary-price" id="summaryPrice">9,800,000,000 ₫</div>
+    </div>
+    <button class="btn-configure" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Đặt cọc ngay →</button>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="intro-number reveal">01</div>
+  <div class="intro-text">
+    <h2 class="reveal reveal-delay-1">Điểm đến của<br><em>Đỉnh cao</em></h2>
+    <p class="reveal reveal-delay-2">APEX MOTORS không chỉ bán xe — chúng tôi trao gửi một đẳng cấp sống. Mỗi chiếc xe trong showroom là sự kết hợp hoàn hảo giữa nghệ thuật thiết kế và công nghệ tiên tiến nhất thế giới.</p>
+    <p class="reveal reveal-delay-3">Từ siêu xe thể thao đến sedan sang trọng, chúng tôi đại diện cho những thương hiệu huyền thoại — mang đến cho bạn không gian trải nghiệm đẳng cấp 5 sao ngay tại Việt Nam.</p>
+    <div class="stat-row reveal reveal-delay-4">
+      <div class="stat">
+        <span class="stat-num" data-count="150">0</span>
+        <span class="stat-label">Mẫu xe</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="12">0</span>
+        <span class="stat-label">Thương hiệu</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="98">0</span>
+        <span class="stat-label">% Hài lòng</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="8">0</span>
+        <span class="stat-label">Năm kinh nghiệm</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARS GRID -->
+<section id="cars">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag">Bộ sưu tập 2025</div>
+      <h2 class="section-title">Những cỗ máy<br>huyền thoại</h2>
+    </div>
+    <a href="#" class="view-all">Xem tất cả →</a>
+  </div>
+
+  <div class="cars-grid">
+
+    <!-- Featured card -->
+    <div class="car-card featured tilt reveal" data-delay="0">
+      <div class="car-img-wrap">
+        <div class="car-badge">Hot</div>
+        <!-- Porsche-inspired -->
+        <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="p1body" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8b1a1a"/>
+              <stop offset="100%" stop-color="#3a0808"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="350" cy="265" rx="280" ry="12" fill="rgba(0,0,0,0.4)"/>
+          <path d="M70 195 Q70 165 120 160 L170 158 Q220 115 300 100 L420 96 Q500 96 570 118 L640 145 Q670 160 675 180 L678 200 Z" fill="url(#p1body)" stroke="rgba(255,100,100,0.2)" stroke-width="1"/>
+          <path d="M180 158 Q230 115 305 100 L418 96 Q495 96 565 118 L600 135 Q635 152 648 166 L668 180 Z" fill="#4a0e0e"/>
+          <path d="M300 102 Q278 138 240 158 L410 158 L460 104 Z" fill="rgba(150,190,230,0.35)" stroke="rgba(150,190,230,0.2)" stroke-width="1"/>
+          <path d="M460 104 L415 158 L530 158 L572 120 Z" fill="rgba(150,190,230,0.2)"/>
+          <path d="M300 102 Q278 138 240 158" stroke="rgba(255,200,50,0.5)" stroke-width="1.5" fill="none"/>
+          <line x1="80" y1="180" x2="676" y2="180" stroke="rgba(255,200,50,0.4)" stroke-width="1"/>
+          <path d="M70 195 Q68 208 75 215 L140 218 L140 195 Z" fill="#200808" stroke="rgba(255,100,100,0.1)" stroke-width="0.5"/>
+          <rect x="76" y="178" width="58" height="22" rx="2" fill="#100505" stroke="rgba(255,200,50,0.2)" stroke-width="1"/>
+          <line x1="77" y1="187" x2="133" y2="186" stroke="rgba(255,240,150,0.9)" stroke-width="2.5"/>
+          <line x1="77" y1="193" x2="133" y2="192" stroke="rgba(255,240,150,0.4)" stroke-width="1"/>
+          <path d="M640 160 Q672 168 675 190 L668 200 L628 196 L625 162 Z" fill="#150005" stroke="rgba(200,50,50,0.3)" stroke-width="1"/>
+          <line x1="627" y1="163" x2="672" y2="170" stroke="rgba(220,50,50,0.8)" stroke-width="3"/>
+          <line x1="627" y1="173" x2="673" y2="179" stroke="rgba(200,30,30,0.5)" stroke-width="1.5"/>
+          <line x1="627" y1="183" x2="673" y2="188" stroke="rgba(200,30,30,0.3)" stroke-width="1"/>
+          <circle cx="185" cy="228" r="42" fill="#0a0408" stroke="rgba(255,200,50,0.2)" stroke-width="1.5"/>
+          <circle cx="185" cy="228" r="13" fill="#050205" stroke="rgba(255,200,50,0.35)" stroke-width="2"/>
+          <g stroke="rgba(255,200,50,0.4)" stroke-width="1.5" fill="none">
+            <line x1="185" y1="186" x2="185" y2="215"/><line x1="185" y1="241" x2="185" y2="270"/>
+            <line x1="143" y1="228" x2="172" y2="228"/><line x1="198" y1="228" x2="227" y2="228"/>
+            <line x1="155" y1="198" x2="173" y2="216"/><line x1="197" y1="240" x2="215" y2="258"/>
+            <line x1="215" y1="198" x2="197" y2="216"/><line x1="173" y1="240" x2="155" y2="258"/>
+          </g>
+          <circle cx="185" cy="228" r="6" fill="rgba(255,200,50,0.5)"/>
+          <circle cx="525" cy="228" r="42" fill="#0a0408" stroke="rgba(255,200,50,0.2)" stroke-width="1.5"/>
+          <circle cx="525" cy="228" r="13" fill="#050205" stroke="rgba(255,200,50,0.35)" stroke-width="2"/>
+          <g stroke="rgba(255,200,50,0.4)" stroke-width="1.5" fill="none">
+            <line x1="525" y1="186" x2="525" y2="215"/><line x1="525" y1="241" x2="525" y2="270"/>
+            <line x1="483" y1="228" x2="512" y2="228"/><line x1="538" y1="228" x2="567" y2="228"/>
+            <line x1="495" y1="198" x2="513" y2="216"/><line x1="537" y1="240" x2="555" y2="258"/>
+            <line x1="555" y1="198" x2="537" y2="216"/><line x1="513" y1="240" x2="495" y2="258"/>
+          </g>
+          <circle cx="525" cy="228" r="6" fill="rgba(255,200,50,0.5)"/>
+        </svg>
+      </div>
+      <div class="car-info">
+        <div class="car-brand">Porsche</div>
+        <div class="car-name">911 Turbo S</div>
+        <div class="car-specs">
+          <div class="spec"><span class="spec-val">640</span><span class="spec-key">Mã lực</span></div>
+          <div class="spec"><span class="spec-val">2.7s</span><span class="spec-key">0–100 km/h</span></div>
+          <div class="spec"><span class="spec-val">330</span><span class="spec-key">km/h tối đa</span></div>
+        </div>
+        <div class="car-price-row">
+          <div>
+            <span class="price-label">Giá từ</span>
+            <div class="car-price" style="color:var(--gold)">9,800,000,000 ₫</div>
+          </div>
+          <button class="btn-detail">Chi tiết</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="car-card tilt reveal reveal-delay-1">
+      <div class="car-img-wrap">
+        <div class="car-badge new">Mới</div>
+        <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="p2body" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1a1a2e"/>
+              <stop offset="100%" stop-color="#0a0a15"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="350" cy="248" rx="270" ry="10" fill="rgba(0,0,0,0.4)"/>
+          <path d="M65 188 Q65 158 118 153 L165 150 Q215 110 295 96 L415 92 Q495 92 562 112 L628 137 Q660 152 665 172 L668 192 Z" fill="url(#p2body)" stroke="rgba(100,100,255,0.15)" stroke-width="1"/>
+          <path d="M178 150 Q226 110 300 96 L413 92 Q490 92 558 112 L590 128 Q628 146 640 160 L658 174 Z" fill="#0f0f22"/>
+          <path d="M295 98 Q273 132 234 150 L408 150 L456 100 Z" fill="rgba(180,220,255,0.3)"/>
+          <path d="M456 100 L412 150 L520 150 L562 114 Z" fill="rgba(160,200,255,0.15)"/>
+          <line x1="75" y1="172" x2="666" y2="172" stroke="rgba(100,150,255,0.35)" stroke-width="1"/>
+          <rect x="71" y="172" width="62" height="20" rx="2" fill="#060610" stroke="rgba(100,150,255,0.2)" stroke-width="1"/>
+          <line x1="72" y1="180" x2="132" y2="179" stroke="rgba(200,230,255,0.9)" stroke-width="2"/>
+          <line x1="72" y1="186" x2="132" y2="185" stroke="rgba(180,210,255,0.4)" stroke-width="1"/>
+          <path d="M625 154 Q657 162 660 183 L653 192 L614 188 L612 157 Z" fill="#08080f"/>
+          <line x1="614" y1="158" x2="658" y2="164" stroke="rgba(220,50,50,0.8)" stroke-width="2.5"/>
+          <circle cx="180" cy="218" r="40" fill="#08080f" stroke="rgba(100,150,255,0.2)" stroke-width="1.5"/>
+          <circle cx="180" cy="218" r="12" fill="#030308" stroke="rgba(100,150,255,0.35)" stroke-width="2"/>
+          <g stroke="rgba(100,150,255,0.45)" stroke-width="1.5" fill="none">
+            <line x1="180" y1="178" x2="180" y2="206"/><line x1="180" y1="230" x2="180" y2="258"/>
+            <line x1="140" y1="218" x2="168" y2="218"/><line x1="192" y1="218" x2="220" y2="218"/>
+            <line x1="152" y1="190" x2="169" y2="207"/><line x1="191" y1="229" x2="208" y2="246"/>
+            <line x1="208" y1="190" x2="191" y2="207"/><line x1="169" y1="229" x2="152" y2="246"/>
+          </g>
+          <circle cx="180" cy="218" r="6" fill="rgba(100,150,255,0.5)"/>
+          <circle cx="516" cy="218" r="40" fill="#08080f" stroke="rgba(100,150,255,0.2)" stroke-width="1.5"/>
+          <circle cx="516" cy="218" r="12" fill="#030308" stroke="rgba(100,150,255,0.35)" stroke-width="2"/>
+          <g stroke="rgba(100,150,255,0.45)" stroke-width="1.5" fill="none">
+            <line x1="516" y1="178" x2="516" y2="206"/><line x1="516" y1="230" x2="516" y2="258"/>
+            <line x1="476" y1="218" x2="504" y2="218"/><line x1="528" y1="218" x2="556" y2="218"/>
+            <line x1="488" y1="190" x2="505" y2="207"/><line x1="527" y1="229" x2="544" y2="246"/>
+            <line x1="544" y1="190" x2="527" y2="207"/><line x1="505" y1="229" x2="488" y2="246"/>
+          </g>
+          <circle cx="516" cy="218" r="6" fill="rgba(100,150,255,0.5)"/>
+        </svg>
+      </div>
+      <div class="car-info">
+        <div class="car-brand">Lamborghini</div>
+        <div class="car-name">Urus S</div>
+        <div class="car-specs">
+          <div class="spec"><span class="spec-val">666</span><span class="spec-key">Mã lực</span></div>
+          <div class="spec"><span class="spec-val">3.5s</span><span class="spec-key">0–100 km/h</span></div>
+        </div>
+        <div class="car-price-row">
+          <div>
+            <span class="price-label">Giá từ</span>
+            <div class="car-price" style="color:var(--gold)">18,500,000,000 ₫</div>
+          </div>
+          <button class="btn-detail">Chi tiết</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="car-card tilt reveal reveal-delay-2">
+      <div class="car-img-wrap">
+        <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="p3body" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1a1510"/>
+              <stop offset="100%" stop-color="#0a0805"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="350" cy="248" rx="270" ry="10" fill="rgba(0,0,0,0.4)"/>
+          <path d="M68 192 Q68 162 122 156 L168 153 Q218 112 298 98 L418 94 L500 94 Q565 115 628 140 L660 157 Q668 172 670 192 Z" fill="url(#p3body)" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+          <path d="M180 153 Q228 112 302 98 L416 94 L498 94 Q562 115 625 140 L655 155 Q662 168 664 178 Z" fill="#0f0c08"/>
+          <path d="M298 100 Q276 134 236 153 L412 153 L458 102 Z" fill="rgba(180,200,220,0.3)"/>
+          <path d="M458 102 L414 153 L528 153 L568 118 Z" fill="rgba(160,180,200,0.15)"/>
+          <line x1="78" y1="174" x2="668" y2="174" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+          <rect x="74" y="174" width="60" height="22" rx="2" fill="#060503" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <line x1="75" y1="183" x2="133" y2="182" stroke="rgba(255,240,150,0.85)" stroke-width="2.5"/>
+          <path d="M626 152 Q660 160 663 182 L657 192 L617 189 L615 155 Z" fill="#0a0808"/>
+          <line x1="617" y1="156" x2="661" y2="163" stroke="rgba(220,50,50,0.85)" stroke-width="2.5"/>
+          <circle cx="183" cy="220" r="41" fill="#060503" stroke="rgba(201,168,76,0.2)" stroke-width="1.5"/>
+          <circle cx="183" cy="220" r="13" fill="#030200" stroke="rgba(201,168,76,0.35)" stroke-width="2"/>
+          <g stroke="rgba(201,168,76,0.4)" stroke-width="1.5" fill="none">
+            <line x1="183" y1="179" x2="183" y2="207"/><line x1="183" y1="233" x2="183" y2="261"/>
+            <line x1="142" y1="220" x2="170" y2="220"/><line x1="196" y1="220" x2="224" y2="220"/>
+            <line x1="154" y1="191" x2="171" y2="208"/><line x1="195" y1="232" x2="212" y2="249"/>
+            <line x1="212" y1="191" x2="195" y2="208"/><line x1="171" y1="232" x2="154" y2="249"/>
+          </g>
+          <circle cx="183" cy="220" r="6" fill="rgba(201,168,76,0.5)"/>
+          <circle cx="519" cy="220" r="41" fill="#060503" stroke="rgba(201,168,76,0.2)" stroke-width="1.5"/>
+          <circle cx="519" cy="220" r="13" fill="#030200" stroke="rgba(201,168,76,0.35)" stroke-width="2"/>
+          <g stroke="rgba(201,168,76,0.4)" stroke-width="1.5" fill="none">
+            <line x1="519" y1="179" x2="519" y2="207"/><line x1="519" y1="233" x2="519" y2="261"/>
+            <line x1="478" y1="220" x2="506" y2="220"/><line x1="532" y1="220" x2="560" y2="220"/>
+            <line x1="490" y1="191" x2="507" y2="208"/><line x1="531" y1="232" x2="548" y2="249"/>
+            <line x1="548" y1="191" x2="531" y2="208"/><line x1="507" y1="232" x2="490" y2="249"/>
+          </g>
+          <circle cx="519" cy="220" r="6" fill="rgba(201,168,76,0.5)"/>
+        </svg>
+      </div>
+      <div class="car-info">
+        <div class="car-brand">Bentley</div>
+        <div class="car-name">Continental GT</div>
+        <div class="car-specs">
+          <div class="spec"><span class="spec-val">659</span><span class="spec-key">Mã lực</span></div>
+          <div class="spec"><span class="spec-val">3.6s</span><span class="spec-key">0–100 km/h</span></div>
+        </div>
+        <div class="car-price-row">
+          <div>
+            <span class="price-label">Giá từ</span>
+            <div class="car-price" style="color:var(--gold)">22,000,000,000 ₫</div>
+          </div>
+          <button class="btn-detail">Chi tiết</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="car-card tilt reveal reveal-delay-1">
+      <div class="car-img-wrap">
+        <div class="car-badge">Điện</div>
+        <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="p4body" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0a1a0a"/>
+              <stop offset="100%" stop-color="#040a04"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="350" cy="248" rx="270" ry="10" fill="rgba(0,0,0,0.4)"/>
+          <path d="M70 190 Q70 155 126 148 L176 145 Q226 105 308 92 L422 88 L505 90 Q570 108 634 135 L664 155 Q672 168 674 190 Z" fill="url(#p4body)" stroke="rgba(50,200,100,0.1)" stroke-width="1"/>
+          <path d="M188 145 Q235 105 312 92 L420 88 L503 90 Q567 108 630 135 L658 152 L666 166 Z" fill="#060f06"/>
+          <path d="M308 94 Q285 130 244 145 L416 145 L462 96 Z" fill="rgba(150,255,180,0.2)"/>
+          <path d="M462 96 L418 145 L532 145 L574 112 Z" fill="rgba(120,220,150,0.1)"/>
+          <line x1="80" y1="170" x2="672" y2="170" stroke="rgba(50,200,100,0.4)" stroke-width="1.5"/>
+          <rect x="76" y="170" width="64" height="22" rx="2" fill="#020602" stroke="rgba(50,200,100,0.2)" stroke-width="1"/>
+          <line x1="77" y1="179" x2="139" y2="178" stroke="rgba(100,255,150,0.9)" stroke-width="2.5"/>
+          <line x1="77" y1="186" x2="139" y2="185" stroke="rgba(80,220,120,0.4)" stroke-width="1"/>
+          <path d="M628 147 Q662 155 665 177 L659 190 L620 186 L618 150 Z" fill="#040a04"/>
+          <line x1="620" y1="151" x2="663" y2="158" stroke="rgba(50,220,50,0.8)" stroke-width="2.5"/>
+          <circle cx="186" cy="217" r="40" fill="#020602" stroke="rgba(50,200,100,0.2)" stroke-width="1.5"/>
+          <circle cx="186" cy="217" r="12" fill="#010401" stroke="rgba(50,200,100,0.35)" stroke-width="2"/>
+          <g stroke="rgba(50,200,100,0.45)" stroke-width="1.5" fill="none">
+            <line x1="186" y1="177" x2="186" y2="205"/><line x1="186" y1="229" x2="186" y2="257"/>
+            <line x1="146" y1="217" x2="174" y2="217"/><line x1="198" y1="217" x2="226" y2="217"/>
+          </g>
+          <circle cx="186" cy="217" r="6" fill="rgba(50,200,100,0.5)"/>
+          <circle cx="522" cy="217" r="40" fill="#020602" stroke="rgba(50,200,100,0.2)" stroke-width="1.5"/>
+          <circle cx="522" cy="217" r="12" fill="#010401" stroke="rgba(50,200,100,0.35)" stroke-width="2"/>
+          <g stroke="rgba(50,200,100,0.45)" stroke-width="1.5" fill="none">
+            <line x1="522" y1="177" x2="522" y2="205"/><line x1="522" y1="229" x2="522" y2="257"/>
+            <line x1="482" y1="217" x2="510" y2="217"/><line x1="534" y1="217" x2="562" y2="217"/>
+          </g>
+          <circle cx="522" cy="217" r="6" fill="rgba(50,200,100,0.5)"/>
+        </svg>
+      </div>
+      <div class="car-info">
+        <div class="car-brand">Ferrari</div>
+        <div class="car-name">SF90 Stradale</div>
+        <div class="car-specs">
+          <div class="spec"><span class="spec-val">1000</span><span class="spec-key">Mã lực</span></div>
+          <div class="spec"><span class="spec-val">2.5s</span><span class="spec-key">0–100 km/h</span></div>
+        </div>
+        <div class="car-price-row">
+          <div>
+            <span class="price-label">Giá từ</span>
+            <div class="car-price" style="color:var(--gold)">35,000,000,000 ₫</div>
+          </div>
+          <button class="btn-detail">Chi tiết</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="experience-grid">
+    <div class="exp-visual reveal">
+      <div class="cube-container">
+        <div class="cube">
+          <div class="cube-face front">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M40 120 Q40 100 70 97 L95 95 Q120 72 165 62 L245 60 Q290 60 330 75 L370 88 Q384 95 386 110 L388 122 Z" fill="#1a1520" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+              <line x1="50" y1="110" x2="386" y2="110" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+              <circle cx="115" cy="144" r="28" fill="#0a0a12" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+              <circle cx="115" cy="144" r="9" fill="#050508" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+              <g stroke="rgba(201,168,76,0.5)" stroke-width="1.2" fill="none">
+                <line x1="115" y1="116" x2="115" y2="135"/><line x1="115" y1="153" x2="115" y2="172"/>
+                <line x1="87" y1="144" x2="106" y2="144"/><line x1="124" y1="144" x2="143" y2="144"/>
+              </g>
+              <circle cx="305" cy="144" r="28" fill="#0a0a12" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+              <circle cx="305" cy="144" r="9" fill="#050508" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+              <g stroke="rgba(201,168,76,0.5)" stroke-width="1.2" fill="none">
+                <line x1="305" y1="116" x2="305" y2="135"/><line x1="305" y1="153" x2="305" y2="172"/>
+                <line x1="277" y1="144" x2="296" y2="144"/><line x1="314" y1="144" x2="333" y2="144"/>
+              </g>
+            </svg>
+          </div>
+          <div class="cube-face back">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+              <text x="200" y="90" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-family="'Bebas Neue',sans-serif" font-size="32" letter-spacing="4">APEX</text>
+              <text x="200" y="120" text-anchor="middle" fill="rgba(201,168,76,0.3)" font-family="'Space Mono',monospace" font-size="10" letter-spacing="3">MOTORS</text>
+            </svg>
+          </div>
+          <div class="cube-face left">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="200" cy="100" r="70" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+              <circle cx="200" cy="100" r="50" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+              <text x="200" y="108" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-family="'Bebas Neue',sans-serif" font-size="28">2025</text>
+            </svg>
+          </div>
+          <div class="cube-face right">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 100 L200 30 L300 100 L200 170 Z" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+              <circle cx="200" cy="100" r="25" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+              <text x="200" y="107" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-family="'Bebas Neue',sans-serif" font-size="20">A</text>
+            </svg>
+          </div>
+          <div class="cube-face top"></div>
+          <div class="cube-face bottom"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-content">
+      <h2 class="reveal">
+        Trải nghiệm<br>vượt trội
+        <em>không giới hạn</em>
+      </h2>
+      <ul class="exp-features reveal reveal-delay-1">
+        <li>Showroom 3 tầng diện tích 2000m² với công nghệ AR cho phép bạn tùy chỉnh màu sắc, nội thất ngay tại chỗ</li>
+        <li>Đội ngũ chuyên gia tư vấn được đào tạo tại Châu Âu, am hiểu từng dòng xe</li>
+        <li>Lái thử miễn phí với hành trình thiết kế riêng theo cá nhân hóa</li>
+        <li>Dịch vụ giao xe tận nhà toàn quốc, bao gồm đăng ký và bảo hiểm</li>
+        <li>Chương trình bảo dưỡng VIP 5 năm, hỗ trợ 24/7 mọi lúc mọi nơi</li>
+      </ul>
+      <a href="#contact" class="btn-primary reveal reveal-delay-2">Đặt hẹn tham quan</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div style="margin-bottom:4rem" class="reveal">
+    <div class="section-tag">Khách hàng nói gì</div>
+    <h2 class="section-title" style="margin-top:1rem">Tin tưởng từ<br>những người sành xe</h2>
+  </div>
+
+  <div style="overflow:hidden">
+    <div class="testimonials-track">
+      <!-- Cards x2 for seamless loop -->
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Dịch vụ tuyệt vời, đội ngũ tư vấn am hiểu và nhiệt tình. Chiếc Porsche 911 tôi mua tại APEX là quyết định đúng đắn nhất năm nay."</p>
+        <div class="testi-author">
+          <div class="author-avatar">TM</div>
+          <div><div class="author-name">Trần Minh Khoa</div><div class="author-loc">CEO · TP.HCM</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Showroom đẹp như châu Âu, không khí chuyên nghiệp. Quy trình mua xe nhanh gọn, giao xe đúng hẹn. Rất hài lòng với Ferrari SF90."</p>
+        <div class="testi-author">
+          <div class="author-avatar">LH</div>
+          <div><div class="author-name">Lê Hoàng Anh</div><div class="author-loc">Doanh nhân · Hà Nội</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Đội ngũ hậu mãi luôn hỗ trợ kịp thời. Đã mua 3 xe tại APEX và không có gì để phàn nàn. Đây là showroom số 1 Việt Nam."</p>
+        <div class="testi-author">
+          <div class="author-avatar">NP</div>
+          <div><div class="author-name">Nguyễn Phú Trọng</div><div class="author-loc">Chủ tịch HĐQT · Đà Nẵng</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Trải nghiệm lái thử Bentley Continental GT cực kỳ ấn tượng. Nhân viên không hề gây áp lực, tư vấn rất chân thật và nhiệt tình."</p>
+        <div class="testi-author">
+          <div class="author-avatar">BT</div>
+          <div><div class="author-name">Bùi Thị Thanh Hà</div><div class="author-loc">Giám đốc · Cần Thơ</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Không gian showroom sang trọng, ánh sáng lung linh. Chiếc Lamborghini Urus tôi nhận về thu hút mọi ánh nhìn. Cảm ơn APEX!"</p>
+        <div class="testi-author">
+          <div class="author-avatar">DK</div>
+          <div><div class="author-name">Đinh Kiên Cường</div><div class="author-loc">Influencer · TP.HCM</div></div>
+        </div>
+      </div>
+      <!-- Duplicate -->
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Dịch vụ tuyệt vời, đội ngũ tư vấn am hiểu và nhiệt tình. Chiếc Porsche 911 tôi mua tại APEX là quyết định đúng đắn nhất năm nay."</p>
+        <div class="testi-author">
+          <div class="author-avatar">TM</div>
+          <div><div class="author-name">Trần Minh Khoa</div><div class="author-loc">CEO · TP.HCM</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Showroom đẹp như châu Âu, không khí chuyên nghiệp. Quy trình mua xe nhanh gọn, giao xe đúng hẹn. Rất hài lòng với Ferrari SF90."</p>
+        <div class="testi-author">
+          <div class="author-avatar">LH</div>
+          <div><div class="author-name">Lê Hoàng Anh</div><div class="author-loc">Doanh nhân · Hà Nội</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Đội ngũ hậu mãi luôn hỗ trợ kịp thời. Đã mua 3 xe tại APEX và không có gì để phàn nàn. Đây là showroom số 1 Việt Nam."</p>
+        <div class="testi-author">
+          <div class="author-avatar">NP</div>
+          <div><div class="author-name">Nguyễn Phú Trọng</div><div class="author-loc">Chủ tịch HĐQT · Đà Nẵng</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Trải nghiệm lái thử Bentley Continental GT cực kỳ ấn tượng. Nhân viên không hề gây áp lực, tư vấn rất chân thật và nhiệt tình."</p>
+        <div class="testi-author">
+          <div class="author-avatar">BT</div>
+          <div><div class="author-name">Bùi Thị Thanh Hà</div><div class="author-loc">Giám đốc · Cần Thơ</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="testi-text">"Không gian showroom sang trọng, ánh sáng lung linh. Chiếc Lamborghini Urus tôi nhận về thu hút mọi ánh nhìn. Cảm ơn APEX!"</p>
+        <div class="testi-author">
+          <div class="author-avatar">DK</div>
+          <div><div class="author-name">Đinh Kiên Cường</div><div class="author-loc">Influencer · TP.HCM</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-left reveal">
+      <h2>Bắt đầu<br>hành trình<br><span style="color:var(--gold);font-style:italic;font-family:'Cormorant Garamond',serif">của bạn</span></h2>
+      <p>Để lại thông tin, chuyên gia của chúng tôi sẽ liên hệ trong vòng 24 giờ để tư vấn và sắp xếp buổi trải nghiệm riêng tư dành cho bạn.</p>
+      <div class="contact-info">
+        <div class="info-item">
+          <span class="info-label">Showroom</span>
+          <span class="info-val">12 Nguyễn Hữu Cảnh, Quận 1, TP. Hồ Chí Minh</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Hotline VIP</span>
+          <span class="info-val">1800 APEX (2739) · 24/7</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Giờ mở cửa</span>
+          <span class="info-val">Thứ 2 – CN: 9:00 – 20:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form reveal reveal-delay-2">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Họ và tên</label>
+          <input type="text" class="form-input" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số điện thoại</label>
+          <input type="tel" class="form-input" placeholder="0901 234 567">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" placeholder="email@domain.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Quan tâm đến dòng xe</label>
+        <select class="form-select">
+          <option value="">Chọn thương hiệu</option>
+          <option>Porsche</option>
+          <option>Lamborghini</option>
+          <option>Ferrari</option>
+          <option>Bentley</option>
+          <option>Rolls-Royce</option>
+          <option>McLaren</option>
+          <option>Aston Martin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mục đích</label>
+        <select class="form-select">
+          <option>Tư vấn mua xe</option>
+          <option>Đặt lịch lái thử</option>
+          <option>Tham quan showroom</option>
+          <option>Dịch vụ bảo dưỡng</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ghi chú thêm</label>
+        <textarea class="form-textarea" placeholder="Yêu cầu đặc biệt của bạn..."></textarea>
+      </div>
+      <button class="btn-submit">Gửi yêu cầu tư vấn →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">APEX<span style="color:var(--gold)">.</span></a>
+      <p class="footer-tagline">Nơi những giấc mơ tốc độ và sang trọng trở thành hiện thực.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Xe</h4>
+        <ul>
+          <li><a href="#">Thể thao</a></li>
+          <li><a href="#">Sedan hạng sang</a></li>
+          <li><a href="#">SUV</a></li>
+          <li><a href="#">Siêu xe</a></li>
+          <li><a href="#">Xe điện</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Dịch vụ</h4>
+        <ul>
+          <li><a href="#">Tư vấn mua xe</a></li>
+          <li><a href="#">Bảo dưỡng VIP</a></li>
+          <li><a href="#">Tài chính xe</a></li>
+          <li><a href="#">Bảo hiểm cao cấp</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Công ty</h4>
+        <ul>
+          <li><a href="#">Về APEX</a></li>
+          <li><a href="#">Tuyển dụng</a></li>
+          <li><a href="#">Tin tức</a></li>
+          <li><a href="#">Liên hệ</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Apex Motors Vietnam. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">YouTube</a>
+      <a href="#">TikTok</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 2200);
+  });
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 20 + 'px';
+    ring.style.top = ry - 20 + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Cursor hover effect
+  document.querySelectorAll('a, button, .car-card, .info-item, .exp-features li').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      ring.style.transform = 'scale(1.5)';
+      ring.style.borderColor = 'rgba(201,168,76,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+      ring.style.borderColor = 'rgba(201,168,76,0.6)';
+    });
+  });
+
+  // Particles
+  const pc = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
+    p.style.width = p.style.height = (Math.random() * 2 + 1) + 'px';
+    pc.appendChild(p);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Counter animation
+  function animCount(el, target, suffix = '') {
+    let start = 0;
+    const duration = 2000;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      el.textContent = Math.floor(progress * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const statObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const nums = e.target.querySelectorAll('[data-count]');
+        nums.forEach(n => {
+          const target = parseInt(n.dataset.count);
+          const suffix = n.textContent.includes('%') ? '%' : '';
+          animCount(n, target, suffix);
+        });
+        statObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.stat-row').forEach(r => statObs.observe(r));
+
+  // 3D tilt on cards
+  document.querySelectorAll('.tilt').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rx2 = (y - cy) / cy * -8;
+      const ry2 = (x - cx) / cx * 8;
+      card.style.transform = `translateY(-8px) perspective(800px) rotateX(${rx2}deg) rotateY(${ry2}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // Hero parallax
+  document.addEventListener('mousemove', e => {
+    const car = document.getElementById('heroCar');
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 10;
+    if (car) {
+      car.style.transform = `translateX(${x}px) translateY(${y}px)`;
+    }
+  });
+
+  // Smooth navbar on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 100) {
+      nav.style.background = 'rgba(5,5,8,0.98)';
+    } else {
+      nav.style.background = 'linear-gradient(to bottom, rgba(5,5,8,0.95), transparent)';
+    }
+  });
+</script>
+</body>
+</html>
