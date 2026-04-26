@@ -1,0 +1,303 @@
+/* ============================================================
+   SHARED COMPONENTS — APEX Motors
+   Navbar, Buttons, Section Titles, Footer
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   NAVBAR / SITE HEADER
+   ---------------------------------------------------------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding-block: 1.2rem;
+  background: linear-gradient(to bottom, rgba(5, 5, 8, 0.95), rgba(5, 5, 8, 0.6));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: padding 0.3s ease, background 0.3s ease;
+}
+
+.site-header.scrolled {
+  padding-block: 0.8rem;
+  background: rgba(5, 5, 8, 0.97);
+}
+
+/* Brand */
+.site-header .navbar-brand {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.24em;
+  color: var(--color-text);
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+.site-header .navbar-brand span {
+  color: var(--color-gold);
+}
+.site-header .navbar-brand:hover {
+  color: var(--color-text);
+}
+
+/* Nav links */
+.site-header .nav-link {
+  font-family: "Space Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-silver);
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color 0.3s ease;
+}
+.site-header .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-gold);
+  transition: width 0.3s ease;
+}
+.site-header .nav-link:hover,
+.site-header .nav-link.active {
+  color: var(--color-text);
+}
+.site-header .nav-link:hover::after,
+.site-header .nav-link.active::after {
+  width: 100%;
+}
+
+/* Toggler icon override for dark theme */
+.site-header .navbar-toggler {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.site-header .navbar-toggler:focus {
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.4);
+}
+.site-header .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(244,241,234,0.8)' stroke-linecap='round' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ----------------------------------------------------------
+   BUTTONS
+   ---------------------------------------------------------- */
+.btn-luxury {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  background: var(--color-gold);
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1.4;
+}
+.btn-luxury:hover {
+  background: var(--color-gold-light);
+  color: var(--color-dark);
+  transform: translateY(-1px);
+}
+.btn-luxury:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+.btn-luxury-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  background: transparent;
+  padding: 0.7rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1.4;
+}
+.btn-luxury-outline:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  transform: translateY(-1px);
+}
+.btn-luxury-outline:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Arrow suffix for CTA buttons */
+.btn-luxury--arrow::after {
+  content: "\2192";
+  transition: transform 0.3s ease;
+}
+.btn-luxury--arrow:hover::after {
+  transform: translateX(4px);
+}
+
+/* ----------------------------------------------------------
+   SECTION TITLES & KICKERS
+   ---------------------------------------------------------- */
+.section-kicker {
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.section-kicker::before {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background: var(--color-gold);
+}
+
+.section-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--color-text);
+}
+.section-title em {
+  font-style: italic;
+  font-family: "Cormorant Garamond", serif;
+  color: var(--color-gold);
+}
+
+/* ----------------------------------------------------------
+   CARDS (shared skin)
+   ---------------------------------------------------------- */
+.card-luxury {
+  background: var(--color-bg-alt);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  transition:
+    transform 0.5s var(--ease-luxury),
+    border-color 0.3s ease;
+}
+.card-luxury:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201, 168, 76, 0.3);
+}
+.card-luxury::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.03) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.card-luxury:hover::before {
+  opacity: 1;
+}
+
+/* ----------------------------------------------------------
+   SITE FOOTER
+   ---------------------------------------------------------- */
+.site-footer {
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-bg);
+}
+.site-footer p {
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--color-silver);
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------
+   UTILITY: gold line separator
+   ---------------------------------------------------------- */
+.gold-line {
+  width: 40px;
+  height: 1px;
+  background: var(--color-gold);
+  display: block;
+}
+
+/* ----------------------------------------------------------
+   STAT ITEMS (reusable)
+   ---------------------------------------------------------- */
+.stat-num {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.5rem;
+  color: var(--color-gold);
+  display: block;
+  line-height: 1;
+}
+.stat-label {
+  font-family: "Space Mono", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--color-silver);
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------
+   SPEC KEY/VALUE (reusable)
+   ---------------------------------------------------------- */
+.spec-val {
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--color-text);
+}
+.spec-key {
+  font-family: "Space Mono", monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: var(--color-silver);
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE ADJUSTMENTS
+   ---------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .site-header .navbar-collapse {
+    background: rgba(5, 5, 8, 0.97);
+    padding: 1.5rem;
+    margin-top: 0.8rem;
+    border: 1px solid var(--color-line);
+  }
+  .site-header .nav-link {
+    padding: 0.8rem 0;
+  }
+  .site-header .btn-luxury {
+    margin-top: 1rem;
+    text-align: center;
+    justify-content: center;
+  }
+}

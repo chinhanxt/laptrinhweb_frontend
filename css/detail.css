@@ -1,0 +1,239 @@
+/* ============================================================
+   DETAIL PAGE — APEX Motors
+   Hero, Gallery Carousel, Spec Tiles, Review
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   DETAIL HERO
+   ---------------------------------------------------------- */
+.detail-hero {
+  padding: 8rem 0 5rem;
+}
+
+.detail-hero__visual {
+  min-height: 440px;
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(201, 168, 76, 0.08), transparent 60%),
+    linear-gradient(160deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-hero__visual-label {
+  font-family: "Space Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-silver);
+  opacity: 0.5;
+}
+
+.detail-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.detail-hero__meta span {
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 2px;
+}
+
+/* ----------------------------------------------------------
+   GALLERY (Bootstrap Carousel)
+   ---------------------------------------------------------- */
+.detail-gallery {
+  padding: 5rem 0;
+}
+
+.detail-slide {
+  min-height: 440px;
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(201, 168, 76, 0.06), transparent 60%),
+    linear-gradient(160deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-slide__label {
+  font-family: "Space Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-silver);
+  opacity: 0.5;
+}
+
+/* Carousel controls — visible on dark background */
+#detailCarousel .carousel-control-prev,
+#detailCarousel .carousel-control-next {
+  width: 56px;
+  height: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 50%;
+  opacity: 1;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+#detailCarousel .carousel-control-prev {
+  left: -28px;
+}
+
+#detailCarousel .carousel-control-next {
+  right: -28px;
+}
+
+#detailCarousel .carousel-control-prev:hover,
+#detailCarousel .carousel-control-next:hover {
+  background: rgba(201, 168, 76, 0.3);
+  border-color: var(--color-gold);
+}
+
+#detailCarousel .carousel-control-prev-icon,
+#detailCarousel .carousel-control-next-icon {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+/* ----------------------------------------------------------
+   SPEC TILES
+   ---------------------------------------------------------- */
+.detail-specs {
+  padding: 5rem 0;
+}
+
+.spec-tile {
+  background: var(--color-bg-alt);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-card);
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  transition: border-color 0.3s ease, transform 0.4s var(--ease-luxury);
+}
+
+.spec-tile:hover {
+  border-color: rgba(201, 168, 76, 0.25);
+  transform: translateY(-4px);
+}
+
+.spec-tile h2 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  color: var(--color-gold);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.spec-tile p {
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ----------------------------------------------------------
+   REVIEW / QUOTE
+   ---------------------------------------------------------- */
+.detail-review {
+  padding: 5rem 0 6rem;
+}
+
+.detail-review__quote {
+  max-width: 720px;
+  margin: 0 auto;
+  border: none;
+  padding: 0;
+}
+
+.detail-review__quote p {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.9;
+  color: var(--color-muted);
+  margin-bottom: 1.5rem;
+}
+
+.detail-review__quote cite {
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  font-style: normal;
+}
+
+/* ----------------------------------------------------------
+   CTA SECTION
+   ---------------------------------------------------------- */
+.detail-cta {
+  padding: 6rem 0;
+  background: var(--color-bg-alt);
+  text-align: center;
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .detail-hero {
+    padding: 7rem 0 3rem;
+  }
+
+  .detail-hero__visual {
+    min-height: 320px;
+  }
+
+  .detail-slide {
+    min-height: 320px;
+  }
+
+  #detailCarousel .carousel-control-prev {
+    left: 8px;
+  }
+
+  #detailCarousel .carousel-control-next {
+    right: 8px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .detail-hero__visual {
+    min-height: 260px;
+  }
+
+  .detail-slide {
+    min-height: 260px;
+  }
+
+  .detail-hero__meta {
+    gap: 0.8rem;
+  }
+
+  .spec-tile h2 {
+    font-size: 2rem;
+  }
+}
