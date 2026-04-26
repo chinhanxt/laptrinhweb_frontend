@@ -1,7 +1,7 @@
 {
-  "tool_name": "Read",
-  "tool_input_preview": "{\"file_path\":\"/home/chinhan/VS_/laptrinhwev/frontend/mau_claude/carshowroom.html\"}",
-  "error": "File content (42198 tokens) exceeds maximum allowed tokens (25000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
-  "timestamp": "2026-04-26T14:38:21.224Z",
-  "retry_count": 4
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"google-chrome --version 2>/dev/null || google-chrome-stable --version 2>/dev/null || chromium-browser --version 2>/dev/null || chromium --version 2>/dev/null; which google-chrome google-ch...",
+  "error": "Exit code 1\nGoogle Chrome 146.0.7680.177 \n/usr/bin/google-chrome\n/usr/bin/google-chrome-stable",
+  "timestamp": "2026-04-26T20:20:23.410Z",
+  "retry_count": 1
 }

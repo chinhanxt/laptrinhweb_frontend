@@ -1,0 +1,289 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1777219199488,
+  "projectRoot": "/home/chinhan/VS_/laptrinhwev/frontend",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets",
+      "docs"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 0,
+      "lastAccessed": 1777219199478,
+      "keyFiles": []
+    },
+    "css": {
+      "path": "css",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1777219199485,
+      "keyFiles": [
+        "base.css",
+        "catalog.css",
+        "components.css",
+        "detail.css",
+        "home.css"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1777219199485,
+      "keyFiles": []
+    },
+    "images": {
+      "path": "images",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777219199485,
+      "keyFiles": []
+    },
+    "js": {
+      "path": "js",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1777219199486,
+      "keyFiles": [
+        "catalog.js",
+        "detail.js",
+        "home.js",
+        "main.js"
+      ]
+    },
+    "mau_claude": {
+      "path": "mau_claude",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1777219199486,
+      "keyFiles": [
+        "carshowroom.html"
+      ]
+    },
+    "model": {
+      "path": "model",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1777219199486,
+      "keyFiles": [
+        "lambo_lp670.glb"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "index.html",
+      "accessCount": 52,
+      "lastAccessed": 1777236781605,
+      "type": "file"
+    },
+    {
+      "path": "tools/render-hero-video.html",
+      "accessCount": 28,
+      "lastAccessed": 1777237477757,
+      "type": "file"
+    },
+    {
+      "path": "assets/css/home.css",
+      "accessCount": 25,
+      "lastAccessed": 1777237239087,
+      "type": "file"
+    },
+    {
+      "path": "assets/js/hero-3d.js",
+      "accessCount": 18,
+      "lastAccessed": 1777231443100,
+      "type": "file"
+    },
+    {
+      "path": "assets/js/home.js",
+      "accessCount": 16,
+      "lastAccessed": 1777232911712,
+      "type": "file"
+    },
+    {
+      "path": "tools/capture-video.js",
+      "accessCount": 8,
+      "lastAccessed": 1777236449687,
+      "type": "file"
+    },
+    {
+      "path": "assets/media/hero/apex-intro-poster.jpg",
+      "accessCount": 6,
+      "lastAccessed": 1777237651212,
+      "type": "file"
+    },
+    {
+      "path": "js/main.js",
+      "accessCount": 3,
+      "lastAccessed": 1777220482045,
+      "type": "file"
+    },
+    {
+      "path": "js/home.js",
+      "accessCount": 3,
+      "lastAccessed": 1777220482076,
+      "type": "file"
+    },
+    {
+      "path": "js/catalog.js",
+      "accessCount": 3,
+      "lastAccessed": 1777220486429,
+      "type": "file"
+    },
+    {
+      "path": "css/base.css",
+      "accessCount": 3,
+      "lastAccessed": 1777220491830,
+      "type": "file"
+    },
+    {
+      "path": "css/catalog.css",
+      "accessCount": 3,
+      "lastAccessed": 1777221807149,
+      "type": "file"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-26-glb-hero-interactive-design.md",
+      "accessCount": 3,
+      "lastAccessed": 1777225916723,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 3,
+      "lastAccessed": 1777225924675,
+      "type": "directory"
+    },
+    {
+      "path": "assets/media/hero/README.md",
+      "accessCount": 3,
+      "lastAccessed": 1777232941939,
+      "type": "file"
+    },
+    {
+      "path": "js/data.js",
+      "accessCount": 2,
+      "lastAccessed": 1777220419180,
+      "type": "file"
+    },
+    {
+      "path": "js/detail.js",
+      "accessCount": 2,
+      "lastAccessed": 1777220486485,
+      "type": "file"
+    },
+    {
+      "path": "css/components.css",
+      "accessCount": 2,
+      "lastAccessed": 1777220491799,
+      "type": "file"
+    },
+    {
+      "path": "css/detail.css",
+      "accessCount": 2,
+      "lastAccessed": 1777220605252,
+      "type": "file"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-04-26-glb-hero-interactive-plan.md",
+      "accessCount": 2,
+      "lastAccessed": 1777224166092,
+      "type": "file"
+    },
+    {
+      "path": ".agents/skills/web-design-guidelines",
+      "accessCount": 2,
+      "lastAccessed": 1777231516281,
+      "type": "directory"
+    },
+    {
+      "path": ".agents/skills/web-design-guidelines/SKILL.md",
+      "accessCount": 2,
+      "lastAccessed": 1777231526356,
+      "type": "file"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-26-car-showroom-requirements-consolidated.md",
+      "accessCount": 1,
+      "lastAccessed": 1777220286707,
+      "type": "file"
+    },
+    {
+      "path": "css/home.css",
+      "accessCount": 1,
+      "lastAccessed": 1777220605352,
+      "type": "file"
+    },
+    {
+      "path": "images/hero-fallback-poster.svg",
+      "accessCount": 1,
+      "lastAccessed": 1777225456637,
+      "type": "file"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-04-27-hero-cinematic-intro-implementation-plan.md",
+      "accessCount": 1,
+      "lastAccessed": 1777231434271,
+      "type": "file"
+    },
+    {
+      "path": ".agents/skills/frontend-design",
+      "accessCount": 1,
+      "lastAccessed": 1777231516255,
+      "type": "directory"
+    },
+    {
+      "path": ".agents/skills/frontend-design/SKILL.md",
+      "accessCount": 1,
+      "lastAccessed": 1777231526370,
+      "type": "file"
+    },
+    {
+      "path": "assets/js/hero-cinematic.js",
+      "accessCount": 1,
+      "lastAccessed": 1777232447132,
+      "type": "file"
+    },
+    {
+      "path": "assets/css",
+      "accessCount": 1,
+      "lastAccessed": 1777236793655,
+      "type": "directory"
+    },
+    {
+      "path": "assets/css/base.css",
+      "accessCount": 1,
+      "lastAccessed": 1777236799072,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
