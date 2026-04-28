@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>APEX Motors | Luxury Performance</title>
+    <title>xT-chinhan | Luxury Performance</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,18 +17,20 @@
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/home.css" />
-    <link rel="stylesheet" href="assets/css/catalog.css" />
-    <link rel="stylesheet" href="assets/css/detail.css" />
+    <link rel="preload" as="fetch" href="assets/model/8000_followerstm.glb" crossorigin />
+    <link rel="preload" as="fetch" href="assets/model/lambo_lp670.glb" crossorigin />
+    <link rel="preload" as="fetch" href="assets/model/2015_bmw_3.0_csl_hommage_concept.glb" crossorigin />
+    <link rel="preload" as="fetch" href="assets/model/2019_ferrari_488_pista_spider.glb" crossorigin />
+    <link rel="preload" as="fetch" href="assets/model/2020_ferrari_roma.glb" crossorigin />
     <link rel="preload" as="image" href="assets/media/hero/apex-intro-poster.jpg" />
-    <link rel="preload" as="video" href="assets/media/hero/apex-intro-loop.webm" type="video/webm" />
-    <link rel="preload" as="video" href="assets/media/hero/apex-intro-loop.mp4" type="video/mp4" />
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   </head>
   <body>
     <!-- ===== HEADER / NAVBAR ===== -->
     <header>
       <nav class="navbar navbar-expand-lg site-header">
         <div class="container-luxury">
-          <a class="navbar-brand" href="#" data-view="home">APEX<span>.</span></a>
+          <a class="navbar-brand" href="index.html">xT-chinhan<span>.</span></a>
           <button
             class="navbar-toggler border-0 text-white"
             type="button"
@@ -42,794 +44,239 @@
           </button>
           <div class="collapse navbar-collapse" id="siteNav">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
-              <li class="nav-item"><a class="nav-link active" href="#" data-view="home">Trang chu</a></li>
-              <li class="nav-item"><a class="nav-link" href="#" data-view="catalog">Bo suu tap</a></li>
-              <li class="nav-item"><a class="nav-link" href="#" data-view="detail">Chi tiet xe</a></li>
+              <li class="nav-item"><a class="nav-link active" href="index.html">Trang Chủ</a></li>
+              <li class="nav-item"><a class="nav-link" href="assets/html/catalog.html">Bộ Sưu Tập</a></li>
+              <li class="nav-item"><a class="nav-link" href="assets/html/detail.html">Chi Tiết Xe</a></li>
             </ul>
-            <a class="btn-luxury" href="#" data-bs-toggle="modal" data-bs-target="#bookingModal">Dat lich lai thu</a>
+            <a class="btn-luxury" href="#" data-bs-toggle="modal" data-bs-target="#bookingModal">Đặt Lịch Lái Thử</a>
           </div>
         </div>
       </nav>
     </header>
 
+    <!-- ===== INTRO LANDING — Cinematic 3D Garage ===== -->
+    <section id="intro-landing" class="intro-landing">
+      <div class="intro-landing__scene">
+        <model-viewer
+          id="intro-model"
+          src="assets/model/8000_followerstm.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          disable-tap
+          interaction-prompt="none"
+          camera-target="0m 0.96m 0m"
+          camera-orbit="150deg 89deg 44%"
+          min-camera-orbit="105deg 89deg 44%"
+          max-camera-orbit="180deg 89deg 44%"
+          field-of-view="18deg"
+          exposure="0.4"
+          shadow-intensity="0"
+          environment-image="neutral"
+          style="width:100%;height:100%;background:#050508;"
+          loading="eager"
+        >
+          <div slot="progress-bar"></div>
+        </model-viewer>
+      </div>
+
+      <div id="intro-loading" class="intro-landing__loading">
+        <div class="intro-landing__welcome">
+          <h2 class="intro-landing__welcome-brand intro-landing__breathing">xT-chinhan</h2>
+        </div>
+      </div>
+
+      <div class="intro-landing__overlay">
+        <div class="intro-landing__content">
+          <p class="intro-landing__eyebrow">Chào mừng đến với</p>
+          <h1 class="intro-landing__title">xT-chinhan</h1>
+          <p class="intro-landing__tagline">Nghệ Thuật Của Hiệu Suất Đỉnh Cao</p>
+          <div class="intro-landing__line"></div>
+        </div>
+        <a href="#showroom-stage" class="intro-landing__scroll intro-landing__scroll--bottom">
+          <span>Khám Phá</span>
+          <div class="intro-landing__scroll-line"></div>
+        </a>
+      </div>
+    </section>
+
     <!-- ===== MAIN CONTENT ===== -->
     <main>
 
-      <!-- ============================================================
-           VIEW 1: HOME (Trang chu)
-           ============================================================ -->
-      <section id="view-home" class="view active page-shell">
+      <!-- HERO SECTION removed — intro landing replaces it -->
 
-        <!-- HERO SECTION -->
-        <section id="hero" class="hero-section hero-section--cinematic">
-          <div class="hero-cinematic">
-            <div class="hero-cinematic__media">
-              <video
-                id="hero-cinematic-video"
-                class="hero-cinematic__video"
-                autoplay
-                muted
-                playsinline
-                loop
-                preload="auto"
-                poster="assets/media/hero/apex-intro-poster.jpg"
-                aria-label="Cinematic Lamborghini intro video"
-              >
-                <source src="assets/media/hero/apex-intro-loop.webm" type="video/webm" />
-                <source src="assets/media/hero/apex-intro-loop.mp4" type="video/mp4" />
-              </video>
-              <div id="hero-cinematic-fallback" class="hero-cinematic__fallback is-hidden">
-                <img src="assets/media/hero/apex-intro-poster.jpg" alt="Cinematic Lamborghini intro poster" />
+      <!-- SHOWROOM STAGE SECTION -->
+      <section id="showroom-stage" class="showroom-stage-section">
+        <div class="container-luxury">
+          <div class="showroom-stage__header reveal">
+            <p class="section-kicker">Phòng Trưng Bày Tương Tác</p>
+            <h2 class="section-title">Khám Phá Siêu Xe</h2>
+            <p class="showroom-stage__desc">
+              Xoay xe, phóng to chi tiết và tiếp tục khám phá sau phần giới thiệu.
+            </p>
+          </div>
+
+          <div class="model-stage">
+            <div id="hero-3d-shell" class="hero-3d-shell">
+              <div id="hero-3d-canvas" class="hero-3d-canvas" aria-label="3D car showroom scene"></div>
+
+              <div class="hero-3d-overlay">
+                <!-- LEFT: Car Info Panel with glassmorphism backdrop -->
+                <div id="hero-car-info" class="hero-car-info">
+                  <div class="hero-car-info__inner">
+                    <div class="hero-car-info__badge">
+                      <span class="hero-car-info__badge-line"></span>
+                      <span class="hero-car-info__badge-text">Showroom</span>
+                    </div>
+                    <p class="hero-car-info__kicker">Lamborghini</p>
+                    <h3 class="hero-car-info__name">Murciélago</h3>
+                    <p class="hero-car-info__sub">LP 670-4 SuperVeloce</p>
+                    <div class="hero-car-info__divider"></div>
+                    <div class="hero-car-info__meta">
+                      <div class="hero-car-info__row">
+                        <span class="hero-car-info__label">Năm</span>
+                        <span class="hero-car-info__value">2010</span>
+                      </div>
+                      <div class="hero-car-info__row">
+                        <span class="hero-car-info__label">Động cơ</span>
+                        <span class="hero-car-info__value">6.5L V12</span>
+                      </div>
+                      <div class="hero-car-info__row">
+                        <span class="hero-car-info__label">Màu sắc</span>
+                        <span class="hero-car-info__value" id="hero-car-color-name">Màu gốc</span>
+                      </div>
+                    </div>
+                    <div class="hero-car-info__specs">
+                      <div class="hero-car-info__spec">
+                        <span class="hero-car-info__spec-num">670</span>
+                        <span class="hero-car-info__spec-unit">HP</span>
+                      </div>
+                      <div class="hero-car-info__spec">
+                        <span class="hero-car-info__spec-num">3.2<small>s</small></span>
+                        <span class="hero-car-info__spec-unit">0-100</span>
+                      </div>
+                      <div class="hero-car-info__spec">
+                        <span class="hero-car-info__spec-num">342</span>
+                        <span class="hero-car-info__spec-unit">km/h</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RIGHT TOP: Color Picker -->
+                <div id="hero-color-panel" class="hero-color-panel" aria-label="Car paint color selector">
+                  <div class="hero-color-panel__head">
+                    <p class="hero-color-panel__eyebrow">Màu ngoại thất</p>
+                    <span class="hero-color-panel__active-name" id="hero-color-active-label">Màu gốc</span>
+                  </div>
+                  <div class="hero-color-swatches" role="group" aria-label="Choose car color">
+                    <button type="button" class="hero-color-swatch hero-color-swatch--original is-active" data-color="original" data-color-name="Màu gốc" aria-label="Original"></button>
+                    <button type="button" class="hero-color-swatch" data-color="white" data-color-name="Bianco Isis" aria-label="White"></button>
+                    <button type="button" class="hero-color-swatch" data-color="red" data-color-name="Rosso Mars" aria-label="Red"></button>
+                    <button type="button" class="hero-color-swatch" data-color="blue" data-color-name="Blu Hera" aria-label="Blue"></button>
+                    <button type="button" class="hero-color-swatch" data-color="green" data-color-name="Verde Artemis" aria-label="Green"></button>
+                    <button type="button" class="hero-color-swatch" data-color="yellow" data-color-name="Giallo Orion" aria-label="Yellow"></button>
+                    <button type="button" class="hero-color-swatch" data-color="pink" data-color-name="Rosa Phoebe" aria-label="Pink"></button>
+                    <button type="button" class="hero-color-swatch" data-color="black" data-color-name="Nero Noctis" aria-label="Black"></button>
+                  </div>
+                </div>
+
+                <!-- RIGHT BOTTOM: Zoom Focus Indicator -->
+                <div id="hero-focus-label" class="hero-focus-label">
+                  <span class="hero-focus-label__dot"></span>
+                  <span class="hero-focus-label__text" id="hero-focus-text">Nhấp đúp để xem chi tiết</span>
+                </div>
+
+                <!-- NAV: Car switching strip -->
+                <div id="hero-nav-strip" class="hero-nav-strip">
+                  <button type="button" class="hero-nav-arrow hero-nav-arrow--prev" id="hero-nav-prev" aria-label="Previous car">
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="13,4 7,10 13,16"/>
+                    </svg>
+                  </button>
+                  <div class="hero-nav-label">
+                    <span class="hero-nav-label__index" id="hero-nav-index">01 / 04</span>
+                    <span class="hero-nav-label__name" id="hero-nav-name">Murciélago</span>
+                  </div>
+                  <button type="button" class="hero-nav-arrow hero-nav-arrow--next" id="hero-nav-next" aria-label="Next car">
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="7,4 13,10 7,16"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
-              <div class="hero-cinematic__scrim"></div>
-            </div>
 
-            <div class="container-luxury hero-cinematic__content">
-              <div class="hero-cinematic__text">
-                <p class="hero-eyebrow">Lamborghini Showroom Experience</p>
-                <h1 class="hero-title">Luxury<br />In Motion</h1>
-                <p class="hero-desc">
-                  Kham pha bo suu tap sieu xe Lamborghini doc quyen.
-                  Trai nghiem dinh cao cua thiet ke, toc do va su sang trong
-                  tai APEX Motors.
-                </p>
-                <div class="hero-ctas">
-                  <a href="#" class="btn-luxury btn-luxury--arrow" data-view="catalog">Kham pha ngay</a>
-                  <a href="#showroom-stage" class="btn-luxury-outline">Tim hieu them</a>
-                </div>
-                <div class="hero-stats">
-                  <div class="hero-stat">
-                    <span class="stat-num">12+</span>
-                    <span class="stat-label">Mau xe</span>
-                  </div>
-                  <div class="hero-stat">
-                    <span class="stat-num">3.2s</span>
-                    <span class="stat-label">0-100 km/h</span>
-                  </div>
-                  <div class="hero-stat">
-                    <span class="stat-num">770</span>
-                    <span class="stat-label">Ma luc</span>
-                  </div>
-                </div>
+              <div id="hero-fallback" class="hero-fallback is-hidden">
+                <img src="assets/images/hero-fallback-poster.svg" alt="Lamborghini 3D showroom fallback poster" />
+              </div>
+
+              <div id="hero-loading" class="hero-loading">
+                <span class="hero-loading__label">Đang tải phòng trưng bày 3D</span>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div class="scroll-hint">
-            <span>Scroll</span>
-            <div class="scroll-line"></div>
-          </div>
-        </section>
-
-        <!-- SHOWROOM STAGE SECTION -->
-        <section id="showroom-stage" class="showroom-stage-section">
-          <div class="container-luxury">
-            <div class="showroom-stage__header reveal">
-              <p class="section-kicker">Interactive Showroom</p>
-              <h2 class="section-title">Explore The Machine</h2>
-              <p class="showroom-stage__desc">
-                Xoay xe, zoom vao cac chi tiet va tiep tuc kham pha sau phan intro cinematic.
-              </p>
-            </div>
-
-            <div class="model-stage">
-              <div id="hero-3d-shell" class="hero-3d-shell">
-                <div id="hero-3d-canvas" class="hero-3d-canvas" aria-label="3D Lamborghini showroom scene"></div>
-                <div id="hero-fallback" class="hero-fallback is-hidden">
-                  <img src="images/hero-fallback-poster.svg" alt="Lamborghini 3D showroom fallback poster" />
-                </div>
-                <div id="hero-loading" class="hero-loading">
-                  <span class="hero-loading__label">Loading 3D showroom scene</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- MARQUEE STRIP -->
-        <div class="marquee-strip" aria-hidden="true">
-          <div class="marquee-track">
-            <span>AVENTADOR</span><span class="marquee-dot"></span>
-            <span>HURACAN</span><span class="marquee-dot"></span>
-            <span>REVUELTO</span><span class="marquee-dot"></span>
-            <span>URUS</span><span class="marquee-dot"></span>
-            <span>COUNTACH</span><span class="marquee-dot"></span>
-            <span>SIAN</span><span class="marquee-dot"></span>
-            <span>AVENTADOR</span><span class="marquee-dot"></span>
-            <span>HURACAN</span><span class="marquee-dot"></span>
-            <span>REVUELTO</span><span class="marquee-dot"></span>
-            <span>URUS</span><span class="marquee-dot"></span>
-            <span>COUNTACH</span><span class="marquee-dot"></span>
-            <span>SIAN</span><span class="marquee-dot"></span>
+      <!-- COLLECTION 3D CAROUSEL -->
+      <section id="collection-3d" class="collection-3d-section">
+        <div class="container-luxury">
+          <div class="collection-3d__header reveal">
+            <p class="section-kicker">Bộ Sưu Tập 3D</p>
+            <h2 class="section-title">Khám Phá Thêm</h2>
           </div>
         </div>
 
-        <!-- BRAND INTRO -->
-        <section id="brand-intro" class="brand-intro">
-          <div class="container-luxury">
-            <div class="row align-items-center">
-              <div class="col-lg-5">
-                <div class="brand-intro__number reveal">1963</div>
-              </div>
-              <div class="col-lg-7">
-                <div class="brand-intro__text reveal">
-                  <p class="section-kicker">Ve chung toi</p>
-                  <h2 class="section-title">
-                    The Art of<br/><em>Speed</em>
-                  </h2>
-                  <p class="brand-intro__desc">
-                    Tu nam 1963, Lamborghini da dinh nghia lai khai niem sieu xe
-                    voi thiet ke tao bao, dong co manh me va tinh than
-                    khong khoan nhuong. APEX Motors tu hao mang den trai nghiem
-                    showroom dinh cao cho nhung nguoi dam song khac biet.
-                  </p>
-                  <div class="brand-intro__stats">
-                    <div class="stat">
-                      <span class="stat-num">60+</span>
-                      <span class="stat-label">Nam thanh lap</span>
-                    </div>
-                    <div class="stat">
-                      <span class="stat-num">8,405</span>
-                      <span class="stat-label">Xe ban ra / nam</span>
-                    </div>
-                    <div class="stat">
-                      <span class="stat-num">160+</span>
-                      <span class="stat-label">Quoc gia</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="collection-3d__viewport">
+          <button type="button" class="collection-3d__arrow collection-3d__arrow--prev" aria-label="Previous car">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="13,4 7,10 13,16"/>
+            </svg>
+          </button>
+
+          <div class="collection-3d__track" id="collection-track">
+            <!-- Cards injected by JS -->
           </div>
-        </section>
 
-        <!-- FEATURED COLLECTION -->
-        <section id="featured" class="featured-section">
-          <div class="container-luxury">
-            <div class="featured-header reveal">
-              <div>
-                <p class="section-kicker">Bo suu tap</p>
-                <h2 class="section-title">Featured Collection</h2>
-              </div>
-              <a href="#" class="view-all-link" data-view="catalog">Xem tat ca &rarr;</a>
-            </div>
+          <button type="button" class="collection-3d__arrow collection-3d__arrow--next" aria-label="Next car">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="7,4 13,10 7,16"/>
+            </svg>
+          </button>
+        </div>
 
-            <div class="featured-grid">
-              <!-- Featured Large Card -->
-              <div class="featured-card featured-card--large card-luxury reveal">
-                <div class="featured-card__badge">Featured</div>
-                <div class="featured-card__img">
-                  <div class="featured-card__placeholder">
-                    <span class="featured-card__icon">&#9670;</span>
-                  </div>
-                </div>
-                <div class="featured-card__info">
-                  <p class="featured-card__brand">Lamborghini</p>
-                  <h3 class="featured-card__name">Revuelto</h3>
-                  <div class="featured-card__specs">
-                    <div class="spec">
-                      <span class="spec-val">1015 HP</span>
-                      <span class="spec-key">Cong suat</span>
-                    </div>
-                    <div class="spec">
-                      <span class="spec-val">2.5s</span>
-                      <span class="spec-key">0-100 km/h</span>
-                    </div>
-                    <div class="spec">
-                      <span class="spec-val">350 km/h</span>
-                      <span class="spec-key">Toc do toi da</span>
-                    </div>
-                  </div>
-                  <div class="featured-card__bottom">
-                    <div>
-                      <span class="spec-key">Gia tu</span>
-                      <span class="featured-card__price">$608,358</span>
-                    </div>
-                    <a href="#" class="btn-luxury" data-view="detail" data-car="revuelto">Chi tiet</a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Smaller Card 1 -->
-              <div class="featured-card card-luxury reveal reveal-delay-1">
-                <div class="featured-card__img">
-                  <div class="featured-card__placeholder">
-                    <span class="featured-card__icon">&#9670;</span>
-                  </div>
-                </div>
-                <div class="featured-card__info">
-                  <p class="featured-card__brand">Lamborghini</p>
-                  <h3 class="featured-card__name">Huracan Tecnica</h3>
-                  <div class="featured-card__specs">
-                    <div class="spec">
-                      <span class="spec-val">640 HP</span>
-                      <span class="spec-key">Cong suat</span>
-                    </div>
-                    <div class="spec">
-                      <span class="spec-val">3.2s</span>
-                      <span class="spec-key">0-100 km/h</span>
-                    </div>
-                  </div>
-                  <div class="featured-card__bottom">
-                    <div>
-                      <span class="spec-key">Gia tu</span>
-                      <span class="featured-card__price">$238,000</span>
-                    </div>
-                    <a href="#" class="btn-luxury" data-view="detail" data-car="huracan-sto">Chi tiet</a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Smaller Card 2 -->
-              <div class="featured-card card-luxury reveal reveal-delay-2">
-                <div class="featured-card__img">
-                  <div class="featured-card__placeholder">
-                    <span class="featured-card__icon">&#9670;</span>
-                  </div>
-                </div>
-                <div class="featured-card__info">
-                  <p class="featured-card__brand">Lamborghini</p>
-                  <h3 class="featured-card__name">Urus Performante</h3>
-                  <div class="featured-card__specs">
-                    <div class="spec">
-                      <span class="spec-val">666 HP</span>
-                      <span class="spec-key">Cong suat</span>
-                    </div>
-                    <div class="spec">
-                      <span class="spec-val">3.3s</span>
-                      <span class="spec-key">0-100 km/h</span>
-                    </div>
-                  </div>
-                  <div class="featured-card__bottom">
-                    <div>
-                      <span class="spec-key">Gia tu</span>
-                      <span class="featured-card__price">$260,676</span>
-                    </div>
-                    <a href="#" class="btn-luxury" data-view="detail" data-car="aventador-lp670">Chi tiet</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="collection-3d__progress">
+          <span class="collection-3d__counter" id="collection-counter">1 / —</span>
+          <div class="collection-3d__bar">
+            <div class="collection-3d__bar-fill" id="collection-bar-fill"></div>
           </div>
-        </section>
-
-        <!-- EXPERIENCE PANEL -->
-        <section id="experience" class="experience-section">
-          <div class="experience-bg-text" aria-hidden="true">APEX</div>
-          <div class="container-luxury">
-            <div class="row align-items-center">
-              <div class="col-lg-6 reveal">
-                <div class="experience-visual">
-                  <div class="experience-visual__frame">
-                    <div class="experience-visual__inner">
-                      <span class="experience-visual__diamond">&#9670;</span>
-                      <p class="experience-visual__tag">Premium Ownership</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="experience-content reveal">
-                  <p class="section-kicker">Trai nghiem</p>
-                  <h2 class="section-title">
-                    Beyond<br/><em>Driving</em>
-                  </h2>
-                  <ul class="experience-features">
-                    <li>Ca nhan hoa toan bo noi ngoai that theo so thich cua ban</li>
-                    <li>Dich vu bao duong VIP tai nha voi ky thuat vien chuyen gia</li>
-                    <li>Chuong trinh lai thu doc quyen tren duong dua quoc te</li>
-                    <li>Moi tham gia su kien ra mat xe moi va trien lam rieng tu</li>
-                  </ul>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#bookingModal" class="btn-luxury btn-luxury--arrow">
-                    Dat lich hen
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- TESTIMONIALS -->
-        <section id="testimonials" class="testimonials-section">
-          <div class="container-luxury">
-            <div class="text-center mb-5 reveal">
-              <p class="section-kicker" style="justify-content:center">
-                <span style="display:none"></span>Danh gia khach hang
-              </p>
-              <h2 class="section-title">What Our Clients Say</h2>
-            </div>
-          </div>
-          <div class="testimonials-track" aria-label="Testimonials">
-            <!-- Card 1 -->
-            <div class="testi-card">
-              <div class="testi-stars" aria-label="5 stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <p class="testi-text">
-                "Trai nghiem mua xe tai APEX la khong gi co the so sanh.
-                Tu tu van den ban giao, moi thu deu hoan hao."
-              </p>
-              <div class="testi-author">
-                <div class="author-avatar">MN</div>
-                <div>
-                  <p class="author-name">Minh Nguyen</p>
-                  <p class="author-loc">Ho Chi Minh City</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="testi-card">
-              <div class="testi-stars" aria-label="5 stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <p class="testi-text">
-                "Chiếc Urus Performante vuot qua moi ky vong cua toi.
-                Doi ngu APEX thuc su hieu khach hang can gi."
-              </p>
-              <div class="testi-author">
-                <div class="author-avatar">TL</div>
-                <div>
-                  <p class="author-name">Thanh Le</p>
-                  <p class="author-loc">Ha Noi</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="testi-card">
-              <div class="testi-stars" aria-label="5 stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <p class="testi-text">
-                "Chuong trinh lai thu tren duong dua la trai nghiem
-                mot lan trong doi. APEX thuc su dang cap."
-              </p>
-              <div class="testi-author">
-                <div class="author-avatar">HP</div>
-                <div>
-                  <p class="author-name">Hoang Pham</p>
-                  <p class="author-loc">Da Nang</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Duplicates for infinite scroll -->
-            <div class="testi-card">
-              <div class="testi-stars" aria-label="5 stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <p class="testi-text">
-                "Trai nghiem mua xe tai APEX la khong gi co the so sanh.
-                Tu tu van den ban giao, moi thu deu hoan hao."
-              </p>
-              <div class="testi-author">
-                <div class="author-avatar">MN</div>
-                <div>
-                  <p class="author-name">Minh Nguyen</p>
-                  <p class="author-loc">Ho Chi Minh City</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="testi-card">
-              <div class="testi-stars" aria-label="5 stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <p class="testi-text">
-                "Chiếc Urus Performante vuot qua moi ky vong cua toi.
-                Doi ngu APEX thuc su hieu khach hang can gi."
-              </p>
-              <div class="testi-author">
-                <div class="author-avatar">TL</div>
-                <div>
-                  <p class="author-name">Thanh Le</p>
-                  <p class="author-loc">Ha Noi</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="testi-card">
-              <div class="testi-stars" aria-label="5 stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <p class="testi-text">
-                "Chuong trinh lai thu tren duong dua la trai nghiem
-                mot lan trong doi. APEX thuc su dang cap."
-              </p>
-              <div class="testi-author">
-                <div class="author-avatar">HP</div>
-                <div>
-                  <p class="author-name">Hoang Pham</p>
-                  <p class="author-loc">Da Nang</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </section><!-- /#view-home -->
-
-      <!-- ============================================================
-           VIEW 2: CATALOG (Bo suu tap)
-           ============================================================ -->
-      <section id="view-catalog" class="view page-shell catalog-page">
-
-        <!-- CATALOG HERO -->
-        <section class="catalog-hero">
-          <div class="container-luxury text-center">
-            <p class="section-kicker justify-content-center">Lamborghini Collection</p>
-            <h1 class="section-title">Bo Suu Tap <em>Sieu Xe</em></h1>
-            <p class="catalog-hero__sub">
-              Kham pha nhung kiet tac co khi duoc che tac cho toc do va phong cach.
-            </p>
-          </div>
-        </section>
-
-        <!-- FILTER CONTROLS -->
-        <section class="catalog-controls">
-          <div class="container-luxury">
-            <form class="row g-3 align-items-end justify-content-center" id="catalog-filter-form">
-              <div class="col-auto">
-                <label for="filter-series" class="catalog-controls__label">Dong xe</label>
-                <select class="form-select catalog-select" id="filter-series">
-                  <option value="all">Tat ca</option>
-                  <option value="v12">V12 Flagship</option>
-                  <option value="track">Track Series</option>
-                  <option value="hybrid">Hybrid</option>
-                </select>
-              </div>
-              <div class="col-auto">
-                <label for="filter-price" class="catalog-controls__label">Muc gia</label>
-                <select class="form-select catalog-select" id="filter-price">
-                  <option value="all">Tat ca</option>
-                  <option value="high">Tren 22 ty</option>
-                  <option value="mid">Duoi 22 ty</option>
-                </select>
-              </div>
-              <div class="col-auto">
-                <button type="button" class="btn-luxury-outline" id="filter-reset">Reset</button>
-              </div>
-            </form>
-          </div>
-        </section>
-
-        <!-- CARD GRID -->
-        <section class="catalog-grid-section">
-          <div class="container-luxury">
-            <div class="row g-4" id="catalog-grid">
-
-              <!-- Card 1 — Aventador LP 670 -->
-              <div class="col-md-6 col-xl-4 car-item" data-series="v12" data-price="high">
-                <div class="card showroom-card">
-                  <div class="showroom-card__media">
-                    <span class="showroom-card__media-label">Aventador LP 670</span>
-                  </div>
-                  <div class="showroom-card__body">
-                    <span class="showroom-card__brand">Lamborghini</span>
-                    <h3 class="showroom-card__title">Aventador LP 670</h3>
-                    <p class="showroom-card__desc">
-                      Bieu tuong toc do tuyet doi voi dong co V12 tu nhien, mang den am thanh va suc manh thuan khiet.
-                    </p>
-                    <div class="showroom-card__meta">
-                      <span>789 HP</span>
-                      <span>V12</span>
-                      <span>26 ty</span>
-                    </div>
-                  </div>
-                  <div class="showroom-card__footer">
-                    <button
-                      type="button"
-                      class="btn-luxury quick-view-btn"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                      data-title="Aventador LP 670"
-                      data-copy="Bieu tuong toc do tuyet doi voi dong co V12 tu nhien, mang den am thanh va suc manh thuan khiet. Cong suat 789 HP, gia tu 26 ty VND."
-                    >
-                      Quick View
-                    </button>
-                    <a href="#" class="btn-luxury-outline btn-luxury--arrow" data-view="detail" data-car="aventador-lp670">Chi tiet</a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card 2 — Huracán STO -->
-              <div class="col-md-6 col-xl-4 car-item" data-series="track" data-price="high">
-                <div class="card showroom-card">
-                  <div class="showroom-card__media">
-                    <span class="showroom-card__media-label">Huracan STO</span>
-                  </div>
-                  <div class="showroom-card__body">
-                    <span class="showroom-card__brand">Lamborghini</span>
-                    <h3 class="showroom-card__title">Huracan STO</h3>
-                    <p class="showroom-card__desc">
-                      Sieu xe duong dua hop phap voi khi dong hoc lay cam hung tu xe dua Super Trofeo.
-                    </p>
-                    <div class="showroom-card__meta">
-                      <span>640 HP</span>
-                      <span>V10</span>
-                      <span>21 ty</span>
-                    </div>
-                  </div>
-                  <div class="showroom-card__footer">
-                    <button
-                      type="button"
-                      class="btn-luxury quick-view-btn"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                      data-title="Huracan STO"
-                      data-copy="Sieu xe duong dua hop phap voi khi dong hoc lay cam hung tu xe dua Super Trofeo. Cong suat 640 HP, gia tu 21 ty VND."
-                    >
-                      Quick View
-                    </button>
-                    <a href="#" class="btn-luxury-outline btn-luxury--arrow" data-view="detail" data-car="huracan-sto">Chi tiet</a>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card 3 — Revuelto -->
-              <div class="col-md-6 col-xl-4 car-item" data-series="hybrid" data-price="mid">
-                <div class="card showroom-card">
-                  <div class="showroom-card__media">
-                    <span class="showroom-card__media-label">Revuelto</span>
-                  </div>
-                  <div class="showroom-card__body">
-                    <span class="showroom-card__brand">Lamborghini</span>
-                    <h3 class="showroom-card__title">Revuelto</h3>
-                    <p class="showroom-card__desc">
-                      The he tiep theo cua Lamborghini — ket hop dong co V12 va 3 mo-to dien cho cong suat ky luc.
-                    </p>
-                    <div class="showroom-card__meta">
-                      <span>1001 HP</span>
-                      <span>Hybrid</span>
-                      <span>19 ty</span>
-                    </div>
-                  </div>
-                  <div class="showroom-card__footer">
-                    <button
-                      type="button"
-                      class="btn-luxury quick-view-btn"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                      data-title="Revuelto"
-                      data-copy="The he tiep theo cua Lamborghini — ket hop dong co V12 va 3 mo-to dien cho cong suat ky luc. Cong suat 1001 HP, gia tu 19 ty VND."
-                    >
-                      Quick View
-                    </button>
-                    <a href="#" class="btn-luxury-outline btn-luxury--arrow" data-view="detail" data-car="revuelto">Chi tiet</a>
-                  </div>
-                </div>
-              </div>
-
-            </div><!-- /#catalog-grid -->
-
-            <!-- No-results message -->
-            <p class="catalog-empty text-center mt-4" id="catalog-empty" style="display:none;">
-              Khong tim thay xe phu hop voi bo loc.
-            </p>
-          </div>
-        </section>
-
-      </section><!-- /#view-catalog -->
-
-      <!-- ============================================================
-           VIEW 3: DETAIL (Chi tiet xe)
-           ============================================================ -->
-      <section id="view-detail" class="view page-shell detail-page">
-
-        <!-- DETAIL HERO -->
-        <section class="detail-hero">
-          <div class="container-luxury">
-            <div class="row align-items-center gy-5">
-              <!-- Left: Info -->
-              <div class="col-lg-6">
-                <p class="section-kicker">Flagship Detail</p>
-                <h1 class="section-title detail-title" style="margin-bottom: 1.2rem;">
-                  Lamborghini<br /><em>Aventador</em> LP 670
-                </h1>
-                <p class="detail-desc" style="color: var(--color-muted); max-width: 480px; margin-bottom: 2rem; line-height: 1.8;">
-                  Sieu pham co bap tu Sant'Agata Bolognese, noi tieng voi dong co V12
-                  tu nhien hut khi troi va khung gam soi carbon. Aventador LP 670 la
-                  bieu tuong cua toc do va su tinh xao.
-                </p>
-                <div class="detail-hero__meta">
-                  <span>26 ty VND</span>
-                  <span>V12</span>
-                  <span>789 hp</span>
-                </div>
-                <div class="d-flex flex-wrap gap-3 mt-4">
-                  <a href="#detailCarousel" class="btn-luxury btn-luxury--arrow">Xem gallery</a>
-                  <a href="#" class="btn-luxury-outline" data-view="catalog">Quay lai bo suu tap</a>
-                </div>
-              </div>
-              <!-- Right: Visual placeholder -->
-              <div class="col-lg-6">
-                <div class="detail-hero__visual">
-                  <span class="detail-hero__visual-label">Hero Visual</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- GALLERY (Bootstrap Carousel) -->
-        <section class="detail-gallery" id="gallery">
-          <div class="container-luxury">
-            <p class="section-kicker">Gallery</p>
-            <div id="detailCarousel" class="carousel slide" data-bs-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <div class="detail-slide">
-                    <span class="detail-slide__label">Exterior Front &mdash; 01</span>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="detail-slide">
-                    <span class="detail-slide__label">Interior Cockpit &mdash; 02</span>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="detail-slide">
-                    <span class="detail-slide__label">Rear Profile &mdash; 03</span>
-                  </div>
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel" data-bs-slide="prev" aria-label="Previous slide">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#detailCarousel" data-bs-slide="next" aria-label="Next slide">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- SPEC TILES -->
-        <section class="detail-specs">
-          <div class="container-luxury">
-            <div class="row g-4">
-              <div class="col-md-6 col-xl-3">
-                <div class="spec-tile">
-                  <h2>789 hp</h2>
-                  <p>Cong suat cuc dai</p>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-3">
-                <div class="spec-tile">
-                  <h2>3.2s</h2>
-                  <p>0-100 km/h</p>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-3">
-                <div class="spec-tile">
-                  <h2>355 km/h</h2>
-                  <p>Toc do toi da</p>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-3">
-                <div class="spec-tile">
-                  <h2>V12</h2>
-                  <p>Powertrain</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- REVIEW / QUOTE -->
-        <section class="detail-review">
-          <div class="container-luxury text-center">
-            <blockquote class="detail-review__quote">
-              <p>
-                &ldquo;Aventador LP 670 khong chi la mot chiec xe &mdash; do la mot tac pham
-                nghe thuat co dong, noi tieng gam cua dong co V12 hoa quyen cung duong
-                cong khi dong hoc sac net, tao nen trai nghiem lai khong the nao quen.&rdquo;
-              </p>
-              <cite>&mdash; APEX Motors Editorial</cite>
-            </blockquote>
-          </div>
-        </section>
-
-        <!-- CTA SECTION -->
-        <section class="detail-cta">
-          <div class="container-luxury text-center">
-            <p class="section-kicker">San sang trai nghiem?</p>
-            <h2 class="section-title">Dat lich lai thu ngay hom nay</h2>
-            <div class="d-flex justify-content-center gap-3 mt-4">
-              <a class="btn-luxury btn-luxury--arrow" href="#" data-bs-toggle="modal" data-bs-target="#bookingModal">Dat lich lai thu</a>
-              <a class="btn-luxury-outline" href="#" data-view="catalog">Xem them xe khac</a>
-            </div>
-          </div>
-        </section>
-
-      </section><!-- /#view-detail -->
+        </div>
+      </section>
 
     </main>
-
-    <!-- ===== QUICK VIEW MODAL (outside views) ===== -->
-    <div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content showroom-modal">
-          <div class="modal-header showroom-modal__header">
-            <h5 class="modal-title showroom-modal__title" id="quickViewTitle">Car Name</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body showroom-modal__body">
-            <p id="quickViewCopy">Description here.</p>
-          </div>
-          <div class="modal-footer showroom-modal__footer">
-            <a href="#" class="btn-luxury btn-luxury--arrow" id="quickViewDetailLink" data-view="detail">Xem chi tiet</a>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- ===== BOOKING MODAL ===== -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content showroom-modal">
           <div class="modal-header showroom-modal__header">
-            <h5 class="modal-title showroom-modal__title" id="bookingModalTitle">Dat Lich Lai Thu</h5>
+            <h5 class="modal-title showroom-modal__title" id="bookingModalTitle">Đặt Lịch Lái Thử</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body showroom-modal__body">
             <form id="bookingForm">
               <div class="mb-3">
-                <label for="bookingName" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Ho va ten</label>
-                <input type="text" class="form-control" id="bookingName" style="background:rgba(15,15,20,0.92);border:1px solid var(--color-line);color:var(--color-text);border-radius:0;" placeholder="Nhap ho ten">
+                <label for="bookingName" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Họ và tên</label>
+                <input type="text" class="form-control" id="bookingName" style="background:rgba(15,15,20,0.92);border:1px solid var(--color-line);color:var(--color-text);border-radius:0;" placeholder="Nhập họ tên">
               </div>
               <div class="mb-3">
-                <label for="bookingPhone" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">So dien thoai</label>
-                <input type="tel" class="form-control" id="bookingPhone" style="background:rgba(15,15,20,0.92);border:1px solid var(--color-line);color:var(--color-text);border-radius:0;" placeholder="Nhap so dien thoai">
+                <label for="bookingPhone" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Số điện thoại</label>
+                <input type="tel" class="form-control" id="bookingPhone" style="background:rgba(15,15,20,0.92);border:1px solid var(--color-line);color:var(--color-text);border-radius:0;" placeholder="Nhập số điện thoại">
               </div>
               <div class="mb-3">
-                <label for="bookingCar" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Mau xe quan tam</label>
+                <label for="bookingCar" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Mẫu xe quan tâm</label>
                 <select class="form-select catalog-select" id="bookingCar">
-                  <option value="">Chon mau xe</option>
+                  <option value="">Chọn mẫu xe</option>
                   <option value="aventador-lp670">Aventador LP 670</option>
                   <option value="huracan-sto">Huracan STO</option>
                   <option value="revuelto">Revuelto</option>
@@ -838,8 +285,8 @@
             </form>
           </div>
           <div class="modal-footer showroom-modal__footer">
-            <button type="button" class="btn-luxury-outline" data-bs-dismiss="modal">Dong</button>
-            <button type="button" class="btn-luxury" id="bookingSubmit">Gui yeu cau</button>
+            <button type="button" class="btn-luxury-outline" data-bs-dismiss="modal">Đóng</button>
+            <button type="button" class="btn-luxury" id="bookingSubmit">Gửi yêu cầu</button>
           </div>
         </div>
       </div>
@@ -849,8 +296,8 @@
     <footer>
       <div class="site-footer">
         <div class="container-luxury d-flex flex-column flex-lg-row justify-content-between gap-3">
-          <p class="mb-0">APEX Motors showroom concept for cinematic luxury presentation.</p>
-          <p class="mb-0">Lamborghini selection | Frontend-only experience</p>
+          <p class="mb-0">xT-chinhan — Phòng trưng bày siêu xe đẳng cấp.</p>
+          <p class="mb-0">Bộ sưu tập Lamborghini | Trải nghiệm giao diện</p>
         </div>
       </div>
     </footer>
@@ -862,12 +309,10 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="assets/js/intro-landing.js"></script>
     <script src="assets/js/hero-3d.js"></script>
-    <script src="assets/js/hero-cinematic.js"></script>
-    <script src="assets/js/data.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/collection-carousel.js"></script>
     <script src="assets/js/home.js"></script>
-    <script src="assets/js/catalog.js"></script>
-    <script src="assets/js/detail.js"></script>
   </body>
 </html>
