@@ -121,6 +121,11 @@
             if (window.LamboGallery && typeof window.LamboGallery.dispose === "function") {
               window.LamboGallery.dispose();
             }
+          },
+          onEnterBack: function () {
+            if (window.LamboGallery && typeof window.LamboGallery.reinit === "function") {
+              window.LamboGallery.reinit();
+            }
           }
         });
       } else {

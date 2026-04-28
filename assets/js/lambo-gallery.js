@@ -123,7 +123,7 @@ window.LamboGallery = (function () {
       var dpr = isMobile ? 1 : (window.devicePixelRatio || 1);
       particleCanvas.width = window.innerWidth * dpr;
       particleCanvas.height = window.innerHeight * dpr;
-      if (particleCtx) particleCtx.scale(dpr, dpr);
+      if (particleCtx) particleCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
   }
 
@@ -371,8 +371,9 @@ window.LamboGallery = (function () {
     var total = neonStreaks.length + lightLines.length + smokes.length + dust.length;
     if (total > 200) {
       var excess = total - 200;
-      dust.splice(0, Math.min(excess, dust.length));
-      excess -= Math.min(excess, dust.length);
+      var removeDust = Math.min(excess, dust.length);
+      dust.splice(0, removeDust);
+      excess -= removeDust;
       if (excess > 0) smokes.splice(0, Math.min(excess, smokes.length));
     }
   }
@@ -500,6 +501,7 @@ window.LamboGallery = (function () {
   function initScrollTrigger() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
+    if (typeof ScrollToPlugin !== "undefined") gsap.registerPlugin(ScrollToPlugin);
 
     var trackWidth = section.scrollWidth;
 
