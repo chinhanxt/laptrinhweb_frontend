@@ -171,6 +171,11 @@ window.LamboGallery = (function () {
       complementary.offsetHSL(0.1, 0, 0);
       rimLightR.color.copy(complementary);
     }
+
+    if (bgEl) {
+      bgEl.style.transition = "background 0.8s ease";
+      bgEl.style.background = "radial-gradient(ellipse at 50% 60%, " + car.color.primary + "0F, transparent 50%)";
+    }
   }
 
   function tweenLightsOn() {
@@ -264,6 +269,7 @@ window.LamboGallery = (function () {
   }
 
   function showModel(index) {
+    if (index === currentIndex && activeModel) return;
     if (activeModel) {
       scene.remove(activeModel);
       activeModel = null;
