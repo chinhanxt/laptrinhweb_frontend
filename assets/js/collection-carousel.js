@@ -35,9 +35,10 @@ window.CollectionCarousel = (function () {
     }
   ];
 
-  var trackEl, counterEl, barFillEl, prevBtn, nextBtn;
+  var sectionEl, trackEl, counterEl, barFillEl, prevBtn, nextBtn;
   var cards = [];
   var activeIndex = 0;
+  var isExpanded = false;
   var initialized = false;
 
   return {
@@ -47,6 +48,7 @@ window.CollectionCarousel = (function () {
 
   function init() {
     if (initialized) return;
+    sectionEl = document.getElementById("collection-3d");
     trackEl = document.getElementById("collection-track");
     counterEl = document.getElementById("collection-counter");
     barFillEl = document.getElementById("collection-bar-fill");
@@ -55,13 +57,13 @@ window.CollectionCarousel = (function () {
 
     if (!trackEl || !COLLECTION_CARS.length) return;
 
-    buildCards();
+    buildAllCards();
     bindEvents();
-    updateActiveCard(0);
+    showCards(0);
     initialized = true;
   }
 
-  function buildCards() {
+  function buildAllCards() {
     var fragment = document.createDocumentFragment();
 
     COLLECTION_CARS.forEach(function (car, index) {
@@ -79,6 +81,7 @@ window.CollectionCarousel = (function () {
       }
 
       card.innerHTML =
+        '<button type="button" class="collection-3d-card__close" aria-label="Close">\u00D7</button>' +
         '<div class="collection-3d-card__viewer">' +
           '<div class="collection-3d-card__poster">' + car.brand + "</div>" +
           '<div class="collection-3d-card__glow"></div>' +
@@ -93,7 +96,8 @@ window.CollectionCarousel = (function () {
           '<div class="collection-3d-card__actions">' +
             '<a href="assets/html/detail.html?car=' + car.id + '" class="collection-3d-card__cta">Xem chi ti\u1EBFt</a>' +
           "</div>" +
-        "</div>";
+        "</div>" +
+        '<div class="collection-3d-card__expand-hint">Click \u0111\u1EC3 xem 3D</div>';
 
       fragment.appendChild(card);
       cards.push(card);
@@ -104,76 +108,140 @@ window.CollectionCarousel = (function () {
 
   function bindEvents() {
     if (prevBtn) {
-      prevBtn.addEventListener("click", function () {
-        scrollToIndex(activeIndex - 1);
+      prevBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (isExpanded) return;
+        navigate(-1);
       });
     }
     if (nextBtn) {
-      nextBtn.addEventListener("click", function () {
-        scrollToIndex(activeIndex + 1);
+      nextBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (isExpanded) return;
+        navigate(1);
       });
     }
 
-    var scrollTimeout;
-    trackEl.addEventListener("scroll", function () {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(onScrollEnd, 80);
-    }, { passive: true });
-  }
-
-  function onScrollEnd() {
-    var trackRect = trackEl.getBoundingClientRect();
-    var trackCenter = trackRect.left + trackRect.width / 2;
-    var closest = 0;
-    var closestDist = Infinity;
-
     cards.forEach(function (card, index) {
-      var cardRect = card.getBoundingClientRect();
-      var cardCenter = cardRect.left + cardRect.width / 2;
-      var dist = Math.abs(cardCenter - trackCenter);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closest = index;
+      card.addEventListener("click", function (e) {
+        if (e.target.closest(".collection-3d-card__close")) {
+          e.stopPropagation();
+          collapseCard();
+          return;
+        }
+        if (e.target.closest(".collection-3d-card__cta")) {
+          return;
+        }
+        if (card.classList.contains("is-active") && !isExpanded) {
+          expandCard(index);
+        }
+      });
+
+      var closeBtn = card.querySelector(".collection-3d-card__close");
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          collapseCard();
+        });
       }
     });
 
-    updateActiveCard(closest);
-  }
-
-  function scrollToIndex(index) {
-    if (index < 0 || index >= cards.length) return;
-    cards[index].scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center"
+    document.addEventListener("keydown", function (e) {
+      if (isExpanded && e.key === "Escape") {
+        collapseCard();
+        return;
+      }
+      if (!isExpanded) {
+        if (e.key === "ArrowLeft") navigate(-1);
+        if (e.key === "ArrowRight") navigate(1);
+      }
     });
-    updateActiveCard(index);
+
+    document.addEventListener("click", function (e) {
+      if (!isExpanded) return;
+      var activeCard = cards[activeIndex];
+      if (activeCard && !activeCard.contains(e.target)) {
+        collapseCard();
+      }
+    });
   }
 
-  function updateActiveCard(index) {
-    activeIndex = index;
+  function navigate(direction) {
+    var nextIndex = activeIndex + direction;
+    if (nextIndex < 0 || nextIndex >= COLLECTION_CARS.length) return;
+    showCards(nextIndex);
+  }
+
+  function showCards(newIndex) {
+    activeIndex = newIndex;
 
     cards.forEach(function (card, i) {
-      card.classList.toggle("is-active", i === index);
+      card.classList.remove("is-active", "is-prev", "is-next", "is-expanded");
+
+      if (i === newIndex) {
+        card.classList.add("is-active");
+      } else if (i === newIndex - 1) {
+        card.classList.add("is-prev");
+      } else if (i === newIndex + 1) {
+        card.classList.add("is-next");
+      }
     });
 
     if (counterEl) {
-      counterEl.textContent = (index + 1) + " / " + cards.length;
+      counterEl.textContent = (newIndex + 1) + " / " + COLLECTION_CARS.length;
     }
     if (barFillEl) {
-      var pct = cards.length > 1 ? ((index) / (cards.length - 1)) * 100 : 100;
+      var pct = COLLECTION_CARS.length > 1
+        ? (newIndex / (COLLECTION_CARS.length - 1)) * 100
+        : 100;
       barFillEl.style.width = pct + "%";
     }
 
-    if (prevBtn) prevBtn.disabled = index === 0;
-    if (nextBtn) nextBtn.disabled = index === cards.length - 1;
+    if (prevBtn) prevBtn.disabled = newIndex === 0;
+    if (nextBtn) nextBtn.disabled = newIndex === COLLECTION_CARS.length - 1;
 
-    loadViewerForCard(index);
-    if (index > 0) loadViewerForCard(index - 1);
-    if (index < cards.length - 1) loadViewerForCard(index + 1);
+    loadModelForCard(newIndex);
   }
 
-  function loadViewerForCard(index) {
+  function expandCard(index) {
+    isExpanded = true;
+    var card = cards[index];
+    card.classList.add("is-expanded");
+    if (sectionEl) sectionEl.classList.add("has-expanded");
+
+    var mv = card.querySelector("model-viewer");
+    if (mv) {
+      mv.setAttribute("camera-controls", "");
+      mv.removeAttribute("disable-zoom");
+      mv.setAttribute("auto-rotate", "");
+      mv.setAttribute("auto-rotate-delay", "0");
+      mv.setAttribute("rotation-per-second", "18deg");
+    }
+  }
+
+  function collapseCard() {
+    if (!isExpanded) return;
+    isExpanded = false;
+
+    cards.forEach(function (card) {
+      card.classList.remove("is-expanded");
+    });
+    if (sectionEl) sectionEl.classList.remove("has-expanded");
+
+    var activeCard = cards[activeIndex];
+    var mv = activeCard ? activeCard.querySelector("model-viewer") : null;
+    if (mv) {
+      mv.removeAttribute("camera-controls");
+      mv.setAttribute("disable-zoom", "");
+      mv.removeAttribute("auto-rotate");
+      var car = COLLECTION_CARS[activeIndex];
+      mv.setAttribute("camera-orbit", car.cameraOrbit || "45deg 75deg 105%");
+      mv.setAttribute("camera-target", car.cameraTarget || "0m 0.4m 0m");
+      mv.setAttribute("field-of-view", car.fieldOfView || "30deg");
+    }
+  }
+
+  function loadModelForCard(index) {
     var card = cards[index];
     if (!card || card.dataset.loaded === "true") return;
 
@@ -184,13 +252,10 @@ window.CollectionCarousel = (function () {
 
     var mv = document.createElement("model-viewer");
     mv.setAttribute("src", car.model);
-    mv.setAttribute("camera-controls", "");
     mv.setAttribute("disable-zoom", "");
     mv.setAttribute("disable-pan", "");
+    mv.setAttribute("disable-tap", "");
     mv.setAttribute("interaction-prompt", "none");
-    mv.setAttribute("auto-rotate", "");
-    mv.setAttribute("auto-rotate-delay", "0");
-    mv.setAttribute("rotation-per-second", "18deg");
     mv.setAttribute("camera-orbit", car.cameraOrbit || "45deg 75deg 105%");
     mv.setAttribute("camera-target", car.cameraTarget || "0m 0.4m 0m");
     mv.setAttribute("field-of-view", car.fieldOfView || "30deg");
