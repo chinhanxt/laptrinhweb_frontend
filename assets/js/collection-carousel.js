@@ -7,9 +7,9 @@ window.CollectionCarousel = (function () {
       name: "Revuelto",
       sub: "Hybrid V12",
       chips: ["Hybrid", "V12"],
-      cameraOrbit: "45deg 75deg 105%",
-      cameraTarget: "0m 0.4m 0m",
-      fieldOfView: "30deg"
+      cameraOrbit: "35deg 72deg 115%",
+      cameraTarget: "0m 0.35m 0m",
+      fieldOfView: "32deg"
     },
     {
       id: "centenario-roadster",
@@ -18,8 +18,8 @@ window.CollectionCarousel = (function () {
       name: "Centenario Roadster",
       sub: "Limited Edition",
       chips: ["V12", "Roadster"],
-      cameraOrbit: "45deg 75deg 105%",
-      cameraTarget: "0m 0.4m 0m",
+      cameraOrbit: "42deg 68deg 110%",
+      cameraTarget: "0m 0.3m 0m",
       fieldOfView: "30deg"
     },
     {
@@ -29,9 +29,9 @@ window.CollectionCarousel = (function () {
       name: "Centenario LP-770",
       sub: "Interior Experience",
       chips: ["V12", "Interior"],
-      cameraOrbit: "45deg 75deg 105%",
-      cameraTarget: "0m 0.4m 0m",
-      fieldOfView: "30deg"
+      cameraOrbit: "180deg 85deg 60%",
+      cameraTarget: "0m 0.5m 0m",
+      fieldOfView: "45deg"
     }
   ];
 
