@@ -8,8 +8,8 @@ window.LamboGallery = (function () {
       model: "assets/model/revuelto_3.0tm.glb",
       color: { primary: "#e63946", rim: "#ff6b6b", hueRange: [340, 370] },
       targetSize: 3.8,
-      cameraPosition: { x: 3.4, y: 1.55, z: 4.8 },
-      cameraTarget: { x: 0, y: 0.5, z: 0 }
+      cameraPosition: { x: 3.2, y: 1.5, z: 5.0 },
+      cameraTarget: { x: -0.1, y: 0.45, z: 0 }
     },
     {
       id: "centenario-roadster",
@@ -17,17 +17,17 @@ window.LamboGallery = (function () {
       model: "assets/model/lamborghini_centenario_roadster_sdc.glb",
       color: { primary: "#00b4d8", rim: "#48cae4", hueRange: [190, 210] },
       targetSize: 3.8,
-      cameraPosition: { x: 3.4, y: 1.55, z: 4.8 },
-      cameraTarget: { x: 0, y: 0.5, z: 0 }
+      cameraPosition: { x: -3.5, y: 1.6, z: 4.6 },
+      cameraTarget: { x: 0.1, y: 0.4, z: 0 }
     },
     {
       id: "centenario-interior",
       name: "CENTENARIO LP-770",
       model: "assets/model/lamborghini_centenario_lp-770_interior_sdc.glb",
       color: { primary: "#c9a84c", rim: "#e8d590", hueRange: [40, 55] },
-      targetSize: 3.8,
-      cameraPosition: { x: 3.4, y: 1.55, z: 4.8 },
-      cameraTarget: { x: 0, y: 0.5, z: 0 }
+      targetSize: 2.8,
+      cameraPosition: { x: 1.2, y: 1.1, z: 2.4 },
+      cameraTarget: { x: 0, y: 0.7, z: 0 }
     }
   ];
 
@@ -614,6 +614,13 @@ window.LamboGallery = (function () {
     init: init,
     whenReady: function () { return readyPromise; },
     dispose: disposeGallery,
-    reinit: reinitGallery
+    reinit: reinitGallery,
+    __debug_camera: function () {
+      if (!camera || !controls) return null;
+      return {
+        position: { x: +camera.position.x.toFixed(2), y: +camera.position.y.toFixed(2), z: +camera.position.z.toFixed(2) },
+        target: { x: +controls.target.x.toFixed(2), y: +controls.target.y.toFixed(2), z: +controls.target.z.toFixed(2) }
+      };
+    }
   };
 })();
