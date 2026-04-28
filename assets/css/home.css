@@ -1631,456 +1631,204 @@ body.app-is-booting .intro-landing__loading {
   .hero-nav-label__index { font-size: 0.38rem; }
 }
 
+
 /* ----------------------------------------------------------
-   COLLECTION 3D CAROUSEL — Centered Card + Expand
+   LAMBORGHINI GALLERY — Cinematic Horizontal Showcase
    ---------------------------------------------------------- */
-.collection-3d-section {
-  position: relative;
-  padding: 5rem 0 4rem;
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(201, 168, 76, 0.04), transparent 50%),
-    #030306;
-  overflow: visible;
-}
-
-.collection-3d__header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-.collection-3d__viewport {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  min-height: 480px;
-}
-
-.collection-3d__track {
+.lambo-gallery {
   position: relative;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1200px;
-}
-
-/* --- Arrows --- */
-.collection-3d__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(5, 5, 8, 0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.06),
-              0 4px 20px rgba(0, 0, 0, 0.4);
-  color: var(--color-silver);
-  cursor: pointer;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.25s ease, box-shadow 0.25s ease, opacity 0.4s ease;
-}
-
-.collection-3d__arrow--prev { left: -1rem; }
-.collection-3d__arrow--next { right: -1rem; }
-
-.collection-3d__arrow:hover {
-  color: var(--color-gold);
-  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.25),
-              0 4px 24px rgba(0, 0, 0, 0.5);
-}
-
-.collection-3d__arrow:disabled {
-  opacity: 0.2;
-  pointer-events: none;
-}
-
-.collection-3d-section.has-expanded .collection-3d__arrow {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* --- Card base --- */
-.collection-3d-card {
-  position: absolute;
-  width: 460px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 16px;
-  background: rgba(13, 13, 20, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  height: 100vh;
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              opacity 0.5s ease,
-              border-color 0.4s ease,
-              box-shadow 0.4s ease;
-  opacity: 0;
-  transform: scale(0.85) translateX(0);
-  pointer-events: none;
+  background: #050508;
 }
 
-.collection-3d-card.is-active {
+.lambo-gallery__track {
+  display: flex;
+  width: 300vw;
+  height: 100vh;
   position: relative;
-  opacity: 1;
-  transform: scale(1) translateX(0);
-  pointer-events: auto;
-  z-index: 2;
-  border-color: rgba(201, 168, 76, 0.12);
-  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.5),
-              0 0 0 1px rgba(201, 168, 76, 0.06);
 }
 
-.collection-3d-card.is-prev {
-  opacity: 0.3;
-  transform: scale(0.82) translateX(-85%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.collection-3d-card.is-next {
-  opacity: 0.3;
-  transform: scale(0.82) translateX(85%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* --- Card viewer area --- */
-.collection-3d-card__viewer {
-  position: relative;
-  width: 100%;
-  height: 240px;
-  background:
-    radial-gradient(circle at 50% 60%, rgba(201, 168, 76, 0.06), transparent 55%),
-    #08080c;
-  overflow: hidden;
-  transition: height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.collection-3d-card__viewer model-viewer {
-  width: 100%;
-  height: 100%;
-  --poster-color: transparent;
-}
-
-.collection-3d-card__viewer .collection-3d-card__poster {
+.lambo-gallery__bg {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 2.5rem;
-  letter-spacing: 0.08em;
-  color: rgba(201, 168, 76, 0.12);
+  width: 300vw;
+  z-index: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  background: radial-gradient(ellipse at 16% 60%, rgba(230, 57, 70, 0.06), transparent 50%),
+              radial-gradient(ellipse at 50% 60%, rgba(0, 180, 216, 0.06), transparent 50%),
+              radial-gradient(ellipse at 84% 60%, rgba(201, 168, 76, 0.06), transparent 50%);
 }
 
-.collection-3d-card__glow {
+.lambo-gallery__canvas-wrap {
   position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.25), transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
 }
 
-.collection-3d-card.is-active .collection-3d-card__glow {
-  opacity: 0.5;
+.lambo-gallery__canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
-/* --- Card body --- */
-.collection-3d-card__body {
-  padding: 1.2rem 1.4rem 1.4rem;
-  max-height: 300px;
-  overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              padding 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              opacity 0.35s ease;
+.lambo-gallery__particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.collection-3d-card__meta {
-  margin-bottom: 1rem;
+.lambo-gallery__panels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 300vw;
+  height: 100vh;
+  z-index: 3;
+  pointer-events: none;
 }
 
-.collection-3d-card__brand {
-  font-family: "Space Mono", monospace;
-  font-size: 0.5rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--color-gold);
-  margin: 0 0 0.2rem;
+.lambo-gallery__panel {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 clamp(2rem, 5vw, 5rem) clamp(5rem, 8vh, 7rem);
+  pointer-events: none;
 }
 
-.collection-3d-card__name {
+.lambo-gallery__info {
+  pointer-events: auto;
+}
+
+.lambo-gallery__name {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 1.6rem;
-  letter-spacing: 0.04em;
-  line-height: 1;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  letter-spacing: 0.08em;
   color: var(--color-text);
-  margin: 0 0 0.3rem;
+  margin: 0 0 0.2rem;
+  line-height: 1;
 }
 
-.collection-3d-card__sub {
+.lambo-gallery__sub {
   font-family: "Cormorant Garamond", serif;
-  font-size: 0.78rem;
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
   font-weight: 300;
   font-style: italic;
-  color: rgba(168, 168, 184, 0.5);
+  letter-spacing: 0.1em;
+  color: var(--color-silver);
   margin: 0;
 }
 
-.collection-3d-card__chips {
+.lambo-gallery__specs {
   display: flex;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
-}
-
-.collection-3d-card__chip {
-  font-family: "Space Mono", monospace;
-  font-size: 0.45rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.55rem;
-  border: 1px solid rgba(201, 168, 76, 0.12);
-  border-radius: 4px;
-  color: var(--color-silver);
-}
-
-.collection-3d-card__actions {
-  padding-top: 0.8rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.collection-3d-card__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: "Space Mono", monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-silver);
-  text-decoration: none;
-  padding: 0.4rem 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.collection-3d-card__cta:hover {
-  color: var(--color-gold);
-}
-
-.collection-3d-card__cta::after {
-  content: "\2192";
-  transition: transform 0.3s ease;
-}
-
-.collection-3d-card__cta:hover::after {
-  transform: translateX(4px);
-}
-
-/* --- Expanded state — model bursts out of card --- */
-.collection-3d-card.is-expanded {
-  cursor: default;
-  overflow: visible;
-  border-color: rgba(201, 168, 76, 0.2);
-  box-shadow:
-    0 0 0 1px rgba(201, 168, 76, 0.08),
-    0 20px 80px rgba(0, 0, 0, 0.7),
-    0 0 120px rgba(201, 168, 76, 0.06);
-  z-index: 10;
-}
-
-.collection-3d-card.is-expanded .collection-3d-card__viewer {
-  height: 320px;
-  overflow: visible;
-  background: transparent;
-}
-
-.collection-3d-card.is-expanded .collection-3d-card__viewer model-viewer {
-  transform: scale(1.35) translateY(-18%);
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.6s ease;
-}
-
-.collection-3d-card__viewer model-viewer {
-  transform: scale(1) translateY(0);
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              filter 0.5s ease;
-}
-
-.collection-3d-card.is-expanded .collection-3d-card__body {
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  opacity: 0;
-}
-
-.collection-3d-card.is-expanded .collection-3d-card__glow {
-  opacity: 1;
-  height: 3px;
-  left: 5%;
-  right: 5%;
-  box-shadow: 0 0 20px rgba(201, 168, 76, 0.15);
-}
-
-.collection-3d-section.has-expanded .collection-3d-card.is-prev,
-.collection-3d-section.has-expanded .collection-3d-card.is-next {
-  opacity: 0.05;
-  transform: scale(0.75) translateX(-95%);
-}
-
-.collection-3d-section.has-expanded .collection-3d-card.is-next {
-  transform: scale(0.75) translateX(95%);
-}
-
-/* --- Close button --- */
-.collection-3d-card__close {
-  position: absolute;
-  top: -0.8rem;
-  right: -0.8rem;
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(5, 5, 8, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: var(--color-silver);
-  cursor: pointer;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  line-height: 1;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.3s ease;
-  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.12),
-              0 4px 16px rgba(0, 0, 0, 0.5);
-  transform: scale(0.6);
-}
-
-.collection-3d-card.is-expanded .collection-3d-card__close {
-  opacity: 1;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: 1.2rem;
   pointer-events: auto;
-  transform: scale(1);
 }
 
-.collection-3d-card__close:hover {
+.lambo-gallery__spec {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lambo-gallery__spec-val {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
   color: var(--color-gold);
-  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.25);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
 }
 
-/* --- Expand hint --- */
-.collection-3d-card__expand-hint {
+.lambo-gallery__spec-val small {
+  font-size: 0.6em;
+}
+
+.lambo-gallery__spec-unit {
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-top: 0.15rem;
+}
+
+/* Progress indicator */
+.lambo-gallery__progress {
   position: absolute;
-  bottom: 0.5rem;
+  bottom: clamp(1.5rem, 3vh, 2.5rem);
   left: 50%;
   transform: translateX(-50%);
-  font-family: "Space Mono", monospace;
-  font-size: 0.42rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(168, 168, 184, 0.35);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.collection-3d-card.is-active:not(.is-expanded) .collection-3d-card__expand-hint {
-  opacity: 1;
-}
-
-/* --- Progress --- */
-.collection-3d__progress {
+  z-index: 4;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.8rem;
-  padding: 0 2rem;
-  transition: opacity 0.4s ease;
+  gap: 0.6rem;
+  width: min(80vw, 400px);
 }
 
-.collection-3d-section.has-expanded .collection-3d__progress {
-  opacity: 0.3;
-}
-
-.collection-3d__counter {
-  font-family: "Space Mono", monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  color: var(--color-silver);
-  white-space: nowrap;
-  min-width: 3.5rem;
-}
-
-.collection-3d__bar {
-  width: 120px;
+.lambo-gallery__progress-bar {
+  width: 100%;
   height: 2px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 1px;
   overflow: hidden;
 }
 
-.collection-3d__bar-fill {
+.lambo-gallery__progress-fill {
   height: 100%;
   width: 0%;
   background: var(--color-gold);
   border-radius: 1px;
-  transition: width 0.35s ease;
+  transition: width 0.05s linear;
 }
 
-/* --- Responsive --- */
-@media (max-width: 991.98px) {
-  .collection-3d-section { padding: 4rem 0 3rem; }
-  .collection-3d__viewport { max-width: 700px; }
-  .collection-3d-card { width: 380px; }
-  .collection-3d-card__viewer { height: 200px; }
-  .collection-3d-card.is-expanded .collection-3d-card__viewer { height: 280px; }
-  .collection-3d-card.is-expanded .collection-3d-card__viewer model-viewer {
-    transform: scale(1.25) translateY(-15%);
+.lambo-gallery__dots {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.lambo-gallery__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.lambo-gallery__dot.is-active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  transform: scale(1.25);
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .lambo-gallery__name {
+    font-size: 2rem;
   }
-  .collection-3d__arrow--prev { left: -0.5rem; }
-  .collection-3d__arrow--next { right: -0.5rem; }
-}
-
-@media (max-width: 575.98px) {
-  .collection-3d-section { padding: 3rem 0 2.5rem; }
-  .collection-3d__viewport { max-width: 100%; padding: 0 1rem; }
-  .collection-3d__arrow { display: none; }
-  .collection-3d-card { width: 100%; max-width: 360px; }
-  .collection-3d-card__viewer { height: 180px; }
-  .collection-3d-card.is-expanded .collection-3d-card__viewer { height: 240px; }
-  .collection-3d-card.is-expanded .collection-3d-card__viewer model-viewer {
-    transform: scale(1.2) translateY(-12%);
+  .lambo-gallery__specs {
+    gap: 1rem;
   }
-  .collection-3d-card__name { font-size: 1.3rem; }
-  .collection-3d-card.is-prev,
-  .collection-3d-card.is-next { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .collection-3d-card { transition: none; }
-  .collection-3d-card__viewer { transition: none; }
-  .collection-3d-card__body { transition: none; }
+  .lambo-gallery__spec-val {
+    font-size: 1.3rem;
+  }
+  .lambo-gallery__particles {
+    display: none;
+  }
 }
