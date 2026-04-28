@@ -19,32 +19,10 @@
     homeTriggers = [];
 
     if (!homeInitialized) {
-      gsap.from(".hero-eyebrow, .hero-title, .hero-desc, .hero-ctas, .hero-stats", {
-        y: 32,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: "power3.out"
-      });
-
-      gsap.from(".hero-cinematic__media", {
-        scale: 1.04,
-        opacity: 0,
-        duration: 1.4,
-        ease: "power2.out"
-      });
-
-      gsap.from(".scroll-hint", {
-        opacity: 0,
-        duration: 0.6,
-        delay: 1.4,
-        ease: "power2.out"
-      });
-
       homeInitialized = true;
     }
 
-    gsap.utils.toArray(".showroom-stage-section, .brand-intro, .featured-section, .experience-section, .testimonials-section").forEach(function (section) {
+    gsap.utils.toArray(".showroom-stage-section, .collection-3d-section, .brand-intro, .featured-section, .experience-section, .testimonials-section").forEach(function (section) {
       var tween = gsap.from(section, {
         scrollTrigger: {
           trigger: section,
@@ -60,7 +38,7 @@
       }
     });
 
-    gsap.utils.toArray("#view-home .reveal").forEach(function (el) {
+    gsap.utils.toArray("main .reveal").forEach(function (el) {
       var tween = gsap.from(el, {
         scrollTrigger: {
           trigger: el,
@@ -80,26 +58,64 @@
   }
 
   $(function () {
-    initHomeAnimations();
+    document.body.classList.add("app-is-booting");
 
-    if (window.APEXCinematicHero) {
-      window.APEXCinematicHero.init();
+    var bootTasks = [];
+
+    if (window.APEXIntro) {
+      window.APEXIntro.init();
+      if (typeof window.APEXIntro.whenReady === "function") {
+        bootTasks.push(window.APEXIntro.whenReady());
+      }
     }
 
-    if (window.APEXHero3D) {
-      var prefersFallback = window.innerWidth < 576;
+    initHomeAnimations();
 
-      if (prefersFallback) {
+    var isMobile = window.innerWidth < 576;
+
+    if (window.APEXHero3D) {
+      if (isMobile) {
         window.APEXHero3D.showHeroFallback();
         $("#hero-loading").addClass("is-hidden");
+        if (typeof window.APEXHero3D.whenReady === "function") {
+          bootTasks.push(window.APEXHero3D.whenReady());
+        }
       } else {
         var initialized = window.APEXHero3D.initHeroScene();
         if (initialized) {
           window.APEXHero3D.animate();
+          if (typeof window.APEXHero3D.whenReady === "function") {
+            bootTasks.push(window.APEXHero3D.whenReady());
+          }
+        } else {
+          bootTasks.push(Promise.resolve(false));
         }
       }
-
     }
+
+    if (!bootTasks.length) {
+      document.body.classList.remove("app-is-booting");
+      return;
+    }
+
+    Promise.all(bootTasks).finally(function () {
+      if (window.APEXIntro && typeof window.APEXIntro.dismissLoading === "function") {
+        window.APEXIntro.dismissLoading();
+      } else {
+        document.body.classList.remove("app-is-booting");
+      }
+
+      if (window.CollectionCarousel) {
+        window.CollectionCarousel.init();
+      }
+
+      if (window.location.hash) {
+        window.requestAnimationFrame(function () {
+          var target = document.querySelector(window.location.hash);
+          if (target) target.scrollIntoView();
+        });
+      }
+    });
   });
 
   window.initHomeAnimations = initHomeAnimations;
