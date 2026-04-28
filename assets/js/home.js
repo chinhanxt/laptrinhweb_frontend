@@ -22,7 +22,7 @@
       homeInitialized = true;
     }
 
-    gsap.utils.toArray(".showroom-stage-section, .collection-3d-section, .brand-intro, .featured-section, .experience-section, .testimonials-section").forEach(function (section) {
+    gsap.utils.toArray(".showroom-stage-section, .brand-intro, .featured-section, .experience-section, .testimonials-section").forEach(function (section) {
       var tween = gsap.from(section, {
         scrollTrigger: {
           trigger: section,
@@ -93,6 +93,41 @@
       }
     }
 
+    if (window.LamboGallery) {
+      bootTasks.push(window.LamboGallery.whenReady());
+
+      if (!isMobile) {
+        window.LamboGallery.init();
+
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.create({
+          trigger: "#lamborghini-gallery",
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: function () {
+            if (window.APEXHero3D && typeof window.APEXHero3D.dispose === "function") {
+              window.APEXHero3D.dispose();
+            }
+          },
+          onLeaveBack: function () {
+            if (window.LamboGallery && typeof window.LamboGallery.dispose === "function") {
+              window.LamboGallery.dispose();
+            }
+            if (window.APEXHero3D && typeof window.APEXHero3D.reinit === "function") {
+              window.APEXHero3D.reinit();
+            }
+          },
+          onLeave: function () {
+            if (window.LamboGallery && typeof window.LamboGallery.dispose === "function") {
+              window.LamboGallery.dispose();
+            }
+          }
+        });
+      } else {
+        window.LamboGallery.init();
+      }
+    }
+
     if (!bootTasks.length) {
       document.body.classList.remove("app-is-booting");
       return;
@@ -105,9 +140,6 @@
         document.body.classList.remove("app-is-booting");
       }
 
-      if (window.CollectionCarousel) {
-        window.CollectionCarousel.init();
-      }
 
       if (window.location.hash) {
         window.requestAnimationFrame(function () {
