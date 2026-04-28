@@ -1632,7 +1632,7 @@ body.app-is-booting .intro-landing__loading {
 }
 
 /* ----------------------------------------------------------
-   COLLECTION 3D CAROUSEL
+   COLLECTION 3D CAROUSEL — Centered Card + Expand
    ---------------------------------------------------------- */
 .collection-3d-section {
   position: relative;
@@ -1650,25 +1650,25 @@ body.app-is-booting .intro-landing__loading {
 
 .collection-3d__viewport {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 0 3.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 480px;
 }
 
 .collection-3d__track {
+  position: relative;
+  width: 100%;
   display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding: 1rem 0;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
 }
 
-.collection-3d__track::-webkit-scrollbar {
-  display: none;
-}
-
+/* --- Arrows --- */
 .collection-3d__arrow {
   position: absolute;
   top: 50%;
@@ -1684,15 +1684,15 @@ body.app-is-booting .intro-landing__loading {
               0 4px 20px rgba(0, 0, 0, 0.4);
   color: var(--color-silver);
   cursor: pointer;
-  z-index: 3;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.25s ease, box-shadow 0.25s ease;
+  transition: color 0.25s ease, box-shadow 0.25s ease, opacity 0.4s ease;
 }
 
-.collection-3d__arrow--prev { left: 0.5rem; }
-.collection-3d__arrow--next { right: 0.5rem; }
+.collection-3d__arrow--prev { left: -1rem; }
+.collection-3d__arrow--next { right: -1rem; }
 
 .collection-3d__arrow:hover {
   color: var(--color-gold);
@@ -1701,35 +1701,61 @@ body.app-is-booting .intro-landing__loading {
 }
 
 .collection-3d__arrow:disabled {
-  opacity: 0.25;
+  opacity: 0.2;
   pointer-events: none;
 }
 
-/* --- Card --- */
+.collection-3d-section.has-expanded .collection-3d__arrow {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Card base --- */
 .collection-3d-card {
-  flex: 0 0 calc(45% - 0.75rem);
-  min-width: 320px;
-  max-width: 540px;
-  scroll-snap-align: center;
+  position: absolute;
+  width: 460px;
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 16px;
-  background: rgba(13, 13, 20, 0.8);
+  background: rgba(13, 13, 20, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
-  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease, opacity 0.4s ease;
-  opacity: 0.55;
-  transform: scale(0.96);
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.5s ease,
+              border-color 0.4s ease,
+              box-shadow 0.4s ease;
+  opacity: 0;
+  transform: scale(0.85) translateX(0);
+  pointer-events: none;
 }
 
 .collection-3d-card.is-active {
-  border-color: rgba(201, 168, 76, 0.15);
+  position: relative;
+  opacity: 1;
+  transform: scale(1) translateX(0);
+  pointer-events: auto;
+  z-index: 2;
+  border-color: rgba(201, 168, 76, 0.12);
   box-shadow: 0 8px 48px rgba(0, 0, 0, 0.5),
               0 0 0 1px rgba(201, 168, 76, 0.06);
-  opacity: 1;
-  transform: scale(1);
 }
 
+.collection-3d-card.is-prev {
+  opacity: 0.3;
+  transform: scale(0.82) translateX(-85%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.collection-3d-card.is-next {
+  opacity: 0.3;
+  transform: scale(0.82) translateX(85%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --- Card viewer area --- */
 .collection-3d-card__viewer {
   position: relative;
   width: 100%;
@@ -1738,6 +1764,7 @@ body.app-is-booting .intro-landing__loading {
     radial-gradient(circle at 50% 60%, rgba(201, 168, 76, 0.06), transparent 55%),
     #08080c;
   overflow: hidden;
+  transition: height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .collection-3d-card__viewer model-viewer {
@@ -1757,6 +1784,7 @@ body.app-is-booting .intro-landing__loading {
   letter-spacing: 0.08em;
   color: rgba(201, 168, 76, 0.12);
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .collection-3d-card__glow {
@@ -1771,11 +1799,17 @@ body.app-is-booting .intro-landing__loading {
 }
 
 .collection-3d-card.is-active .collection-3d-card__glow {
-  opacity: 1;
+  opacity: 0.5;
 }
 
+/* --- Card body --- */
 .collection-3d-card__body {
   padding: 1.2rem 1.4rem 1.4rem;
+  max-height: 300px;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              padding 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.35s ease;
 }
 
 .collection-3d-card__meta {
@@ -1861,6 +1895,88 @@ body.app-is-booting .intro-landing__loading {
   transform: translateX(4px);
 }
 
+/* --- Expanded state --- */
+.collection-3d-card.is-expanded {
+  cursor: default;
+}
+
+.collection-3d-card.is-expanded .collection-3d-card__viewer {
+  height: 400px;
+}
+
+.collection-3d-card.is-expanded .collection-3d-card__body {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
+.collection-3d-card.is-expanded .collection-3d-card__glow {
+  opacity: 1;
+  height: 3px;
+}
+
+.collection-3d-section.has-expanded .collection-3d-card.is-prev,
+.collection-3d-section.has-expanded .collection-3d-card.is-next {
+  opacity: 0.08;
+}
+
+/* --- Close button --- */
+.collection-3d-card__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(5, 5, 8, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--color-silver);
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.06);
+}
+
+.collection-3d-card.is-expanded .collection-3d-card__close {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.collection-3d-card__close:hover {
+  color: var(--color-gold);
+  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.25);
+}
+
+/* --- Expand hint --- */
+.collection-3d-card__expand-hint {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Space Mono", monospace;
+  font-size: 0.42rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(168, 168, 184, 0.35);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.collection-3d-card.is-active:not(.is-expanded) .collection-3d-card__expand-hint {
+  opacity: 1;
+}
+
 /* --- Progress --- */
 .collection-3d__progress {
   display: flex;
@@ -1869,6 +1985,11 @@ body.app-is-booting .intro-landing__loading {
   gap: 1rem;
   margin-top: 1.8rem;
   padding: 0 2rem;
+  transition: opacity 0.4s ease;
+}
+
+.collection-3d-section.has-expanded .collection-3d__progress {
+  opacity: 0.3;
 }
 
 .collection-3d__counter {
@@ -1899,27 +2020,28 @@ body.app-is-booting .intro-landing__loading {
 /* --- Responsive --- */
 @media (max-width: 991.98px) {
   .collection-3d-section { padding: 4rem 0 3rem; }
-  .collection-3d__viewport { padding: 0 2.5rem; }
-  .collection-3d-card {
-    flex: 0 0 calc(65% - 0.75rem);
-    min-width: 280px;
-  }
+  .collection-3d__viewport { max-width: 700px; }
+  .collection-3d-card { width: 380px; }
   .collection-3d-card__viewer { height: 200px; }
+  .collection-3d-card.is-expanded .collection-3d-card__viewer { height: 340px; }
+  .collection-3d__arrow--prev { left: -0.5rem; }
+  .collection-3d__arrow--next { right: -0.5rem; }
 }
 
 @media (max-width: 575.98px) {
   .collection-3d-section { padding: 3rem 0 2.5rem; }
-  .collection-3d__viewport { padding: 0 0.5rem; }
+  .collection-3d__viewport { max-width: 100%; padding: 0 1rem; }
   .collection-3d__arrow { display: none; }
-  .collection-3d-card {
-    flex: 0 0 calc(88% - 0.75rem);
-    min-width: 260px;
-  }
+  .collection-3d-card { width: 100%; max-width: 360px; }
   .collection-3d-card__viewer { height: 180px; }
+  .collection-3d-card.is-expanded .collection-3d-card__viewer { height: 300px; }
   .collection-3d-card__name { font-size: 1.3rem; }
+  .collection-3d-card.is-prev,
+  .collection-3d-card.is-next { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .collection-3d__track { scroll-behavior: auto; }
   .collection-3d-card { transition: none; }
+  .collection-3d-card__viewer { transition: none; }
+  .collection-3d-card__body { transition: none; }
 }
