@@ -7,9 +7,9 @@ window.CollectionCarousel = (function () {
       name: "Revuelto",
       sub: "Hybrid V12",
       chips: ["Hybrid", "V12"],
-      cameraOrbit: "35deg 72deg 115%",
-      cameraTarget: "0m 0.35m 0m",
-      fieldOfView: "32deg"
+      cameraOrbit: "325deg 78deg 105%",
+      cameraTarget: "0m 0.3m 0m",
+      fieldOfView: "28deg"
     },
     {
       id: "centenario-roadster",
@@ -18,20 +18,20 @@ window.CollectionCarousel = (function () {
       name: "Centenario Roadster",
       sub: "Limited Edition",
       chips: ["V12", "Roadster"],
-      cameraOrbit: "42deg 68deg 110%",
+      cameraOrbit: "325deg 78deg 105%",
       cameraTarget: "0m 0.3m 0m",
-      fieldOfView: "30deg"
+      fieldOfView: "28deg"
     },
     {
-      id: "centenario-interior",
+      id: "centenario-lp770",
       model: "assets/model/lamborghini_centenario_lp-770_interior_sdc.glb",
       brand: "Lamborghini",
       name: "Centenario LP-770",
-      sub: "Interior Experience",
-      chips: ["V12", "Interior"],
-      cameraOrbit: "180deg 85deg 60%",
-      cameraTarget: "0m 0.5m 0m",
-      fieldOfView: "45deg"
+      sub: "Super Trofeo",
+      chips: ["V12", "Track"],
+      cameraOrbit: "325deg 78deg 105%",
+      cameraTarget: "0m 0.3m 0m",
+      fieldOfView: "28deg"
     }
   ];
 
@@ -97,7 +97,7 @@ window.CollectionCarousel = (function () {
             '<a href="assets/html/detail.html?car=' + car.id + '" class="collection-3d-card__cta">Xem chi ti\u1EBFt</a>' +
           "</div>" +
         "</div>" +
-        '<div class="collection-3d-card__expand-hint">Click \u0111\u1EC3 xem 3D</div>';
+        '<div class="collection-3d-card__expand-hint">Nh\u1EA5p \u0111\u1EC3 t\u01B0\u01A1ng t\u00E1c 3D</div>';
 
       fragment.appendChild(card);
       cards.push(card);
