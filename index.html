@@ -23,6 +23,9 @@
     <link rel="preload" as="fetch" href="assets/model/2019_ferrari_488_pista_spider.glb" crossorigin />
     <link rel="preload" as="fetch" href="assets/model/2020_ferrari_roma.glb" crossorigin />
     <link rel="preload" as="image" href="assets/media/hero/apex-intro-poster.jpg" />
+    <link rel="preload" as="fetch" href="assets/model/revuelto_3.0tm.glb" crossorigin />
+    <link rel="preload" as="fetch" href="assets/model/lamborghini_centenario_roadster_sdc.glb" crossorigin />
+    <link rel="preload" as="fetch" href="assets/model/lamborghini_centenario_lp-770_interior_sdc.glb" crossorigin />
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   </head>
   <body>
@@ -218,37 +221,65 @@
         </div>
       </section>
 
-      <!-- COLLECTION 3D CAROUSEL -->
-      <section id="collection-3d" class="collection-3d-section">
-        <div class="container-luxury">
-          <div class="collection-3d__header reveal">
-            <p class="section-kicker">Bộ Sưu Tập 3D</p>
-            <h2 class="section-title">Khám Phá Thêm</h2>
+      <!-- LAMBORGHINI GALLERY — Cinematic Horizontal Showcase -->
+      <section id="lamborghini-gallery" class="lambo-gallery">
+        <div class="lambo-gallery__track">
+          <!-- Background parallax layer -->
+          <div class="lambo-gallery__bg" id="lambo-gallery-bg"></div>
+
+          <!-- Three.js canvas mount -->
+          <div class="lambo-gallery__canvas-wrap" id="lambo-gallery-canvas"></div>
+
+          <!-- Particle overlay canvas -->
+          <canvas class="lambo-gallery__particles" id="lambo-gallery-particles"></canvas>
+
+          <!-- Text panels (one per car, parallax layer) -->
+          <div class="lambo-gallery__panels" id="lambo-gallery-panels">
+            <div class="lambo-gallery__panel" data-car="revuelto">
+              <div class="lambo-gallery__info">
+                <h3 class="lambo-gallery__name">REVUELTO</h3>
+                <p class="lambo-gallery__sub">V12 Hybrid Supercar</p>
+              </div>
+              <div class="lambo-gallery__specs">
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">1015</span><span class="lambo-gallery__spec-unit">HP</span></div>
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">2.5<small>s</small></span><span class="lambo-gallery__spec-unit">0-100</span></div>
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">350</span><span class="lambo-gallery__spec-unit">km/h</span></div>
+              </div>
+            </div>
+
+            <div class="lambo-gallery__panel" data-car="centenario-roadster">
+              <div class="lambo-gallery__info">
+                <h3 class="lambo-gallery__name">CENTENARIO ROADSTER</h3>
+                <p class="lambo-gallery__sub">Limited Edition — 20 Units</p>
+              </div>
+              <div class="lambo-gallery__specs">
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">770</span><span class="lambo-gallery__spec-unit">HP</span></div>
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">2.8<small>s</small></span><span class="lambo-gallery__spec-unit">0-100</span></div>
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">355</span><span class="lambo-gallery__spec-unit">km/h</span></div>
+              </div>
+            </div>
+
+            <div class="lambo-gallery__panel" data-car="centenario-interior">
+              <div class="lambo-gallery__info">
+                <h3 class="lambo-gallery__name">CENTENARIO LP-770</h3>
+                <p class="lambo-gallery__sub">Interior Experience</p>
+              </div>
+              <div class="lambo-gallery__specs">
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">770</span><span class="lambo-gallery__spec-unit">HP</span></div>
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">Alcantara</span><span class="lambo-gallery__spec-unit">Material</span></div>
+                <div class="lambo-gallery__spec"><span class="lambo-gallery__spec-val">Carbon</span><span class="lambo-gallery__spec-unit">Trim</span></div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="collection-3d__viewport">
-          <button type="button" class="collection-3d__arrow collection-3d__arrow--prev" aria-label="Previous car">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="13,4 7,10 13,16"/>
-            </svg>
-          </button>
-
-          <div class="collection-3d__track" id="collection-track">
-            <!-- Cards injected by JS -->
-          </div>
-
-          <button type="button" class="collection-3d__arrow collection-3d__arrow--next" aria-label="Next car">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="7,4 13,10 7,16"/>
-            </svg>
-          </button>
-        </div>
-
-        <div class="collection-3d__progress">
-          <span class="collection-3d__counter" id="collection-counter">1 / —</span>
-          <div class="collection-3d__bar">
-            <div class="collection-3d__bar-fill" id="collection-bar-fill"></div>
+          <!-- Progress indicator -->
+          <div class="lambo-gallery__progress">
+            <div class="lambo-gallery__progress-bar"><div class="lambo-gallery__progress-fill" id="lambo-gallery-fill"></div></div>
+            <div class="lambo-gallery__dots">
+              <button class="lambo-gallery__dot is-active" data-index="0" aria-label="Revuelto"></button>
+              <button class="lambo-gallery__dot" data-index="1" aria-label="Centenario Roadster"></button>
+              <button class="lambo-gallery__dot" data-index="2" aria-label="Centenario Interior"></button>
+            </div>
           </div>
         </div>
       </section>
@@ -311,8 +342,9 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="assets/js/intro-landing.js"></script>
     <script src="assets/js/hero-3d.js"></script>
+    <script src="assets/js/lambo-gallery.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/collection-carousel.js"></script>
+
     <script src="assets/js/home.js"></script>
   </body>
 </html>
