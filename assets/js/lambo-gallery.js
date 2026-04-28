@@ -46,7 +46,7 @@ window.LamboGallery = (function () {
   var particleCanvas, particleCtx;
   var particleAnimId = null;
   var neonStreaks = [], lightLines = [], smokes = [], dust = [];
-  var mouse = { x: 0, y: 0, px: 0, py: 0, active: false };
+  var mouse = { x: 0, y: 0, px: 0, py: 0, dragging: false };
 
   // DOM references
   var section, canvasWrap, bgEl, panelsEl, fillEl;
@@ -295,9 +295,12 @@ window.LamboGallery = (function () {
     particleCtx = particleCanvas.getContext("2d");
     particleCtx.scale(dpr, dpr);
 
-    section.addEventListener("mouseenter", function () { mouse.active = true; });
-    section.addEventListener("mouseleave", function () { mouse.active = false; });
-    section.addEventListener("mousemove", function (e) {
+    canvasWrap.addEventListener("mousedown", function () { mouse.dragging = true; });
+    window.addEventListener("mouseup", function () { mouse.dragging = false; });
+    window.addEventListener("mousemove", function (e) {
+      if (!mouse.dragging) return;
+      var rect = section.getBoundingClientRect();
+      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
       mouse.px = mouse.x; mouse.py = mouse.y;
       mouse.x = e.clientX; mouse.y = e.clientY;
     });
@@ -306,7 +309,7 @@ window.LamboGallery = (function () {
   }
 
   function spawnParticles() {
-    if (!mouse.active) return;
+    if (!mouse.dragging) return;
     var speed = Math.sqrt(Math.pow(mouse.x - mouse.px, 2) + Math.pow(mouse.y - mouse.py, 2));
     if (speed < 1.5) return;
 
