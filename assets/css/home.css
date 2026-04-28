@@ -1633,7 +1633,7 @@ body.app-is-booting .intro-landing__loading {
 
 
 /* ----------------------------------------------------------
-   LAMBORGHINI GALLERY — Cinematic Horizontal Showcase
+   LAMBORGHINI GALLERY — Cinematic Showcase
    ---------------------------------------------------------- */
 .lambo-gallery {
   position: relative;
@@ -1643,29 +1643,17 @@ body.app-is-booting .intro-landing__loading {
   background: #050508;
 }
 
-.lambo-gallery__track {
-  display: flex;
-  width: 300vw;
-  height: 100vh;
-  position: relative;
-}
-
 .lambo-gallery__bg {
   position: absolute;
   inset: 0;
-  width: 300vw;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at 16% 60%, rgba(230, 57, 70, 0.06), transparent 50%),
-              radial-gradient(ellipse at 50% 60%, rgba(0, 180, 216, 0.06), transparent 50%),
-              radial-gradient(ellipse at 84% 60%, rgba(201, 168, 76, 0.06), transparent 50%);
+  transition: background 0.8s ease;
 }
 
 .lambo-gallery__canvas-wrap {
   position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
   z-index: 1;
 }
 
@@ -1679,32 +1667,33 @@ body.app-is-booting .intro-landing__loading {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
 }
 
 .lambo-gallery__panels {
   position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  width: 300vw;
-  height: 100vh;
+  inset: 0;
   z-index: 3;
   pointer-events: none;
 }
 
 .lambo-gallery__panel {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 0 clamp(2rem, 5vw, 5rem) clamp(5rem, 8vh, 7rem);
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.lambo-gallery__panel.is-active {
+  opacity: 1;
 }
 
 .lambo-gallery__info {
@@ -1713,16 +1702,16 @@ body.app-is-booting .intro-landing__loading {
 
 .lambo-gallery__name {
   font-family: "Bebas Neue", sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
   letter-spacing: 0.08em;
   color: var(--color-text);
-  margin: 0 0 0.2rem;
+  margin: 0 0 0.15rem;
   line-height: 1;
 }
 
 .lambo-gallery__sub {
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  font-size: clamp(0.7rem, 1.1vw, 0.9rem);
   font-weight: 300;
   font-style: italic;
   letter-spacing: 0.1em;
@@ -1732,8 +1721,8 @@ body.app-is-booting .intro-landing__loading {
 
 .lambo-gallery__specs {
   display: flex;
-  gap: clamp(1.5rem, 3vw, 3rem);
-  margin-top: 1.2rem;
+  gap: clamp(1.2rem, 2.5vw, 2.5rem);
+  margin-top: 0.8rem;
   pointer-events: auto;
 }
 
@@ -1745,7 +1734,7 @@ body.app-is-booting .intro-landing__loading {
 
 .lambo-gallery__spec-val {
   font-family: "Bebas Neue", sans-serif;
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
   color: var(--color-gold);
   line-height: 1.1;
   letter-spacing: 0.04em;
@@ -1757,41 +1746,87 @@ body.app-is-booting .intro-landing__loading {
 
 .lambo-gallery__spec-unit {
   font-family: "Space Mono", monospace;
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--color-muted);
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
 }
 
-/* Progress indicator */
-.lambo-gallery__progress {
+/* Arrow navigation */
+.lambo-gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  background: rgba(10, 10, 15, 0.6);
+  color: var(--color-silver);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+}
+
+.lambo-gallery__arrow:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(10, 10, 15, 0.8);
+}
+
+.lambo-gallery__arrow--prev { left: clamp(1rem, 3vw, 2.5rem); }
+.lambo-gallery__arrow--next { right: clamp(1rem, 3vw, 2.5rem); }
+
+/* Custom cursor */
+.lambo-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.lambo-cursor.is-active { opacity: 1; }
+
+.lambo-cursor__ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--color-gold, #c9a84c);
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: lambo-cursor-pulse 1.8s ease-in-out infinite;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.lambo-cursor__dot {
+  width: 5px; height: 5px;
+  background: var(--color-gold, #c9a84c);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-gold, #c9a84c), 0 0 16px rgba(201,168,76,0.3);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes lambo-cursor-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.3; }
+}
+
+/* Dots navigation */
+.lambo-gallery__nav {
   position: absolute;
   bottom: clamp(1.5rem, 3vh, 2.5rem);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  width: min(80vw, 400px);
-}
-
-.lambo-gallery__progress-bar {
-  width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.lambo-gallery__progress-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--color-gold);
-  border-radius: 1px;
-  transition: width 0.05s linear;
+  z-index: 5;
 }
 
 .lambo-gallery__dots {
@@ -1830,5 +1865,10 @@ body.app-is-booting .intro-landing__loading {
   }
   .lambo-gallery__particles {
     display: none;
+  }
+  .lambo-gallery__arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
   }
 }

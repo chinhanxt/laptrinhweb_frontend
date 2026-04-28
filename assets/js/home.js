@@ -95,41 +95,24 @@
 
     if (window.LamboGallery) {
       bootTasks.push(window.LamboGallery.whenReady());
+      window.LamboGallery.init();
 
       if (!isMobile) {
-        window.LamboGallery.init();
-
         gsap.registerPlugin(ScrollTrigger);
         ScrollTrigger.create({
           trigger: "#lamborghini-gallery",
           start: "top 80%",
-          end: "bottom 20%",
           onEnter: function () {
             if (window.APEXHero3D && typeof window.APEXHero3D.dispose === "function") {
               window.APEXHero3D.dispose();
             }
           },
           onLeaveBack: function () {
-            if (window.LamboGallery && typeof window.LamboGallery.dispose === "function") {
-              window.LamboGallery.dispose();
-            }
             if (window.APEXHero3D && typeof window.APEXHero3D.reinit === "function") {
               window.APEXHero3D.reinit();
             }
-          },
-          onLeave: function () {
-            if (window.LamboGallery && typeof window.LamboGallery.dispose === "function") {
-              window.LamboGallery.dispose();
-            }
-          },
-          onEnterBack: function () {
-            if (window.LamboGallery && typeof window.LamboGallery.reinit === "function") {
-              window.LamboGallery.reinit();
-            }
           }
         });
-      } else {
-        window.LamboGallery.init();
       }
     }
 

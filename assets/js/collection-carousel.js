@@ -29,9 +29,9 @@ window.CollectionCarousel = (function () {
       name: "Centenario LP-770",
       sub: "Super Trofeo",
       chips: ["V12", "Track"],
-      cameraOrbit: "325deg 78deg 105%",
-      cameraTarget: "0m 0.3m 0m",
-      fieldOfView: "28deg"
+      cameraOrbit: "325deg 75deg 120%",
+      cameraTarget: "0m 0.45m 0m",
+      fieldOfView: "30deg"
     }
   ];
 
@@ -132,7 +132,7 @@ window.CollectionCarousel = (function () {
         if (e.target.closest(".collection-3d-card__cta")) {
           return;
         }
-        if (card.classList.contains("is-active") && !isExpanded) {
+        if (card.classList.contains("is-active") && !isExpanded && !isCollapsing) {
           expandCard(index);
         }
       });
@@ -160,7 +160,9 @@ window.CollectionCarousel = (function () {
     document.addEventListener("click", function (e) {
       if (!isExpanded) return;
       var activeCard = cards[activeIndex];
-      if (activeCard && !activeCard.contains(e.target)) {
+      var inCard = activeCard && activeCard.contains(e.target);
+      var inStage = floatStage && floatStage.contains(e.target);
+      if (!inCard && !inStage) {
         collapseCard();
       }
     });
@@ -203,41 +205,149 @@ window.CollectionCarousel = (function () {
     loadModelForCard(newIndex);
   }
 
-  function expandCard(index) {
-    isExpanded = true;
-    var card = cards[index];
-    card.classList.add("is-expanded");
-    if (sectionEl) sectionEl.classList.add("has-expanded");
+  var overlayEl = null;
+  var floatStage = null;
+  var expandedMvOrigin = null;
 
-    var mv = card.querySelector("model-viewer");
-    if (mv) {
-      mv.setAttribute("camera-controls", "");
-      mv.removeAttribute("disable-zoom");
-      mv.setAttribute("auto-rotate", "");
-      mv.setAttribute("auto-rotate-delay", "0");
-      mv.setAttribute("rotation-per-second", "18deg");
+  function ensureOverlayAndStage() {
+    if (!overlayEl) {
+      overlayEl = document.createElement("div");
+      overlayEl.className = "collection-3d__overlay";
+      document.body.appendChild(overlayEl);
+      overlayEl.addEventListener("click", function () {
+        collapseCard();
+      });
+    }
+    if (!floatStage) {
+      floatStage = document.createElement("div");
+      floatStage.className = "collection-3d__float-stage";
+      document.body.appendChild(floatStage);
     }
   }
 
-  function collapseCard() {
-    if (!isExpanded) return;
+  function expandCard(index) {
+    isExpanded = true;
+    ensureOverlayAndStage();
+
+    var card = cards[index];
+    var mv = card.querySelector("model-viewer");
+    var viewerArea = card.querySelector(".collection-3d-card__viewer");
+
+    card.classList.add("is-expanded");
+    if (sectionEl) sectionEl.classList.add("has-expanded");
+
+    expandedMvOrigin = viewerArea;
+
+    var cardRect = card.getBoundingClientRect();
+    var viewerRect = viewerArea.getBoundingClientRect();
+
+    var stageWidth = viewerRect.width * 1.6;
+    var stageHeight = viewerRect.height * 1.8;
+    var stageLeft = cardRect.left + cardRect.width / 2 - stageWidth / 2;
+    var stageTop = viewerRect.top - (stageHeight - viewerRect.height) * 0.6;
+
+    floatStage.style.left = stageLeft + "px";
+    floatStage.style.top = stageTop + "px";
+    floatStage.style.width = stageWidth + "px";
+    floatStage.style.height = stageHeight + "px";
+
+    floatStage.appendChild(mv);
+    overlayEl.classList.add("is-visible");
+    floatStage.classList.add("is-visible");
+
+    mv.setAttribute("camera-controls", "");
+    mv.removeAttribute("disable-zoom");
+    mv.setAttribute("auto-rotate", "");
+    mv.setAttribute("auto-rotate-delay", "0");
+    mv.setAttribute("rotation-per-second", "18deg");
+    mv.setAttribute("exposure", "2.0");
+    mv.setAttribute("shadow-intensity", "0.3");
+    mv.setAttribute("environment-image", "legacy");
+  }
+
+  var isCollapsing = false;
+
+  function finishCollapse(mv) {
+    mv.removeAttribute("camera-controls");
+    mv.setAttribute("disable-zoom", "");
+    mv.setAttribute("exposure", "1.0");
+    mv.setAttribute("shadow-intensity", "0");
+    mv.setAttribute("environment-image", "neutral");
+
+    if (expandedMvOrigin) {
+      var poster = expandedMvOrigin.querySelector(".collection-3d-card__poster");
+      if (poster) {
+        expandedMvOrigin.insertBefore(mv, poster);
+      } else {
+        expandedMvOrigin.appendChild(mv);
+      }
+      expandedMvOrigin = null;
+    }
+
+    if (overlayEl) overlayEl.classList.remove("is-visible");
+    if (floatStage) floatStage.classList.remove("is-visible");
+
     isExpanded = false;
+    isCollapsing = false;
 
     cards.forEach(function (card) {
       card.classList.remove("is-expanded");
     });
     if (sectionEl) sectionEl.classList.remove("has-expanded");
+  }
 
-    var activeCard = cards[activeIndex];
-    var mv = activeCard ? activeCard.querySelector("model-viewer") : null;
+  function collapseCard() {
+    if (!isExpanded || isCollapsing) return;
+    isCollapsing = true;
+
+    var mv = floatStage ? floatStage.querySelector("model-viewer") : null;
+    var car = COLLECTION_CARS[activeIndex];
+
     if (mv) {
-      mv.removeAttribute("camera-controls");
-      mv.setAttribute("disable-zoom", "");
       mv.removeAttribute("auto-rotate");
-      var car = COLLECTION_CARS[activeIndex];
-      mv.setAttribute("camera-orbit", car.cameraOrbit || "45deg 75deg 105%");
-      mv.setAttribute("camera-target", car.cameraTarget || "0m 0.4m 0m");
-      mv.setAttribute("field-of-view", car.fieldOfView || "30deg");
+
+      var targetOrbit = car.cameraOrbit || "45deg 75deg 105%";
+      var targetTarget = car.cameraTarget || "0m 0.4m 0m";
+      var targetFov = car.fieldOfView || "30deg";
+
+      mv.setAttribute("interpolation-decay", "80");
+      mv.setAttribute("camera-orbit", targetOrbit);
+      mv.setAttribute("camera-target", targetTarget);
+      mv.setAttribute("field-of-view", targetFov);
+
+      var settled = false;
+      var safetyTimer = setTimeout(function () {
+        if (!settled) {
+          settled = true;
+          mv.removeAttribute("interpolation-decay");
+          finishCollapse(mv);
+        }
+      }, 1200);
+
+      mv.addEventListener("camera-change", function onCamChange(e) {
+        if (settled) {
+          mv.removeEventListener("camera-change", onCamChange);
+          return;
+        }
+        if (e.detail && e.detail.source === "none") {
+          settled = true;
+          clearTimeout(safetyTimer);
+          mv.removeEventListener("camera-change", onCamChange);
+          mv.removeAttribute("interpolation-decay");
+          setTimeout(function () {
+            finishCollapse(mv);
+          }, 50);
+        }
+      });
+    } else {
+      isExpanded = false;
+      isCollapsing = false;
+      if (overlayEl) overlayEl.classList.remove("is-visible");
+      if (floatStage) floatStage.classList.remove("is-visible");
+      cards.forEach(function (card) {
+        card.classList.remove("is-expanded");
+      });
+      if (sectionEl) sectionEl.classList.remove("has-expanded");
     }
   }
 
@@ -259,7 +369,7 @@ window.CollectionCarousel = (function () {
     mv.setAttribute("camera-orbit", car.cameraOrbit || "45deg 75deg 105%");
     mv.setAttribute("camera-target", car.cameraTarget || "0m 0.4m 0m");
     mv.setAttribute("field-of-view", car.fieldOfView || "30deg");
-    mv.setAttribute("exposure", "0.8");
+    mv.setAttribute("exposure", "1.0");
     mv.setAttribute("shadow-intensity", "0");
     mv.setAttribute("environment-image", "neutral");
     mv.setAttribute("loading", "lazy");

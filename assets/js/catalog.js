@@ -3,9 +3,6 @@
    ============================================================ */
 $(function () {
 
-  /* ----------------------------------------------------------
-     1. FILTER: show / hide .car-item based on data attributes
-     ---------------------------------------------------------- */
   var $series = $("#filter-series");
   var $price  = $("#filter-price");
   var $grid   = $("#catalog-grid");
@@ -46,9 +43,6 @@ $(function () {
     applyFilter();
   });
 
-  /* ----------------------------------------------------------
-     2. QUICK-VIEW MODAL: populate title + copy from data attrs
-     ---------------------------------------------------------- */
   $(document).on("click", ".quick-view-btn", function () {
     var $btn = $(this);
     var title = $btn.data("title");
@@ -63,7 +57,8 @@ $(function () {
       }
     }
     if (car) {
-      $("#quickViewDetailLink").attr("data-car", car.id);
+      var basePath = window.location.pathname.indexOf("/assets/html/") !== -1 ? "" : "assets/html/";
+      $("#quickViewDetailLink").attr("href", basePath + "detail.html?car=" + car.id);
     }
   });
 

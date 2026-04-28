@@ -5,6 +5,11 @@
 (function () {
   var detailTriggers = [];
 
+  function getCarIdFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get("car");
+  }
+
   function renderDetail(carId) {
     var car = null;
     for (var i = 0; i < CARS_DATA.length; i++) {
@@ -91,6 +96,14 @@
       }
     });
   }
+
+  $(function () {
+    var carId = getCarIdFromURL();
+    if (carId) {
+      renderDetail(carId);
+    }
+    initDetailAnimations();
+  });
 
   window.renderDetail = renderDetail;
   window.initDetailAnimations = initDetailAnimations;
