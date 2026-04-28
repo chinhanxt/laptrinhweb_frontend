@@ -46,7 +46,8 @@ window.LamboGallery = (function () {
   var particleCanvas, particleCtx;
   var particleAnimId = null;
   var neonStreaks = [], lightLines = [], smokes = [], dust = [];
-  var mouse = { x: 0, y: 0, px: 0, py: 0, dragging: false };
+  var prevAzimuth = 0, prevPolar = 0;
+  var spawnCooldown = 0;
 
   // DOM references
   var section, canvasWrap, bgEl, panelsEl, fillEl;
@@ -295,85 +296,91 @@ window.LamboGallery = (function () {
     particleCtx = particleCanvas.getContext("2d");
     particleCtx.scale(dpr, dpr);
 
-    canvasWrap.addEventListener("mousedown", function () { mouse.dragging = true; });
-    window.addEventListener("mouseup", function () { mouse.dragging = false; });
-    window.addEventListener("mousemove", function (e) {
-      if (!mouse.dragging) return;
-      var rect = section.getBoundingClientRect();
-      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
-      mouse.px = mouse.x; mouse.py = mouse.y;
-      mouse.x = e.clientX; mouse.y = e.clientY;
-    });
+    if (controls) {
+      prevAzimuth = controls.getAzimuthalAngle();
+      prevPolar = controls.getPolarAngle();
+    }
 
     animateParticles();
   }
 
   function spawnParticles() {
-    if (!mouse.dragging) return;
-    var speed = Math.sqrt(Math.pow(mouse.x - mouse.px, 2) + Math.pow(mouse.y - mouse.py, 2));
-    if (speed < 1.5) return;
+    if (!controls) return;
 
-    var angle = Math.atan2(mouse.y - mouse.py, mouse.x - mouse.px);
+    var azimuth = controls.getAzimuthalAngle();
+    var polar = controls.getPolarAngle();
+    var dAz = azimuth - prevAzimuth;
+    var dPo = polar - prevPolar;
+    prevAzimuth = azimuth;
+    prevPolar = polar;
+
+    var rotSpeed = Math.sqrt(dAz * dAz + dPo * dPo);
+    if (rotSpeed < 0.005) return;
+
+    if (spawnCooldown > 0) { spawnCooldown--; return; }
+    spawnCooldown = 3;
+
+    var w = window.innerWidth, h = window.innerHeight;
+    var cx = w * 0.5, cy = h * 0.45;
     var car = GALLERY_CARS[currentIndex];
     var hueMin = car.color.hueRange[0];
     var hueMax = car.color.hueRange[1];
-    var intensity = Math.min(speed, 40);
+    var dir = dAz > 0 ? 1 : -1;
 
-    var neonCount = Math.min(intensity * 0.3, 4);
-    for (var i = 0; i < neonCount; i++) {
-      var spread = (Math.random() - 0.5) * 0.5;
-      neonStreaks.push({
-        x: mouse.x, y: mouse.y,
-        vx: -Math.cos(angle + spread) * (speed * 0.28 + Math.random() * 2),
-        vy: -Math.sin(angle + spread) * (speed * 0.28 + Math.random() * 2),
-        life: 1, decay: 0.014 + Math.random() * 0.008,
-        len: speed * 0.7 + Math.random() * 18,
-        width: Math.random() * 2.5 + 0.6,
-        hue: hueMin + Math.random() * (hueMax - hueMin)
-      });
-    }
+    var edgeX = dir > 0 ? cx + w * 0.18 : cx - w * 0.18;
+    var baseAngle = dir > 0 ? 0 : Math.PI;
 
-    var lineCount = Math.min(intensity * 0.2, 3);
-    for (var j = 0; j < lineCount; j++) {
-      var lSpread = (Math.random() - 0.5) * 0.35;
+    neonStreaks.push({
+      x: edgeX + (Math.random() - 0.5) * 60,
+      y: cy + (Math.random() - 0.5) * h * 0.35,
+      vx: Math.cos(baseAngle + (Math.random() - 0.5) * 0.4) * (2 + Math.random() * 2.5),
+      vy: (Math.random() - 0.5) * 1.2,
+      life: 1, decay: 0.012 + Math.random() * 0.006,
+      len: 25 + Math.random() * 30,
+      width: Math.random() * 2 + 0.8,
+      hue: hueMin + Math.random() * (hueMax - hueMin)
+    });
+
+    if (Math.random() > 0.5) {
       lightLines.push({
-        x: mouse.x, y: mouse.y,
-        vx: -Math.cos(angle + lSpread) * (speed * 0.18 + Math.random() * 1.2),
-        vy: -Math.sin(angle + lSpread) * (speed * 0.18 + Math.random() * 1.2),
-        life: 1, decay: 0.02 + Math.random() * 0.012,
-        len: speed * 0.5 + Math.random() * 10,
-        width: Math.random() * 1.2 + 0.3
+        x: edgeX + (Math.random() - 0.5) * 80,
+        y: cy + (Math.random() - 0.5) * h * 0.3,
+        vx: Math.cos(baseAngle + (Math.random() - 0.5) * 0.3) * (1.5 + Math.random() * 1.5),
+        vy: (Math.random() - 0.5) * 0.8,
+        life: 1, decay: 0.018 + Math.random() * 0.01,
+        len: 15 + Math.random() * 18,
+        width: Math.random() * 1 + 0.3
       });
     }
 
-    if (Math.random() > 0.45) {
+    if (rotSpeed > 0.02 && Math.random() > 0.7) {
       smokes.push({
-        x: mouse.x + (Math.random() - 0.5) * 25,
-        y: mouse.y + (Math.random() - 0.5) * 12,
-        vx: -Math.cos(angle) * speed * 0.04 + (Math.random() - 0.5) * 0.6,
-        vy: -0.25 - Math.random() * 0.35,
-        size: Math.random() * 20 + 8,
-        life: 1, decay: 0.008 + Math.random() * 0.005,
+        x: edgeX + (Math.random() - 0.5) * 40,
+        y: cy + h * 0.12 + Math.random() * 30,
+        vx: dir * (0.3 + Math.random() * 0.4),
+        vy: -0.15 - Math.random() * 0.2,
+        size: Math.random() * 15 + 6,
+        life: 1, decay: 0.008 + Math.random() * 0.004,
         rot: Math.random() * Math.PI * 2,
-        rotSpd: (Math.random() - 0.5) * 0.012
+        rotSpd: (Math.random() - 0.5) * 0.008
       });
     }
 
-    if (Math.random() > 0.65) {
+    if (rotSpeed > 0.015 && Math.random() > 0.75) {
       dust.push({
-        x: mouse.x + (Math.random() - 0.5) * 60,
-        y: window.innerHeight - 100 + Math.random() * 20,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: -Math.random() * 0.5 - 0.15,
-        size: Math.random() * 2 + 0.4,
-        life: 1, decay: 0.006 + Math.random() * 0.004
+        x: cx + (Math.random() - 0.5) * w * 0.4,
+        y: h - 80 + Math.random() * 15,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: -Math.random() * 0.3 - 0.1,
+        size: Math.random() * 1.5 + 0.3,
+        life: 1, decay: 0.005 + Math.random() * 0.003
       });
     }
 
     // Hard cap
     var total = neonStreaks.length + lightLines.length + smokes.length + dust.length;
-    if (total > 200) {
-      var excess = total - 200;
+    if (total > 60) {
+      var excess = total - 60;
       var removeDust = Math.min(excess, dust.length);
       dust.splice(0, removeDust);
       excess -= removeDust;
