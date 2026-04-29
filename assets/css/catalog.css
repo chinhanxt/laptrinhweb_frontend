@@ -1,16 +1,13 @@
 /* ============================================================
-   CATALOG PAGE — APEX Motors
-   Card grid, filter controls, quick-view modal
+   CATALOG PAGE — T.R.Y.P
+   Horizontal card strip, brand filter tabs
    ============================================================ */
 
-/* ----------------------------------------------------------
-   CATALOG HERO
-   ---------------------------------------------------------- */
+/* HERO */
 .catalog-hero {
-  padding: 8rem 0 3rem;
+  padding: 8rem 0 2rem;
   text-align: center;
 }
-
 .catalog-hero__sub {
   font-family: "Cormorant Garamond", serif;
   font-size: 1.15rem;
@@ -20,23 +17,187 @@
   margin-inline: auto;
 }
 
-/* ----------------------------------------------------------
-   FILTER CONTROLS
-   ---------------------------------------------------------- */
-.catalog-controls {
-  padding: 2rem 0 4rem;
+/* BRAND FILTER TABS */
+.catalog-filters {
+  padding: 1rem 0 2rem;
 }
-
-.catalog-controls__label {
-  display: block;
+.catalog-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-line);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.catalog-tabs::-webkit-scrollbar {
+  display: none;
+}
+.catalog-tab {
+  flex-shrink: 0;
+  padding: 0.75rem 1.5rem;
   font-family: "Space Mono", monospace;
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-silver);
-  margin-bottom: 0.4rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  white-space: nowrap;
+}
+.catalog-tab:hover {
+  color: var(--color-text);
+}
+.catalog-tab.is-active {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
 }
 
+/* HORIZONTAL CARD STRIP */
+.catalog-strip-section {
+  padding: 0 0 5rem;
+  position: relative;
+}
+.catalog-strip {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem calc((100vw - var(--container-max)) / 2 + 16px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  scrollbar-width: none;
+}
+.catalog-strip::-webkit-scrollbar {
+  display: none;
+}
+.catalog-strip:active {
+  cursor: grabbing;
+}
+
+/* CATALOG CARD */
+.catalog-card {
+  flex-shrink: 0;
+  width: 340px;
+  scroll-snap-align: start;
+  background: rgba(15, 15, 20, 0.92);
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s var(--ease-luxury), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.catalog-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201, 168, 76, 0.35);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201, 168, 76, 0.12);
+}
+
+/* Card image area */
+.catalog-card__media {
+  position: relative;
+  height: 220px;
+  background: linear-gradient(135deg, #0d0d14, #14141e, #0d0d14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.catalog-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.catalog-card__media-placeholder {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.1);
+}
+.catalog-card__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--color-gold);
+}
+
+/* Card body */
+.catalog-card__body {
+  padding: 1.25rem 1.5rem 1rem;
+  flex: 1;
+}
+.catalog-card__name {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+.catalog-card__specs {
+  display: flex;
+  gap: 1rem;
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--color-mono);
+  text-transform: uppercase;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+/* Card footer */
+.catalog-card__footer {
+  padding: 0.75rem 1.5rem 1.25rem;
+}
+
+/* Empty state */
+.catalog-empty {
+  display: none;
+  text-align: center;
+  font-family: "Space Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--color-silver);
+  padding: 3rem 0;
+}
+
+/* BOOKING MODAL (shared) */
+.showroom-modal {
+  background: #0d0d12;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius-card);
+  color: var(--color-text);
+}
+.showroom-modal__header {
+  border-bottom: 1px solid var(--color-line);
+  padding: 1.2rem 1.5rem;
+}
+.showroom-modal__title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+}
+.showroom-modal__body {
+  padding: 1.5rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.05rem;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+.showroom-modal__footer {
+  border-top: 1px solid var(--color-line);
+  padding: 1rem 1.5rem;
+}
 .catalog-select {
   background-color: rgba(15, 15, 20, 0.92);
   color: var(--color-text);
@@ -46,18 +207,12 @@
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   padding: 0.55rem 2.2rem 0.55rem 0.8rem;
-  min-width: 170px;
-  transition: border-color 0.3s ease;
-  /* Custom dropdown arrow */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23c9a84c' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 0.6rem center;
   background-size: 12px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
-
 .catalog-select:focus {
   border-color: var(--color-gold);
   box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.15);
@@ -65,231 +220,23 @@
   background-color: rgba(15, 15, 20, 0.92);
   color: var(--color-text);
 }
-
 .catalog-select option {
   background: #0d0d12;
   color: var(--color-text);
 }
 
-/* ----------------------------------------------------------
-   CARD GRID SECTION
-   ---------------------------------------------------------- */
-.catalog-grid-section {
-  padding: 0 0 4rem;
-}
-
-/* ----------------------------------------------------------
-   SHOWROOM CARD
-   ---------------------------------------------------------- */
-.showroom-card {
-  background: rgba(15, 15, 20, 0.92);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transition:
-    transform 0.5s var(--ease-luxury),
-    border-color 0.4s ease,
-    box-shadow 0.4s ease;
-  --bs-card-bg: transparent;
-  --bs-card-border-color: transparent;
-  --bs-card-border-width: 0;
-  --bs-card-cap-bg: transparent;
-  --bs-card-color: inherit;
-}
-
-.showroom-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(201, 168, 76, 0.35);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201, 168, 76, 0.12);
-}
-
-/* Media placeholder */
-.showroom-card__media {
-  position: relative;
-  min-height: 220px;
-  background: linear-gradient(135deg, #0d0d14 0%, #14141e 50%, #0d0d14 100%);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 1.2rem;
-  overflow: hidden;
-}
-
-.showroom-card__media::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(15, 15, 20, 0.92) 100%);
-  pointer-events: none;
-}
-
-.showroom-card__media-label {
-  position: relative;
-  z-index: 1;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 1.6rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.12);
-}
-
-/* Card body */
-.showroom-card__body {
-  padding: 1.5rem 1.5rem 1rem;
-  flex: 1;
-}
-
-.showroom-card__brand {
-  font-family: "Space Mono", monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--color-gold);
-  display: block;
-  margin-bottom: 0.4rem;
-}
-
-.showroom-card__title {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 2rem;
-  letter-spacing: 0.04em;
-  line-height: 1.1;
-  color: var(--color-text);
-  margin-bottom: 0.6rem;
-}
-
-.showroom-card__desc {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 0.95rem;
-  color: var(--color-muted);
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.showroom-card__meta {
-  display: flex;
-  gap: 1.2rem;
-  font-family: "Space Mono", monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  color: var(--color-mono);
-  text-transform: uppercase;
-  padding-top: 0.8rem;
-  border-top: 1px solid var(--color-line);
-}
-
-/* Card footer */
-.showroom-card__footer {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 1rem 1.5rem 1.5rem;
-}
-
-/* ----------------------------------------------------------
-   CAR ITEM FILTER ANIMATION
-   ---------------------------------------------------------- */
-.car-item {
-  transition: opacity 0.4s var(--ease-luxury), transform 0.4s var(--ease-luxury);
-}
-
-.car-item.hidden {
-  opacity: 0;
-  transform: scale(0.95);
-  pointer-events: none;
-  position: absolute;
-  left: -9999px;
-}
-
-/* ----------------------------------------------------------
-   EMPTY STATE
-   ---------------------------------------------------------- */
-.catalog-empty {
-  font-family: "Space Mono", monospace;
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  color: var(--color-silver);
-  padding: 2rem 0;
-}
-
-/* ----------------------------------------------------------
-   QUICK-VIEW MODAL
-   ---------------------------------------------------------- */
-.showroom-modal {
-  background: #0d0d12;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  border-radius: var(--radius-card);
-  color: var(--color-text);
-}
-
-.showroom-modal__header {
-  border-bottom: 1px solid var(--color-line);
-  padding: 1.2rem 1.5rem;
-}
-
-.showroom-modal__title {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 0.06em;
-  color: var(--color-text);
-}
-
-.showroom-modal__body {
-  padding: 1.5rem;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.05rem;
-  color: var(--color-muted);
-  line-height: 1.7;
-}
-
-.showroom-modal__footer {
-  border-top: 1px solid var(--color-line);
-  padding: 1rem 1.5rem;
-}
-
-/* ----------------------------------------------------------
-   RESPONSIVE
-   ---------------------------------------------------------- */
+/* RESPONSIVE */
 @media (max-width: 991.98px) {
-  .catalog-hero {
-    padding-top: 7rem;
-  }
-  .catalog-controls .row {
-    gap: 1rem;
+  .catalog-hero { padding-top: 7rem; }
+  .catalog-card { width: 300px; }
+  .catalog-strip {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
-
-@media (max-width: 767.98px) {
-  .catalog-hero {
-    padding: 7rem 0 2rem;
-  }
-
-  .showroom-card__media {
-    min-height: 180px;
-  }
-
-  .showroom-card__title {
-    font-size: 1.6rem;
-  }
-
-  .showroom-card__footer {
-    flex-direction: column;
-  }
-
-  .showroom-card__footer .btn-luxury,
-  .showroom-card__footer .btn-luxury-outline {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .catalog-controls .row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .catalog-select {
-    min-width: 100%;
-  }
+@media (max-width: 575.98px) {
+  .catalog-hero { padding: 7rem 0 1.5rem; }
+  .catalog-card { width: 280px; }
+  .catalog-card__media { height: 180px; }
+  .catalog-card__name { font-size: 1.3rem; }
 }
