@@ -872,11 +872,22 @@ window.APEXHero3D = (function () {
     targetScene.add(ambient, key, rim);
   }
 
+  var renderPaused = false;
+
   function animate() {
     if (!renderer || !scene || !camera) return;
     requestAnimationFrame(animate);
+    if (renderPaused) return;
     if (controls) controls.update();
     renderer.render(scene, camera);
+  }
+
+  function pause() {
+    renderPaused = true;
+  }
+
+  function resume() {
+    renderPaused = false;
   }
 
   var disposed = false;
@@ -969,6 +980,8 @@ window.APEXHero3D = (function () {
     switchCar: switchCar,
     whenReady: function () { return readyPromise; },
     dispose: dispose,
-    reinit: reinit
+    reinit: reinit,
+    pause: pause,
+    resume: resume
   };
 })();

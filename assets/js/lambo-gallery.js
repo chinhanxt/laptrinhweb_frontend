@@ -408,21 +408,37 @@ window.LamboGallery = (function () {
     scene.add(clone);
     activeModel = clone;
 
-    var box = new THREE.Box3().setFromObject(clone);
+    var box = new THREE.Box3();
+    clone.traverse(function (node) {
+      if (!node.isMesh || !node.visible || !node.geometry) return;
+      var mat = Array.isArray(node.material) ? node.material[0] : node.material;
+      if (mat && mat.visible === false) return;
+      var name = (node.name || "").toLowerCase();
+      if (/ground|floor|plane|env|sky|shadow|backdrop/i.test(name)) return;
+      node.updateWorldMatrix(true, false);
+      var geomBox = node.geometry.boundingBox;
+      if (!geomBox) node.geometry.computeBoundingBox();
+      geomBox = node.geometry.boundingBox;
+      if (geomBox) {
+        var worldBox = geomBox.clone().applyMatrix4(node.matrixWorld);
+        box.union(worldBox);
+      }
+    });
+    if (box.isEmpty()) box.setFromObject(clone);
     var size = box.getSize(new THREE.Vector3());
     var center = box.getCenter(new THREE.Vector3());
     var invisMat = new THREE.MeshBasicMaterial({ visible: false });
 
-    hitBox = new THREE.Mesh(new THREE.BoxGeometry(size.x * 1.02, size.y * 1.02, size.z * 1.02), invisMat);
+    hitBox = new THREE.Mesh(new THREE.BoxGeometry(size.x * 0.85, size.y * 0.9, size.z * 0.85), invisMat);
     hitBox.position.copy(center);
     scene.add(hitBox);
 
     doorHitBoxL = new THREE.Mesh(new THREE.BoxGeometry(size.x * 0.12, size.y * 0.55, size.z * 0.4), invisMat);
-    doorHitBoxL.position.set(center.x - size.x * 0.48, center.y + size.y * 0.05, center.z);
+    doorHitBoxL.position.set(center.x - size.x * 0.42, center.y + size.y * 0.05, center.z);
     scene.add(doorHitBoxL);
 
     doorHitBoxR = new THREE.Mesh(new THREE.BoxGeometry(size.x * 0.12, size.y * 0.55, size.z * 0.4), invisMat);
-    doorHitBoxR.position.set(center.x + size.x * 0.48, center.y + size.y * 0.05, center.z);
+    doorHitBoxR.position.set(center.x + size.x * 0.42, center.y + size.y * 0.05, center.z);
     scene.add(doorHitBoxR);
 
     storeOriginalMaterials(clone);

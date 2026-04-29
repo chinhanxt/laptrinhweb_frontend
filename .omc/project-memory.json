@@ -73,27 +73,63 @@
   "hotPaths": [
     {
       "path": "assets/js/lambo-gallery.js",
-      "accessCount": 161,
-      "lastAccessed": 1777409639510,
+      "accessCount": 188,
+      "lastAccessed": 1777454750368,
       "type": "directory"
     },
     {
+      "path": "assets/js/intro-landing.js",
+      "accessCount": 40,
+      "lastAccessed": 1777448300135,
+      "type": "file"
+    },
+    {
       "path": "assets/css/home.css",
-      "accessCount": 11,
-      "lastAccessed": 1777409625055,
+      "accessCount": 39,
+      "lastAccessed": 1777453466657,
       "type": "directory"
     },
     {
       "path": "index.html",
-      "accessCount": 10,
-      "lastAccessed": 1777409284540,
+      "accessCount": 35,
+      "lastAccessed": 1777455456802,
       "type": "directory"
     },
     {
       "path": "assets/js/home.js",
-      "accessCount": 3,
-      "lastAccessed": 1777401964550,
+      "accessCount": 8,
+      "lastAccessed": 1777449475503,
       "type": "file"
+    },
+    {
+      "path": "assets/js/hero-3d.js",
+      "accessCount": 6,
+      "lastAccessed": 1777450751532,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 3,
+      "lastAccessed": 1777437841278,
+      "type": "directory"
+    },
+    {
+      "path": "docs/mô tả.md",
+      "accessCount": 1,
+      "lastAccessed": 1777438347765,
+      "type": "file"
+    },
+    {
+      "path": "assets/js/main.js",
+      "accessCount": 1,
+      "lastAccessed": 1777438784815,
+      "type": "file"
+    },
+    {
+      "path": "assets/css/base.css",
+      "accessCount": 1,
+      "lastAccessed": 1777439077176,
+      "type": "directory"
     }
   ],
   "userDirectives": []

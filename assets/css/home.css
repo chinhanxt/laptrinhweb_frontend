@@ -57,6 +57,8 @@
   width: min(92vw, 980px);
   margin: 0 auto;
   pointer-events: auto;
+  overflow: visible;
+  padding-inline: clamp(1rem, 3vw, 2rem);
 }
 
 .intro-landing__eyebrow {
@@ -79,10 +81,16 @@
   margin: 0 0 0.8rem;
   opacity: 0;
   transform: translateY(30px);
+  white-space: nowrap;
+  max-width: 100%;
 }
 
-.intro-landing__title span {
+.intro-landing__title span:not(.char-particle) {
   color: var(--color-gold);
+}
+
+.intro-landing__title .char-particle {
+  color: inherit;
 }
 
 .intro-landing__tagline {
@@ -95,6 +103,7 @@
   margin: 0 0 2rem;
   opacity: 0;
   transform: translateY(20px);
+  max-width: 100%;
 }
 
 .intro-landing__line {
@@ -170,9 +179,7 @@ body.app-is-booting .intro-landing__loading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: 22vh;
-  padding-left: 6vw;
+  justify-content: center;
   width: 100%;
   height: 100%;
 }
@@ -181,46 +188,73 @@ body.app-is-booting .intro-landing__loading {
   font-family: "Bebas Neue", sans-serif;
   font-size: clamp(4rem, 14vw, 10rem);
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.08);
   line-height: 1;
-  background: linear-gradient(
+  position: relative;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.08);
+}
+
+.intro-landing__welcome-brand::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  -webkit-mask-image: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.10) 20%,
-    rgba(255, 255, 255, 0.25) 35%,
-    rgba(255, 255, 255, 0.7) 45%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.7) 55%,
-    rgba(255, 255, 255, 0.25) 65%,
-    rgba(255, 255, 255, 0.10) 80%,
-    rgba(255, 255, 255, 0.08) 100%
+    transparent 0%,
+    transparent 25%,
+    rgba(0, 0, 0, 0.6) 40%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 60%,
+    transparent 75%,
+    transparent 100%
   );
-  background-size: 400% 100%;
-  background-position: 150% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0));
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(0, 0, 0, 0.6) 40%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 60%,
+    transparent 75%,
+    transparent 100%
+  );
+  -webkit-mask-size: 200% 100%;
+  mask-size: 200% 100%;
+  animation: shimmerMask 2.8s ease-in-out infinite;
+  will-change: mask-position, -webkit-mask-position;
 }
 
-.intro-landing__breathing {
-  background-position: 150% 0;
+@keyframes shimmerMask {
+  0%   { -webkit-mask-position: 150% 0; mask-position: 150% 0; }
+  100% { -webkit-mask-position: -50% 0; mask-position: -50% 0; }
 }
 
-.intro-landing__breathing.is-animating {
-  animation:
-    logoScanShimmer 3.5s linear infinite,
-    logoGlow 3.5s ease-in-out infinite;
+.intro-landing__welcome-bar {
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes logoScanShimmer {
-  0% { background-position: 150% 0; }
-  100% { background-position: -50% 0; }
+.intro-landing__welcome-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: welcomeBarSlide 1.6s ease-in-out infinite;
+  will-change: transform;
 }
 
-@keyframes logoGlow {
-  0%, 100% { filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0)); }
-  40%, 60% { filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.12)); }
+@keyframes welcomeBarSlide {
+  0%   { transform: translateX(-120px); }
+  100% { transform: translateX(300px); }
 }
 
 .intro-landing__loading-text {
@@ -339,6 +373,156 @@ body.app-is-booting .intro-landing__loading {
   .intro-landing::before {
     background:
       radial-gradient(ellipse at center, transparent 40%, rgba(5, 5, 8, 0.5) 100%);
+  }
+}
+
+/* ----------------------------------------------------------
+   INTRO ZOOM MODE — Character dissolve + navigation overlay
+   ---------------------------------------------------------- */
+.intro-particle-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.intro-landing__zoom-content {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: min(92vw, 980px);
+  pointer-events: auto;
+  z-index: 6;
+  opacity: 0;
+  visibility: hidden;
+  overflow: visible;
+  padding-inline: clamp(1rem, 3vw, 2rem);
+}
+
+.intro-landing__zoom-content.is-visible {
+  visibility: visible;
+}
+
+.intro-landing__zoom-eyebrow {
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin: 0 0 1.2rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.intro-landing__zoom-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+  margin: 0 0 2.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  max-width: 100%;
+  text-wrap: balance;
+}
+
+.intro-landing__zoom-nav {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.intro-landing__zoom-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.6rem;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 2px;
+  background: rgba(201, 168, 76, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--color-silver);
+  font-family: "Space Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.intro-landing__zoom-link:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.1);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.15), inset 0 0 20px rgba(201, 168, 76, 0.05);
+}
+
+.intro-landing__zoom-link-icon {
+  font-size: 0.55rem;
+  color: var(--color-gold);
+  transition: transform 0.35s ease;
+}
+
+.intro-landing__zoom-link:hover .intro-landing__zoom-link-icon {
+  transform: scale(1.3);
+}
+
+.intro-landing__zoom-scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-silver);
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 6;
+  transition: color 0.3s ease;
+}
+
+.intro-landing__zoom-scroll:hover {
+  color: var(--color-gold);
+}
+
+.intro-landing__zoom-scroll span {
+  font-family: "Space Mono", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.char-particle {
+  display: inline-block;
+  will-change: transform, opacity;
+  white-space: pre;
+}
+
+@media (max-width: 575.98px) {
+  .intro-landing__zoom-content {
+    display: none;
+  }
+  .intro-particle-canvas {
+    display: none;
   }
 }
 
@@ -1049,6 +1233,7 @@ body.app-is-booting .intro-landing__loading {
   display: block;
   width: 100% !important;
   height: 100% !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='none'%3E%3Cg filter='url(%23s)'%3E%3Cpath d='M13 3a2 2 0 014 0v9a2 2 0 014 0v2a2 2 0 014 0v3c0 5-3.6 9-9 9-5.4 0-9-4-9-9v-4a2 2 0 014 0v-3a2 2 0 014 0V3z' fill='%23c9a84c' fill-opacity='.88'/%3E%3Cpath d='M13 3a2 2 0 014 0v9a2 2 0 014 0v2a2 2 0 014 0v3c0 5-3.6 9-9 9-5.4 0-9-4-9-9v-4a2 2 0 014 0v-3a2 2 0 014 0V3z' stroke='%23fff' stroke-opacity='.45' stroke-width='.7'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='s' x='4' y='0' width='24' height='30' filterUnits='userSpaceOnUse'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='1' flood-color='%23000' flood-opacity='.35'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E") 15 0, pointer;
 }
 
 .hero-3d-overlay {

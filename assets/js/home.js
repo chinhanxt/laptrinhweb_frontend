@@ -96,23 +96,20 @@
     if (window.LamboGallery) {
       bootTasks.push(window.LamboGallery.whenReady());
       window.LamboGallery.init();
+    }
 
-      if (!isMobile) {
-        gsap.registerPlugin(ScrollTrigger);
-        ScrollTrigger.create({
-          trigger: "#lamborghini-gallery",
-          start: "top 80%",
-          onEnter: function () {
-            if (window.APEXHero3D && typeof window.APEXHero3D.dispose === "function") {
-              window.APEXHero3D.dispose();
-            }
-          },
-          onLeaveBack: function () {
-            if (window.APEXHero3D && typeof window.APEXHero3D.reinit === "function") {
-              window.APEXHero3D.reinit();
-            }
+    if (!isMobile && window.APEXHero3D) {
+      var heroShell = document.getElementById("hero-3d-shell");
+      if (heroShell) {
+        var heroObserver = new IntersectionObserver(function (entries) {
+          var entry = entries[0];
+          if (entry.isIntersecting) {
+            window.APEXHero3D.resume();
+          } else {
+            window.APEXHero3D.pause();
           }
-        });
+        }, { threshold: 0 });
+        heroObserver.observe(heroShell);
       }
     }
 

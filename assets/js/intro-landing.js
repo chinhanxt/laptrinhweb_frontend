@@ -1,5 +1,6 @@
 /* ============================================================
    INTRO LANDING — model-viewer + fan spin + GSAP scroll
+   + Zoom mode: character dissolve to gold particles
    ============================================================ */
 
 window.APEXIntro = (function () {
@@ -17,6 +18,20 @@ window.APEXIntro = (function () {
   var DEFAULT_ORBIT = "150deg 89deg 44%";
   var ZOOMED_ORBIT = "150deg 89deg 25%";
 
+  var zoomTransitioning = false;
+  var charSplitCache = {};
+  var particleCanvas = null;
+  var particleCtx = null;
+  var particles = [];
+  var particleAnimId = null;
+  function getCharRgb(el) {
+    var style = window.getComputedStyle(el.parentElement || el);
+    var c = style.color;
+    var m = c.match(/(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (m) return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
+    return [255, 255, 255];
+  }
+
   function startEmbeddedAnimation() {
     if (!mvEl || typeof mvEl.play !== "function") return false;
 
@@ -31,7 +46,6 @@ window.APEXIntro = (function () {
       mvEl.play();
     }
 
-    console.log("[APEX Intro] Playing embedded animation:", animations[0]);
     return true;
   }
 
@@ -74,6 +88,13 @@ window.APEXIntro = (function () {
     loadingEl = document.getElementById("intro-loading");
     var progressEl = document.getElementById("intro-loading-progress");
 
+    particleCanvas = document.getElementById("intro-particle-canvas");
+    if (particleCanvas) {
+      particleCtx = particleCanvas.getContext("2d");
+      resizeParticleCanvas();
+      window.addEventListener("resize", resizeParticleCanvas);
+    }
+
     if (!mvEl) {
       markReady();
       return;
@@ -106,9 +127,13 @@ window.APEXIntro = (function () {
 
     mvEl.addEventListener("dblclick", handleDoubleClickZoom);
 
+    initZoomNavigation();
     setupScrollAnimation();
   }
 
+  /* ----------------------------------------------------------
+     SCENE / FAN HELPERS (unchanged)
+     ---------------------------------------------------------- */
   function getInternalScene() {
     if (!mvEl) return null;
 
@@ -147,10 +172,7 @@ window.APEXIntro = (function () {
 
   function collectFans() {
     var scene = getInternalScene();
-    if (!scene) {
-      console.warn("[APEX Intro] Could not access internal Three.js scene");
-      return;
-    }
+    if (!scene) return;
 
     scene.traverse(function (node) {
       var name = (node.name || "").toLowerCase();
@@ -158,8 +180,6 @@ window.APEXIntro = (function () {
         fanNodes.push(node);
       }
     });
-
-    console.log("[APEX Intro] Fan nodes found:", fanNodes.length);
   }
 
   function startFanLoop() {
@@ -183,6 +203,9 @@ window.APEXIntro = (function () {
     requestAnimationFrame(tick);
   }
 
+  /* ----------------------------------------------------------
+     TEXT REVEAL (initial page load)
+     ---------------------------------------------------------- */
   function animateTextReveal() {
     if (typeof gsap === "undefined") return;
 
@@ -194,6 +217,330 @@ window.APEXIntro = (function () {
       .to(".intro-landing__scroll", { opacity: 1, y: 0, duration: 0.6 }, 1.5);
   }
 
+  /* ----------------------------------------------------------
+     CHARACTER SPLIT SYSTEM
+     ---------------------------------------------------------- */
+  function splitTextToChars(el) {
+    var text = el.textContent;
+    if (!text) return [];
+
+    var rect = el.getBoundingClientRect();
+    el.setAttribute("data-original-text", text);
+    el.setAttribute("data-original-style", el.getAttribute("style") || "");
+    el.style.minWidth = rect.width + "px";
+    el.style.minHeight = rect.height + "px";
+    el.style.overflow = "visible";
+    el.style.whiteSpace = "pre";
+
+    if (window.getComputedStyle(el).display === "block") {
+      el.style.display = "flex";
+      el.style.justifyContent = "center";
+      el.style.alignItems = "center";
+    }
+
+    el.textContent = "";
+
+    var chars = [];
+    for (var i = 0; i < text.length; i++) {
+      var span = document.createElement("span");
+      span.className = "char-particle";
+      span.textContent = text[i] === " " ? "\u00A0" : text[i];
+      el.appendChild(span);
+      chars.push(span);
+    }
+
+    return chars;
+  }
+
+  function restoreOriginalText(el) {
+    var original = el.getAttribute("data-original-text");
+    if (original !== null) {
+      el.textContent = original;
+      el.removeAttribute("data-original-text");
+      el.setAttribute("style", el.getAttribute("data-original-style") || "");
+      el.removeAttribute("data-original-style");
+    }
+  }
+
+  /* ----------------------------------------------------------
+     GOLD PARTICLE CANVAS SYSTEM
+     ---------------------------------------------------------- */
+  function resizeParticleCanvas() {
+    if (!particleCanvas) return;
+    var section = document.getElementById("intro-landing");
+    if (!section) return;
+    var dpr = window.devicePixelRatio || 1;
+    particleCanvas.width = section.offsetWidth * dpr;
+    particleCanvas.height = section.offsetHeight * dpr;
+    particleCanvas.style.width = section.offsetWidth + "px";
+    particleCanvas.style.height = section.offsetHeight + "px";
+    if (particleCtx) {
+      particleCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  }
+
+  function spawnParticlesFromChar(charEl, rgb) {
+    if (!particleCanvas) return;
+    var rect = charEl.getBoundingClientRect();
+    var section = document.getElementById("intro-landing");
+    var sectionRect = section.getBoundingClientRect();
+
+    var cx = rect.left + rect.width / 2 - sectionRect.left;
+    var cy = rect.top + rect.height / 2 - sectionRect.top;
+    var base = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",";
+
+    var count = 3 + Math.floor(Math.random() * 3);
+    for (var i = 0; i < count; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var speed = 50 + Math.random() * 100;
+      particles.push({
+        x: cx + (Math.random() - 0.5) * rect.width,
+        y: cy + (Math.random() - 0.5) * rect.height,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 40 - Math.random() * 50,
+        size: 0.8 + Math.random() * 2,
+        colorBase: base,
+        life: 1.0,
+        decay: 0.5 + Math.random() * 0.4,
+        gravity: 20 + Math.random() * 20
+      });
+    }
+  }
+
+  function startParticleLoop() {
+    if (particleAnimId) return;
+    var lastTime = performance.now();
+    var cw = particleCanvas.width / (window.devicePixelRatio || 1);
+    var ch = particleCanvas.height / (window.devicePixelRatio || 1);
+
+    function tick(now) {
+      var dt = Math.min((now - lastTime) / 1000, 0.04);
+      lastTime = now;
+
+      particleCtx.clearRect(0, 0, cw, ch);
+
+      var alive = 0;
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.life -= p.decay * dt;
+        if (p.life <= 0) continue;
+
+        p.vy += p.gravity * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vx *= (1 - 2 * dt);
+
+        var a = p.life * p.life;
+        var r = p.size * p.life;
+        particleCtx.fillStyle = p.colorBase + a.toFixed(2) + ")";
+        particleCtx.fillRect(p.x - r * 0.5, p.y - r * 0.5, r, r);
+        alive++;
+      }
+
+      if (alive > 0) {
+        particleAnimId = requestAnimationFrame(tick);
+      } else {
+        particles.length = 0;
+        particleAnimId = null;
+      }
+    }
+
+    particleAnimId = requestAnimationFrame(tick);
+  }
+
+  /* ----------------------------------------------------------
+     ZOOM TEXT TRANSITIONS
+     ---------------------------------------------------------- */
+  function animateZoomIn() {
+    if (typeof gsap === "undefined") return;
+    zoomTransitioning = true;
+
+    var content = document.querySelector(".intro-landing__content");
+    var eyebrow = document.querySelector(".intro-landing__eyebrow");
+    var title = document.querySelector(".intro-landing__title");
+    var tagline = document.querySelector(".intro-landing__tagline");
+    var line = document.querySelector(".intro-landing__line");
+    var scroll = document.querySelector(".intro-landing__scroll--bottom");
+
+    var tl = gsap.timeline({
+      onComplete: function () {
+        gsap.set([eyebrow, title, tagline, line, scroll], {
+          autoAlpha: 0,
+          clearProps: "transform"
+        });
+        if (content) {
+          gsap.set(content, { autoAlpha: 0 });
+        }
+        revealZoomContent();
+        zoomTransitioning = false;
+      }
+    });
+
+    tl.to(scroll, {
+      opacity: 0,
+      y: 15,
+      duration: 0.3,
+      ease: "power2.in"
+    }, 0);
+
+    tl.to(line, {
+      scaleX: 0,
+      opacity: 0,
+      duration: 0.35,
+      ease: "power2.in"
+    }, 0.05);
+
+    tl.to(tagline, {
+      opacity: 0,
+      y: 20,
+      duration: 0.35,
+      ease: "power2.in"
+    }, 0.08);
+
+    tl.to(title, {
+      opacity: 0,
+      y: 20,
+      duration: 0.4,
+      ease: "power2.in"
+    }, 0.15);
+
+    tl.to(eyebrow, {
+      opacity: 0,
+      y: 15,
+      duration: 0.35,
+      ease: "power2.in"
+    }, 0.2);
+  }
+
+  function revealZoomContent() {
+    var zoomContent = document.querySelector(".intro-landing__zoom-content");
+    if (!zoomContent) return;
+
+    gsap.set(".intro-landing__zoom-eyebrow", { opacity: 0, y: 20 });
+    gsap.set(".intro-landing__zoom-title", { opacity: 0, y: 30 });
+    gsap.set(".intro-landing__zoom-link", { opacity: 0, y: 20 });
+    gsap.set(".intro-landing__zoom-scroll", { opacity: 0, y: 15, xPercent: -50 });
+
+    zoomContent.classList.add("is-visible");
+    gsap.set(zoomContent, { opacity: 1, visibility: "visible" });
+
+    var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    tl.to(".intro-landing__zoom-eyebrow", {
+      opacity: 1, y: 0, duration: 0.7
+    }, 0);
+
+    tl.to(".intro-landing__zoom-title", {
+      opacity: 1, y: 0, duration: 0.9, ease: "power4.out"
+    }, 0.15);
+
+    tl.to(".intro-landing__zoom-link", {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out"
+    }, 0.35);
+
+    tl.to(".intro-landing__zoom-scroll", {
+      opacity: 1, y: 0, xPercent: -50, duration: 0.5
+    }, 0.65);
+  }
+
+  function animateZoomOut() {
+    if (typeof gsap === "undefined") return;
+    zoomTransitioning = true;
+
+    var zoomContent = document.querySelector(".intro-landing__zoom-content");
+
+    var tl = gsap.timeline({
+      onComplete: function () {
+        if (zoomContent) {
+          zoomContent.classList.remove("is-visible");
+          gsap.set(zoomContent, { opacity: 0, visibility: "hidden" });
+        }
+        gsap.set(".intro-landing__zoom-eyebrow", { opacity: 0, y: 20 });
+        gsap.set(".intro-landing__zoom-title", { opacity: 0, y: 30 });
+        gsap.set(".intro-landing__zoom-link", { opacity: 0, y: 20 });
+        gsap.set(".intro-landing__zoom-scroll", { opacity: 0, y: 15, xPercent: -50 });
+
+        restoreIntroText();
+        zoomTransitioning = false;
+      }
+    });
+
+    tl.to(".intro-landing__zoom-scroll", {
+      opacity: 0, y: 15, xPercent: -50, duration: 0.3, ease: "power2.in"
+    }, 0);
+
+    tl.to(".intro-landing__zoom-link", {
+      opacity: 0, y: 15, duration: 0.35, stagger: 0.05, ease: "power2.in"
+    }, 0.05);
+
+    tl.to(".intro-landing__zoom-title", {
+      opacity: 0, y: 20, duration: 0.4, ease: "power2.in"
+    }, 0.15);
+
+    tl.to(".intro-landing__zoom-eyebrow", {
+      opacity: 0, y: 15, duration: 0.35, ease: "power2.in"
+    }, 0.2);
+  }
+
+  function restoreIntroText() {
+    var content = document.querySelector(".intro-landing__content");
+    var eyebrow = document.querySelector(".intro-landing__eyebrow");
+    var title = document.querySelector(".intro-landing__title");
+    var tagline = document.querySelector(".intro-landing__tagline");
+    var line = document.querySelector(".intro-landing__line");
+    var scroll = document.querySelector(".intro-landing__scroll--bottom");
+
+    restoreOriginalText(eyebrow);
+    restoreOriginalText(title);
+    restoreOriginalText(tagline);
+
+    if (content) {
+      gsap.set(content, { clearProps: "opacity,visibility,filter" });
+      gsap.set(content, { opacity: 1, visibility: "visible" });
+    }
+    gsap.set([eyebrow, title, tagline], {
+      clearProps: "opacity,visibility,transform,filter,display"
+    });
+    gsap.set([eyebrow, title, tagline], {
+      opacity: 0,
+      visibility: "visible",
+      y: 20,
+      scale: 1
+    });
+    gsap.set(line, { opacity: 0, scaleX: 0, visibility: "visible" });
+    gsap.set(scroll, { opacity: 0, y: 15, visibility: "visible" });
+
+    var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.7 }, 0.1)
+      .to(title, { opacity: 1, y: 0, duration: 0.9, ease: "power4.out" }, 0.25)
+      .to(tagline, { opacity: 1, y: 0, duration: 0.7 }, 0.45)
+      .to(line, { scaleX: 1, opacity: 1, duration: 0.5 }, 0.6)
+      .to(scroll, { opacity: 1, y: 0, duration: 0.5 }, 0.75);
+  }
+
+  /* ----------------------------------------------------------
+     ZOOM NAVIGATION (smooth scroll)
+     ---------------------------------------------------------- */
+  function initZoomNavigation() {
+    var links = document.querySelectorAll(".intro-landing__zoom-link[data-scroll-target]");
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener("click", function (e) {
+        e.preventDefault();
+        var target = this.getAttribute("data-scroll-target");
+        if (target && typeof gsap !== "undefined" && typeof ScrollToPlugin !== "undefined") {
+          gsap.to(window, {
+            scrollTo: { y: "#" + target, offsetY: 0 },
+            duration: 1.2,
+            ease: "power2.inOut"
+          });
+        }
+      });
+    }
+  }
+
+  /* ----------------------------------------------------------
+     CAMERA ZOOM TWEEN
+     ---------------------------------------------------------- */
   var zoomTweenId = null;
 
   function parseOrbit(str) {
@@ -248,23 +595,31 @@ window.APEXIntro = (function () {
     zoomTweenId = requestAnimationFrame(tick);
   }
 
+  /* ----------------------------------------------------------
+     DOUBLE-CLICK ZOOM HANDLER
+     ---------------------------------------------------------- */
   function handleDoubleClickZoom() {
-    if (!mvEl) return;
+    if (!mvEl || zoomTransitioning) return;
     isZoomed = !isZoomed;
 
     if (isZoomed) {
       mvEl.setAttribute("min-camera-orbit", "105deg 89deg 20%");
       mvEl.setAttribute("max-camera-orbit", "180deg 89deg 44%");
       tweenZoom(ZOOMED_ORBIT, "25deg", 900);
+      animateZoomIn();
     } else {
       tweenZoom(DEFAULT_ORBIT, "18deg", 900);
       setTimeout(function () {
         mvEl.setAttribute("min-camera-orbit", "105deg 89deg 44%");
         mvEl.setAttribute("max-camera-orbit", "180deg 89deg 44%");
       }, 950);
+      animateZoomOut();
     }
   }
 
+  /* ----------------------------------------------------------
+     SCROLL ANIMATION
+     ---------------------------------------------------------- */
   function setupScrollAnimation() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 

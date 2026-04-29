@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>xT-chinhan | Luxury Performance</title>
+    <title>T.R.Y.P | Luxury Performance</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,7 +32,7 @@
     <header>
       <nav class="navbar navbar-expand-lg site-header">
         <div class="container-luxury">
-          <a class="navbar-brand" href="index.html">xT-chinhan<span>.</span></a>
+          <a class="navbar-brand" href="index.html">T.R.Y.P<span>.</span></a>
           <button
             class="navbar-toggler border-0 text-white"
             type="button"
@@ -45,12 +45,12 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="siteNav">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4" style="display:none !important">
               <li class="nav-item"><a class="nav-link active" href="index.html">Trang Chủ</a></li>
               <li class="nav-item"><a class="nav-link" href="assets/html/catalog.html">Bộ Sưu Tập</a></li>
               <li class="nav-item"><a class="nav-link" href="assets/html/detail.html">Chi Tiết Xe</a></li>
             </ul>
-            <a class="btn-luxury" href="#" data-bs-toggle="modal" data-bs-target="#bookingModal">Đặt Lịch Lái Thử</a>
+            <a class="btn-luxury" href="#" data-bs-toggle="modal" data-bs-target="#bookingModal" style="display:none !important">Đặt Lịch Lái Thử</a>
           </div>
         </div>
       </nav>
@@ -84,14 +84,15 @@
 
       <div id="intro-loading" class="intro-landing__loading">
         <div class="intro-landing__welcome">
-          <h2 class="intro-landing__welcome-brand intro-landing__breathing">xT-chinhan</h2>
+          <h2 class="intro-landing__welcome-brand" data-text="T.R.Y.P">T.R.Y.P</h2>
+          <div class="intro-landing__welcome-bar"></div>
         </div>
       </div>
 
       <div class="intro-landing__overlay">
         <div class="intro-landing__content">
           <p class="intro-landing__eyebrow">Chào mừng đến với</p>
-          <h1 class="intro-landing__title">xT-chinhan</h1>
+          <h1 class="intro-landing__title">T.R.Y.P</h1>
           <p class="intro-landing__tagline">Nghệ Thuật Của Hiệu Suất Đỉnh Cao</p>
           <div class="intro-landing__line"></div>
         </div>
@@ -99,6 +100,30 @@
           <span>Khám Phá</span>
           <div class="intro-landing__scroll-line"></div>
         </a>
+
+        <div class="intro-landing__zoom-content">
+          <p class="intro-landing__zoom-eyebrow">Trải Nghiệm 360°</p>
+          <h2 class="intro-landing__zoom-title">Khám Phá Thế Giới Xe</h2>
+          <div class="intro-landing__zoom-nav">
+            <a href="#showroom-stage" class="intro-landing__zoom-link" data-scroll-target="showroom-stage">
+              <span class="intro-landing__zoom-link-icon">&#9670;</span>
+              <span>Showroom 3D</span>
+            </a>
+            <a href="#lamborghini-gallery" class="intro-landing__zoom-link" data-scroll-target="lamborghini-gallery">
+              <span class="intro-landing__zoom-link-icon">&#9670;</span>
+              <span>Bộ Sưu Tập</span>
+            </a>
+            <a href="#" class="intro-landing__zoom-link" data-bs-toggle="modal" data-bs-target="#bookingModal">
+              <span class="intro-landing__zoom-link-icon">&#9670;</span>
+              <span>Đặt Lịch Lái Thử</span>
+            </a>
+          </div>
+        </div>
+        <a href="#showroom-stage" class="intro-landing__zoom-scroll">
+          <span>Cuộn xuống để khám phá</span>
+          <div class="intro-landing__scroll-line"></div>
+        </a>
+        <canvas id="intro-particle-canvas" class="intro-particle-canvas"></canvas>
       </div>
     </section>
 
@@ -314,7 +339,7 @@
     <footer>
       <div class="site-footer">
         <div class="container-luxury d-flex flex-column flex-lg-row justify-content-between gap-3">
-          <p class="mb-0">xT-chinhan — Phòng trưng bày siêu xe đẳng cấp.</p>
+          <p class="mb-0">T.R.Y.P — Phòng trưng bày siêu xe đẳng cấp.</p>
           <p class="mb-0">Bộ sưu tập Lamborghini | Trải nghiệm giao diện</p>
         </div>
       </div>
