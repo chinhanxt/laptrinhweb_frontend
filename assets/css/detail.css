@@ -1,143 +1,244 @@
 /* ============================================================
-   DETAIL PAGE — APEX Motors
-   Hero, Gallery Carousel, Spec Tiles, Review
+   DETAIL PAGE — T.R.Y.P
+   Sidebar + scrollable sections with tab bar
    ============================================================ */
 
-/* ----------------------------------------------------------
-   DETAIL HERO
-   ---------------------------------------------------------- */
-.detail-hero {
-  padding: 8rem 0 5rem;
+/* LAYOUT */
+.detail-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px;
 }
 
-.detail-hero__visual {
-  min-height: 440px;
-  border-radius: var(--radius-panel);
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  background:
-    radial-gradient(ellipse at 30% 40%, rgba(201, 168, 76, 0.08), transparent 60%),
-    linear-gradient(160deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
-  box-shadow: var(--shadow-soft);
+/* SIDEBAR */
+.detail-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  padding: 2.5rem 1.5rem;
+  background: rgba(10, 10, 15, 0.98);
+  border-right: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar__kicker {
+  font-family: "Space Mono", monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.25rem;
+}
+.sidebar__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+.sidebar__specs {
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--color-silver);
+  line-height: 2.2;
+}
+.sidebar__specs strong {
+  color: var(--color-text);
+  font-weight: 400;
+}
+.sidebar__price {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.4rem;
+  color: var(--color-gold);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+.sidebar__actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sidebar__actions .btn-luxury,
+.sidebar__actions .btn-luxury-outline {
+  width: 100%;
+  justify-content: center;
+  font-size: 0.55rem;
+  padding: 0.6rem 1rem;
+}
+
+/* MAIN CONTENT */
+.detail-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* HERO */
+.detail-hero {
+  height: 50vh;
+  min-height: 360px;
+  background: linear-gradient(135deg, #0d0d14, #14141e, #0d0d14);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
 }
+.detail-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-hero__placeholder {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.08);
+}
 
-.detail-hero__visual-label {
+/* STICKY TAB BAR */
+.detail-tabs {
+  position: sticky;
+  top: 70px;
+  z-index: 100;
+  display: flex;
+  background: rgba(10, 10, 15, 0.97);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.detail-tabs::-webkit-scrollbar {
+  display: none;
+}
+.detail-tab {
+  flex-shrink: 0;
+  padding: 0.85rem 1.5rem;
   font-family: "Space Mono", monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-silver);
-  opacity: 0.5;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  white-space: nowrap;
 }
-
-.detail-hero__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+.detail-tab:hover {
+  color: var(--color-text);
 }
-
-.detail-hero__meta span {
-  font-family: "Space Mono", monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+.detail-tab.is-active {
   color: var(--color-gold);
-  padding: 0.35rem 0.9rem;
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  border-radius: 2px;
+  border-bottom-color: var(--color-gold);
 }
 
-/* ----------------------------------------------------------
-   GALLERY (Bootstrap Carousel)
-   ---------------------------------------------------------- */
-.detail-gallery {
-  padding: 5rem 0;
+/* SECTIONS */
+.detail-section {
+  padding: 4rem 2.5rem;
+  min-height: 400px;
+}
+.detail-section + .detail-section {
+  border-top: 1px solid var(--color-line);
 }
 
-.detail-slide {
-  min-height: 440px;
-  border-radius: var(--radius-panel);
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(201, 168, 76, 0.06), transparent 60%),
-    linear-gradient(160deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
-  box-shadow: var(--shadow-soft);
+/* SECTION: Gallery */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto;
+  gap: 8px;
+}
+.gallery-main {
+  grid-row: 1 / 4;
+  min-height: 360px;
+  background: rgba(201, 168, 76, 0.04);
+  border: 1px solid var(--color-line);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
 }
-
-.detail-slide__label {
-  font-family: "Space Mono", monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-silver);
-  opacity: 0.5;
+.gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-
-/* Carousel controls — visible on dark background */
-#detailCarousel .carousel-control-prev,
-#detailCarousel .carousel-control-next {
-  width: 56px;
-  height: 56px;
-  top: 50%;
-  transform: translateY(-50%);
-  bottom: auto;
-  background: rgba(201, 168, 76, 0.15);
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  border-radius: 50%;
-  opacity: 1;
-  transition: background 0.3s ease, border-color 0.3s ease;
+.gallery-thumb {
+  min-height: 115px;
+  background: rgba(201, 168, 76, 0.03);
+  border: 1px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
 }
-
-#detailCarousel .carousel-control-prev {
-  left: -28px;
-}
-
-#detailCarousel .carousel-control-next {
-  right: -28px;
-}
-
-#detailCarousel .carousel-control-prev:hover,
-#detailCarousel .carousel-control-next:hover {
-  background: rgba(201, 168, 76, 0.3);
+.gallery-thumb:hover,
+.gallery-thumb.is-active {
   border-color: var(--color-gold);
 }
-
-#detailCarousel .carousel-control-prev-icon,
-#detailCarousel .carousel-control-next-icon {
-  width: 18px;
-  height: 18px;
-  filter: brightness(0) invert(1);
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-placeholder {
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--color-silver);
+  opacity: 0.4;
 }
 
-/* ----------------------------------------------------------
-   SPEC TILES
-   ---------------------------------------------------------- */
-.detail-specs {
-  padding: 5rem 0;
+/* Lightbox */
+.gallery-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(5, 5, 8, 0.95);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.gallery-lightbox.is-open {
+  display: flex;
+}
+.gallery-lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
 }
 
+/* SECTION: Specs */
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
 .spec-tile {
   background: var(--color-bg-alt);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-card);
-  padding: 2.2rem 1.8rem;
+  padding: 2rem 1.5rem;
   text-align: center;
   transition: border-color 0.3s ease, transform 0.4s var(--ease-luxury);
 }
-
 .spec-tile:hover {
   border-color: rgba(201, 168, 76, 0.25);
   transform: translateY(-4px);
 }
-
-.spec-tile h2 {
+.spec-tile__value {
   font-family: "Bebas Neue", sans-serif;
   font-size: 2.5rem;
   letter-spacing: 0.04em;
@@ -145,95 +246,162 @@
   line-height: 1;
   margin-bottom: 0.5rem;
 }
-
-.spec-tile p {
+.spec-tile__label {
   font-family: "Space Mono", monospace;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-muted);
 }
 
-/* ----------------------------------------------------------
-   REVIEW / QUOTE
-   ---------------------------------------------------------- */
-.detail-review {
-  padding: 5rem 0 6rem;
+/* SECTION: 360 View */
+.view360-container {
+  width: 100%;
+  height: 500px;
+  background: linear-gradient(135deg, #0d0d14, #14141e);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  position: relative;
+}
+.view360-container model-viewer {
+  width: 100%;
+  height: 100%;
+}
+.view360-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-silver);
 }
 
-.detail-review__quote {
-  max-width: 720px;
-  margin: 0 auto;
-  border: none;
-  padding: 0;
+/* SECTION: Compare */
+.compare-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
-
-.detail-review__quote p {
-  font-family: "Cormorant Garamond", serif;
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-  font-style: italic;
-  line-height: 1.9;
-  color: var(--color-muted);
-  margin-bottom: 1.5rem;
-}
-
-.detail-review__quote cite {
+.compare-header label {
   font-family: "Space Mono", monospace;
   font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-gold);
-  font-style: normal;
+  color: var(--color-silver);
 }
-
-/* ----------------------------------------------------------
-   CTA SECTION
-   ---------------------------------------------------------- */
-.detail-cta {
-  padding: 6rem 0;
-  background: var(--color-bg-alt);
+.compare-cars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.compare-car-visual {
+  height: 200px;
+  background: rgba(201, 168, 76, 0.03);
+  border: 1px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.compare-car-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.compare-car-name {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.3rem;
+  color: var(--color-text);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.compare-table th,
+.compare-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-line);
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+}
+.compare-table th {
+  text-transform: uppercase;
+  color: var(--color-silver);
+  font-weight: 400;
+  text-align: left;
+  width: 30%;
+}
+.compare-table td {
+  color: var(--color-text);
   text-align: center;
 }
-
-/* ----------------------------------------------------------
-   RESPONSIVE
-   ---------------------------------------------------------- */
-@media (max-width: 991.98px) {
-  .detail-hero {
-    padding: 7rem 0 3rem;
-  }
-
-  .detail-hero__visual {
-    min-height: 320px;
-  }
-
-  .detail-slide {
-    min-height: 320px;
-  }
-
-  #detailCarousel .carousel-control-prev {
-    left: 8px;
-  }
-
-  #detailCarousel .carousel-control-next {
-    right: 8px;
-  }
+.compare-table td.is-better {
+  color: var(--color-gold);
+}
+.compare-placeholder {
+  text-align: center;
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--color-silver);
+  padding: 3rem 0;
 }
 
+/* RESPONSIVE */
+@media (max-width: 991.98px) {
+  .detail-layout {
+    flex-direction: column;
+  }
+  .detail-sidebar {
+    width: 100%;
+    position: relative;
+    top: auto;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .sidebar__title { font-size: 1.3rem; margin-bottom: 0; }
+  .sidebar__specs { display: flex; gap: 1.5rem; flex-wrap: wrap; line-height: 1.6; }
+  .sidebar__price { margin: 0; font-size: 1.1rem; }
+  .sidebar__actions {
+    flex-direction: row;
+    margin-top: 0;
+  }
+  .sidebar__actions .btn-luxury,
+  .sidebar__actions .btn-luxury-outline {
+    width: auto;
+  }
+  .detail-tabs { top: 0; }
+  .detail-hero { height: 40vh; min-height: 280px; }
+  .detail-section { padding: 3rem 1.5rem; }
+  .specs-grid { grid-template-columns: repeat(2, 1fr); }
+  .compare-cars { grid-template-columns: 1fr 1fr; gap: 1rem; }
+}
 @media (max-width: 575.98px) {
-  .detail-hero__visual {
-    min-height: 260px;
-  }
-
-  .detail-slide {
-    min-height: 260px;
-  }
-
-  .detail-hero__meta {
-    gap: 0.8rem;
-  }
-
-  .spec-tile h2 {
-    font-size: 2rem;
-  }
+  .detail-sidebar { flex-direction: column; align-items: flex-start; }
+  .sidebar__actions { flex-direction: column; width: 100%; }
+  .sidebar__actions .btn-luxury,
+  .sidebar__actions .btn-luxury-outline { width: 100%; }
+  .detail-hero { height: 35vh; min-height: 220px; }
+  .detail-section { padding: 2.5rem 1rem; }
+  .gallery-grid { grid-template-columns: 1fr; }
+  .gallery-main { min-height: 250px; grid-row: auto; }
+  .gallery-thumb { min-height: 80px; }
+  .specs-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .spec-tile__value { font-size: 2rem; }
+  .view360-container { height: 350px; }
+  .compare-cars { grid-template-columns: 1fr; }
+  .compare-table th, .compare-table td { padding: 0.6rem 0.5rem; font-size: 0.55rem; }
 }
