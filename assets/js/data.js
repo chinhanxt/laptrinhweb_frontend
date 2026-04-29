@@ -17,15 +17,15 @@ var CARS_DATA = [
       price: "26 tỷ VND"
     },
     images: {
-      hero: "assets/img/aventador-hero.webp",
+      hero: "../img/aventador-hero.webp",
       gallery: [
-        "assets/img/aventador-exterior.webp",
-        "assets/img/aventador-interior.webp",
-        "assets/img/aventador-rear.webp",
-        "assets/img/aventador-engine.webp"
+        "../img/aventador-exterior.webp",
+        "../img/aventador-interior.webp",
+        "../img/aventador-rear.webp",
+        "../img/aventador-engine.webp"
       ]
     },
-    model3d: "assets/model/lambo_lp670.glb",
+    model3d: "../model/lambo_lp670.glb",
     modelConfig: {
       cameraOrbit: "325deg 78deg 105%",
       cameraTarget: "0m 0.3m 0m",
@@ -46,11 +46,11 @@ var CARS_DATA = [
       price: "21 tỷ VND"
     },
     images: {
-      hero: "assets/img/huracan-hero.webp",
+      hero: "../img/huracan-hero.webp",
       gallery: [
-        "assets/img/huracan-exterior.webp",
-        "assets/img/huracan-interior.webp",
-        "assets/img/huracan-rear.webp"
+        "../img/huracan-exterior.webp",
+        "../img/huracan-interior.webp",
+        "../img/huracan-rear.webp"
       ]
     },
     model3d: null,
@@ -70,11 +70,11 @@ var CARS_DATA = [
       price: "19 tỷ VND"
     },
     images: {
-      hero: "assets/img/revuelto-hero.webp",
+      hero: "../img/revuelto-hero.webp",
       gallery: [
-        "assets/img/revuelto-exterior.webp",
-        "assets/img/revuelto-interior.webp",
-        "assets/img/revuelto-rear.webp"
+        "../img/revuelto-exterior.webp",
+        "../img/revuelto-interior.webp",
+        "../img/revuelto-rear.webp"
       ]
     },
     model3d: null,
@@ -94,14 +94,14 @@ var CARS_DATA = [
       price: "32 tỷ VND"
     },
     images: {
-      hero: "assets/img/sf90-hero.webp",
+      hero: "../img/sf90-hero.webp",
       gallery: [
-        "assets/img/sf90-exterior.webp",
-        "assets/img/sf90-interior.webp",
-        "assets/img/sf90-rear.webp"
+        "../img/sf90-exterior.webp",
+        "../img/sf90-interior.webp",
+        "../img/sf90-rear.webp"
       ]
     },
-    model3d: "assets/model/2019_ferrari_488_pista_spider.glb",
+    model3d: "../model/2019_ferrari_488_pista_spider.glb",
     modelConfig: {
       cameraOrbit: "325deg 78deg 105%",
       cameraTarget: "0m 0.3m 0m",
@@ -122,14 +122,14 @@ var CARS_DATA = [
       price: "22 tỷ VND"
     },
     images: {
-      hero: "assets/img/roma-hero.webp",
+      hero: "../img/roma-hero.webp",
       gallery: [
-        "assets/img/roma-exterior.webp",
-        "assets/img/roma-interior.webp",
-        "assets/img/roma-rear.webp"
+        "../img/roma-exterior.webp",
+        "../img/roma-interior.webp",
+        "../img/roma-rear.webp"
       ]
     },
-    model3d: "assets/model/2020_ferrari_roma.glb",
+    model3d: "../model/2020_ferrari_roma.glb",
     modelConfig: {
       cameraOrbit: "325deg 78deg 105%",
       cameraTarget: "0m 0.3m 0m",
@@ -150,11 +150,11 @@ var CARS_DATA = [
       price: "24 tỷ VND"
     },
     images: {
-      hero: "assets/img/750s-hero.webp",
+      hero: "../img/750s-hero.webp",
       gallery: [
-        "assets/img/750s-exterior.webp",
-        "assets/img/750s-interior.webp",
-        "assets/img/750s-rear.webp"
+        "../img/750s-exterior.webp",
+        "../img/750s-interior.webp",
+        "../img/750s-rear.webp"
       ]
     },
     model3d: null,
@@ -174,11 +174,11 @@ var CARS_DATA = [
       price: "18 tỷ VND"
     },
     images: {
-      hero: "assets/img/gt3rs-hero.webp",
+      hero: "../img/gt3rs-hero.webp",
       gallery: [
-        "assets/img/gt3rs-exterior.webp",
-        "assets/img/gt3rs-interior.webp",
-        "assets/img/gt3rs-rear.webp"
+        "../img/gt3rs-exterior.webp",
+        "../img/gt3rs-interior.webp",
+        "../img/gt3rs-rear.webp"
       ]
     },
     model3d: null,
