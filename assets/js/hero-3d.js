@@ -499,6 +499,32 @@ window.APEXHero3D = (function () {
     warmNext();
   }
 
+  function preloadRemainingModelsInBackground() {
+    var queue = CAR_CATALOG.map(function (_, index) {
+      return index;
+    }).filter(function (index) {
+      return index !== currentIndex;
+    });
+
+    function preloadNext() {
+      if (!queue.length) return;
+
+      var catalogIndex = queue.shift();
+      preloadModel(catalogIndex, function (entry) {
+        if (!entry) {
+          window.setTimeout(preloadNext, 0);
+          return;
+        }
+
+        warmModelCacheEntry(catalogIndex, function () {
+          window.setTimeout(preloadNext, 0);
+        });
+      });
+    }
+
+    window.setTimeout(preloadNext, 0);
+  }
+
   function activateCachedModel(catalogIndex) {
     var cached = modelCache[catalogIndex];
     if (!cached) return false;
@@ -700,28 +726,11 @@ window.APEXHero3D = (function () {
       activateCachedModel(currentIndex);
       snapHeroCameraToDefault();
       showOverlayUI();
-      setNavLoading(true);
-
-      preloadAllModels(function (allLoaded) {
-        if (!allLoaded) {
-          setNavLoading(false);
-          showHeroFallback();
-          return;
-        }
-
-        warmAllModelsSequentially(function (allWarmed) {
-          if (!allWarmed) {
-            setNavLoading(false);
-            showHeroFallback();
-            return;
-          }
-
-          hideLoadingState();
-          setNavLoading(false);
-          window.__modelsLoaded = true;
-          settleReady(true);
-        });
-      });
+      hideLoadingState();
+      setNavLoading(false);
+      window.__modelsLoaded = true;
+      settleReady(true);
+      preloadRemainingModelsInBackground();
     });
   }
 
