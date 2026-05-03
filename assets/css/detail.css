@@ -257,16 +257,21 @@
 /* SECTION: 360 View */
 .view360-container {
   width: 100%;
-  height: 500px;
-  background: linear-gradient(135deg, #0d0d14, #14141e);
+  height: 520px;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(201, 168, 76, 0.18), transparent 44%),
+    linear-gradient(155deg, rgba(8, 8, 12, 0.98), rgba(18, 18, 28, 0.96) 52%, rgba(6, 6, 10, 0.98));
   border: 1px solid var(--color-line);
   border-radius: var(--radius-card);
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 .view360-container model-viewer {
   width: 100%;
   height: 100%;
+  border-radius: calc(var(--radius-card) - 6px);
 }
 .view360-fallback {
   display: flex;
@@ -387,6 +392,7 @@
   .detail-hero { height: 40vh; min-height: 280px; }
   .detail-section { padding: 3rem 1.5rem; }
   .specs-grid { grid-template-columns: repeat(2, 1fr); }
+  .view360-container { height: 400px; padding: 1rem; }
   .compare-cars { grid-template-columns: 1fr 1fr; gap: 1rem; }
 }
 @media (max-width: 575.98px) {
@@ -401,7 +407,7 @@
   .gallery-thumb { min-height: 80px; }
   .specs-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
   .spec-tile__value { font-size: 2rem; }
-  .view360-container { height: 350px; }
+  .view360-container { height: 340px; padding: 0.85rem; }
   .compare-cars { grid-template-columns: 1fr; }
   .compare-table th, .compare-table td { padding: 0.6rem 0.5rem; font-size: 0.55rem; }
 }

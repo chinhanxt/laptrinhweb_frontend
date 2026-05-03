@@ -3,9 +3,12 @@
    360° Model Viewer, Compare
    ============================================================ */
 $(function () {
+  var approvedCars = getApprovedCars();
+  var fallbackCar = approvedCars[0] || null;
   var carId = new URLSearchParams(window.location.search).get("car");
-  var car = getCarById(carId) || CARS_DATA[0];
-  var basePath = window.location.pathname.indexOf("/assets/html/") !== -1 ? "" : "assets/html/";
+  var car = resolveApprovedCar(carId, fallbackCar);
+
+  if (!car) return;
 
   document.title = "T.R.Y.P | " + car.name;
 
@@ -18,6 +21,36 @@ $(function () {
   renderBookingOptions();
   initTabs();
   initAnimations();
+
+  function getApprovedCars() {
+    if (!Array.isArray(CARS_DATA)) return [];
+
+    return CARS_DATA.filter(function (entry) {
+      return entry && typeof entry.id === "string" && entry.id.length > 0;
+    }).slice(0, 6);
+  }
+
+  function resolveApprovedCar(id, fallback) {
+    if (!id) return fallback;
+
+    for (var i = 0; i < approvedCars.length; i++) {
+      if (approvedCars[i].id === id) return approvedCars[i];
+    }
+
+    return fallback;
+  }
+
+  function getRenderSet(selectedCar) {
+    var gallery = selectedCar && selectedCar.images && Array.isArray(selectedCar.images.gallery)
+      ? selectedCar.images.gallery.slice(0, 4)
+      : [];
+
+    if (!gallery.length && selectedCar && selectedCar.images && selectedCar.images.hero) {
+      gallery.push(selectedCar.images.hero);
+    }
+
+    return gallery;
+  }
 
   /* ---- SIDEBAR ---- */
   function renderSidebar(car) {
@@ -40,7 +73,8 @@ $(function () {
 
   /* ---- HERO ---- */
   function renderHero(car) {
-    var imgSrc = car.images && car.images.hero;
+    var renderSet = getRenderSet(car);
+    var imgSrc = renderSet[0] || "";
     var html = imgSrc
       ? '<img src="' + imgSrc + '" alt="' + car.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' +
         '<span class="detail-hero__placeholder" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;">' + car.name + '</span>'
@@ -50,7 +84,7 @@ $(function () {
 
   /* ---- GALLERY ---- */
   function renderGallery(car) {
-    var gallery = (car.images && car.images.gallery) || [];
+    var gallery = getRenderSet(car);
     var $section = $("#section-gallery");
 
     if (gallery.length === 0) {
@@ -148,9 +182,10 @@ $(function () {
     }
 
     var config = car.modelConfig || {};
-    var orbit = config.cameraOrbit || "325deg 78deg 105%";
-    var target = config.cameraTarget || "0m 0.3m 0m";
-    var fov = config.fieldOfView || "28deg";
+    var orbit = config.cameraOrbit || "320deg 72deg 74%";
+    var target = config.cameraTarget || "0m 0.45m 0m";
+    var fov = config.fieldOfView || "24deg";
+    var exposure = config.exposure || "1.35";
 
     $section.html(
       '<p class="section-kicker">360° View</p>' +
@@ -164,7 +199,7 @@ $(function () {
           'camera-orbit="' + orbit + '" ' +
           'camera-target="' + target + '" ' +
           'field-of-view="' + fov + '" ' +
-          'exposure="1.5" ' +
+          'exposure="' + exposure + '" ' +
           'shadow-intensity="0.2" ' +
           'environment-image="neutral" ' +
           'loading="lazy" ' +
@@ -177,8 +212,8 @@ $(function () {
   /* ---- COMPARE ---- */
   function renderCompare(car) {
     var otherCars = [];
-    for (var i = 0; i < CARS_DATA.length; i++) {
-      if (CARS_DATA[i].id !== car.id) otherCars.push(CARS_DATA[i]);
+    for (var i = 0; i < approvedCars.length; i++) {
+      if (approvedCars[i].id !== car.id) otherCars.push(approvedCars[i]);
     }
 
     var optionsHtml = '<option value="">Chọn xe để so sánh</option>';
@@ -205,7 +240,7 @@ $(function () {
         $("#compare-result").html('<p class="compare-placeholder">Chọn một xe khác để xem bảng so sánh.</p>');
         return;
       }
-      var other = getCarById(otherId);
+      var other = resolveApprovedCar(otherId, null);
       if (!other) return;
       renderCompareTable(car, other);
     });
@@ -234,8 +269,8 @@ $(function () {
       { label: "Giá", a: car.specs.price, b: other.specs.price, cmp: null }
     ];
 
-    var imgA = (car.images && car.images.hero) || "";
-    var imgB = (other.images && other.images.hero) || "";
+    var imgA = getRenderSet(car)[0] || "";
+    var imgB = getRenderSet(other)[0] || "";
 
     var visualHtml =
       '<div class="compare-cars">' +
@@ -274,9 +309,9 @@ $(function () {
   /* ---- BOOKING OPTIONS ---- */
   function renderBookingOptions() {
     var html = '<option value="">Chọn mẫu xe</option>';
-    for (var i = 0; i < CARS_DATA.length; i++) {
-      var selected = CARS_DATA[i].id === car.id ? " selected" : "";
-      html += '<option value="' + CARS_DATA[i].id + '"' + selected + '>' + CARS_DATA[i].brand + ' ' + CARS_DATA[i].name + '</option>';
+    for (var i = 0; i < approvedCars.length; i++) {
+      var selected = approvedCars[i].id === car.id ? " selected" : "";
+      html += '<option value="' + approvedCars[i].id + '"' + selected + '>' + approvedCars[i].brand + ' ' + approvedCars[i].name + '</option>';
     }
     $("#bookingCar").html(html);
   }
