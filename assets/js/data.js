@@ -4,185 +4,184 @@
    ============================================================ */
 var CARS_DATA = [
   {
-    id: "aventador-lp670",
-    name: "Aventador LP 670",
+    id: "murcielago",
     brand: "Lamborghini",
-    series: "v12",
-    tagline: "Biểu tượng tốc độ tuyệt đối với động cơ V12 tự nhiên, mang đến âm thanh và sức mạnh thuần khiết.",
+    name: "Murcielago LP 670-4 SV",
+    subtitle: "Naturally Aspirated V12",
     specs: {
-      hp: 789,
-      engine: "V12",
+      year: 2010,
+      hp: 670,
+      engine: "6.5L V12",
       acceleration: "3.2s",
-      topSpeed: "355 km/h",
-      price: "26 tỷ VND"
+      topSpeed: "342 km/h",
+      price: "18 ty VND"
     },
     images: {
-      hero: "../img/aventador-hero.webp",
+      hero: "../img/cars/murcielago/hero.webp",
       gallery: [
-        "../img/aventador-exterior.webp",
-        "../img/aventador-interior.webp",
-        "../img/aventador-rear.webp",
-        "../img/aventador-engine.webp"
+        "../img/cars/murcielago/hero.webp",
+        "../img/cars/murcielago/front.webp",
+        "../img/cars/murcielago/rear.webp",
+        "../img/cars/murcielago/top.webp"
       ]
     },
     model3d: "../model/lambo_lp670.glb",
     modelConfig: {
-      cameraOrbit: "325deg 78deg 105%",
-      cameraTarget: "0m 0.3m 0m",
-      fieldOfView: "28deg"
+      cameraOrbit: "320deg 76deg 112%",
+      cameraTarget: "-0.18m 0.47m -0.01m",
+      fieldOfView: "27deg",
+      exposure: "1.5"
     }
   },
   {
-    id: "huracan-sto",
-    name: "Huracán STO",
-    brand: "Lamborghini",
-    series: "track",
-    tagline: "Siêu xe đường đua hợp pháp với khí động học lấy cảm hứng từ xe đua Super Trofeo.",
+    id: "bmw-3-0-csl-hommage",
+    brand: "BMW",
+    name: "3.0 CSL Hommage",
+    subtitle: "Concept 2015",
     specs: {
-      hp: 640,
-      engine: "V10",
-      acceleration: "3.0s",
-      topSpeed: "310 km/h",
-      price: "21 tỷ VND"
+      year: 2015,
+      hp: 365,
+      engine: "3.0L I6 Twin-Turbo",
+      acceleration: "4.3s",
+      topSpeed: "250 km/h",
+      price: "Concept only"
     },
     images: {
-      hero: "../img/huracan-hero.webp",
+      hero: "../img/cars/bmw-3-0-csl-hommage/hero.webp",
       gallery: [
-        "../img/huracan-exterior.webp",
-        "../img/huracan-interior.webp",
-        "../img/huracan-rear.webp"
+        "../img/cars/bmw-3-0-csl-hommage/hero.webp",
+        "../img/cars/bmw-3-0-csl-hommage/front.webp",
+        "../img/cars/bmw-3-0-csl-hommage/rear.webp",
+        "../img/cars/bmw-3-0-csl-hommage/top.webp"
       ]
     },
-    model3d: null,
-    modelConfig: null
+    model3d: "../model/2015_bmw_3.0_csl_hommage_concept.glb",
+    modelConfig: {
+      cameraOrbit: "318deg 77deg 108%",
+      cameraTarget: "0m 0.42m 0m",
+      fieldOfView: "28deg",
+      exposure: "1.45"
+    }
   },
   {
-    id: "revuelto",
-    name: "Revuelto",
-    brand: "Lamborghini",
-    series: "hybrid",
-    tagline: "Thế hệ tiếp theo của Lamborghini — kết hợp động cơ V12 và 3 mô-tơ điện cho công suất kỷ lục.",
-    specs: {
-      hp: 1001,
-      engine: "Hybrid V12",
-      acceleration: "2.5s",
-      topSpeed: "350 km/h",
-      price: "19 tỷ VND"
-    },
-    images: {
-      hero: "../img/revuelto-hero.webp",
-      gallery: [
-        "../img/revuelto-exterior.webp",
-        "../img/revuelto-interior.webp",
-        "../img/revuelto-rear.webp"
-      ]
-    },
-    model3d: null,
-    modelConfig: null
-  },
-  {
-    id: "sf90-stradale",
-    name: "SF90 Stradale",
+    id: "ferrari-488-pista-spider",
     brand: "Ferrari",
-    series: "hybrid",
-    tagline: "Siêu xe hybrid mạnh nhất của Ferrari với hệ thống plug-in hybrid 3 mô-tơ điện.",
+    name: "488 Pista Spider",
+    subtitle: "V8 Twin-Turbo",
     specs: {
-      hp: 986,
-      engine: "Hybrid V8",
-      acceleration: "2.5s",
+      year: 2019,
+      hp: 711,
+      engine: "3.9L V8",
+      acceleration: "2.85s",
       topSpeed: "340 km/h",
-      price: "32 tỷ VND"
+      price: "32 ty VND"
     },
     images: {
-      hero: "../img/sf90-hero.webp",
+      hero: "../img/cars/ferrari-488-pista-spider/hero.webp",
       gallery: [
-        "../img/sf90-exterior.webp",
-        "../img/sf90-interior.webp",
-        "../img/sf90-rear.webp"
+        "../img/cars/ferrari-488-pista-spider/hero.webp",
+        "../img/cars/ferrari-488-pista-spider/front.webp",
+        "../img/cars/ferrari-488-pista-spider/rear.webp",
+        "../img/cars/ferrari-488-pista-spider/top.webp"
       ]
     },
     model3d: "../model/2019_ferrari_488_pista_spider.glb",
     modelConfig: {
-      cameraOrbit: "325deg 78deg 105%",
-      cameraTarget: "0m 0.3m 0m",
-      fieldOfView: "28deg"
+      cameraOrbit: "323deg 78deg 106%",
+      cameraTarget: "0m 0.36m 0m",
+      fieldOfView: "28deg",
+      exposure: "1.55"
     }
   },
   {
-    id: "roma",
-    name: "Roma",
+    id: "ferrari-roma",
     brand: "Ferrari",
-    series: "gt",
-    tagline: "Grand Touring đỉnh cao — sự kết hợp hoàn hảo giữa hiệu suất và phong cách La Dolce Vita.",
+    name: "Roma",
+    subtitle: "Grand Touring Coupe",
     specs: {
-      hp: 620,
-      engine: "V8 Twin-Turbo",
+      year: 2020,
+      hp: 612,
+      engine: "3.9L V8",
       acceleration: "3.4s",
       topSpeed: "320 km/h",
-      price: "22 tỷ VND"
+      price: "22 ty VND"
     },
     images: {
-      hero: "../img/roma-hero.webp",
+      hero: "../img/cars/ferrari-roma/hero.webp",
       gallery: [
-        "../img/roma-exterior.webp",
-        "../img/roma-interior.webp",
-        "../img/roma-rear.webp"
+        "../img/cars/ferrari-roma/hero.webp",
+        "../img/cars/ferrari-roma/front.webp",
+        "../img/cars/ferrari-roma/rear.webp",
+        "../img/cars/ferrari-roma/top.webp"
       ]
     },
     model3d: "../model/2020_ferrari_roma.glb",
     modelConfig: {
-      cameraOrbit: "325deg 78deg 105%",
-      cameraTarget: "0m 0.3m 0m",
-      fieldOfView: "28deg"
+      cameraOrbit: "326deg 77deg 108%",
+      cameraTarget: "0m 0.34m 0m",
+      fieldOfView: "28deg",
+      exposure: "1.5"
     }
   },
   {
-    id: "750s",
-    name: "750S",
-    brand: "McLaren",
-    series: "super",
-    tagline: "Siêu phẩm siêu nhẹ với cấu trúc carbon và hiệu suất vượt trội trên mọi cung đường.",
+    id: "centenario-roadster",
+    brand: "Lamborghini",
+    name: "Centenario Roadster",
+    subtitle: "Limited Edition V12",
     specs: {
-      hp: 750,
-      engine: "V8 Twin-Turbo",
-      acceleration: "2.8s",
-      topSpeed: "332 km/h",
-      price: "24 tỷ VND"
+      year: 2017,
+      hp: 770,
+      engine: "6.5L V12",
+      acceleration: "2.9s",
+      topSpeed: "350 km/h",
+      price: "48 ty VND"
     },
     images: {
-      hero: "../img/750s-hero.webp",
+      hero: "../img/cars/centenario-roadster/hero.webp",
       gallery: [
-        "../img/750s-exterior.webp",
-        "../img/750s-interior.webp",
-        "../img/750s-rear.webp"
+        "../img/cars/centenario-roadster/hero.webp",
+        "../img/cars/centenario-roadster/front.webp",
+        "../img/cars/centenario-roadster/rear.webp",
+        "../img/cars/centenario-roadster/top.webp"
       ]
     },
-    model3d: null,
-    modelConfig: null
+    model3d: "../model/lamborghini_centenario_roadster_sdc.glb",
+    modelConfig: {
+      cameraOrbit: "325deg 78deg 105%",
+      cameraTarget: "0m 0.3m 0m",
+      fieldOfView: "28deg",
+      exposure: "1.0"
+    }
   },
   {
-    id: "911-gt3-rs",
-    name: "911 GT3 RS",
-    brand: "Porsche",
-    series: "track",
-    tagline: "Cỗ máy đường đua thuần chủng mang đẳng cấp motorsport lên từng cung đường phố.",
+    id: "centenario-lp770",
+    brand: "Lamborghini",
+    name: "Centenario LP-770",
+    subtitle: "Interior Showcase",
     specs: {
-      hp: 525,
-      engine: "Flat-6",
-      acceleration: "3.2s",
-      topSpeed: "296 km/h",
-      price: "18 tỷ VND"
+      year: 2016,
+      hp: 770,
+      engine: "6.5L V12",
+      acceleration: "2.8s",
+      topSpeed: "350 km/h",
+      price: "44 ty VND"
     },
     images: {
-      hero: "../img/gt3rs-hero.webp",
+      hero: "../img/cars/centenario-lp770/hero.webp",
       gallery: [
-        "../img/gt3rs-exterior.webp",
-        "../img/gt3rs-interior.webp",
-        "../img/gt3rs-rear.webp"
+        "../img/cars/centenario-lp770/hero.webp",
+        "../img/cars/centenario-lp770/front.webp",
+        "../img/cars/centenario-lp770/rear.webp",
+        "../img/cars/centenario-lp770/top.webp"
       ]
     },
-    model3d: null,
-    modelConfig: null
+    model3d: "../model/lamborghini_centenario_lp-770_interior_sdc.glb",
+    modelConfig: {
+      cameraOrbit: "325deg 75deg 120%",
+      cameraTarget: "0m 0.45m 0m",
+      fieldOfView: "30deg",
+      exposure: "1.0"
+    }
   }
 ];
 
