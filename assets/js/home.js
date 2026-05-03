@@ -57,8 +57,23 @@
     ScrollTrigger.refresh();
   }
 
+  function renderHomepageBookingOptions() {
+    var select = document.getElementById("bookingCar");
+    if (!select || typeof getApprovedCars !== "function") {
+      return;
+    }
+
+    var cars = getApprovedCars();
+    var html = '<option value="">Chọn mẫu xe</option>';
+    for (var i = 0; i < cars.length; i++) {
+      html += '<option value="' + cars[i].id + '">' + cars[i].brand + " " + cars[i].name + "</option>";
+    }
+    select.innerHTML = html;
+  }
+
   $(function () {
     document.body.classList.add("app-is-booting");
+    renderHomepageBookingOptions();
 
     var bootTasks = [];
 

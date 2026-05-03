@@ -80,6 +80,38 @@ window.APEXHero3D = (function () {
       topSpeed: "320",
       targetSize: 3.7,
       modelOffset: { x: 0, y: 0, z: 0 }
+    },
+    {
+      model: "assets/model/lamborghini_centenario_roadster_sdc.glb",
+      brand: "Lamborghini",
+      name: "Centenario Roadster",
+      sub: "Limited Edition V12",
+      year: "2017",
+      engine: "6.5L V12",
+      defaultColorName: "Bianco Isis",
+      hp: "770",
+      accel: "2.9",
+      topSpeed: "350",
+      targetSize: 3.68,
+      modelOffset: { x: 0, y: 0, z: 0 },
+      cameraPosition: { x: 3.15, y: 1.5, z: 4.95 },
+      cameraTarget: { x: 0, y: 0.34, z: 0 }
+    },
+    {
+      model: "assets/model/lamborghini_centenario_lp-770_interior_sdc.glb",
+      brand: "Lamborghini",
+      name: "Centenario LP-770",
+      sub: "Interior Showcase",
+      year: "2016",
+      engine: "6.5L V12",
+      defaultColorName: "Bianco Isis",
+      hp: "770",
+      accel: "2.8",
+      topSpeed: "350",
+      targetSize: 3.62,
+      modelOffset: { x: 0, y: 0, z: 0 },
+      cameraPosition: { x: 3.35, y: 1.6, z: 5.35 },
+      cameraTarget: { x: 0, y: 0.45, z: 0 }
     }
   ];
   var currentIndex = 0;
