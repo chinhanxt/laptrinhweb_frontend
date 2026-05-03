@@ -39,7 +39,7 @@ var CARS_DATA = [
       cameraOrbit: "320deg 72deg 74%",
       cameraTarget: "0m 0.45m 0m",
       fieldOfView: "24deg",
-      modelScale: "1.85 1.85 1.85",
+      modelScale: "1.35 1.35 1.35",
       exposure: "1.5"
     }
   },
@@ -71,7 +71,7 @@ var CARS_DATA = [
       cameraTarget: "0m 0.42m 0m",
       fieldOfView: "24deg",
       modelScale: "96 96 96",
-      exposure: "1.45"
+      exposure: "1.2"
     }
   },
   {
