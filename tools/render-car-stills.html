@@ -147,7 +147,7 @@
           }
         }
 
-        function normalizeScale() {
+        function normalizeScale(config) {
           if (typeof viewer.getDimensions !== "function") {
             return { scaleFactor: 1 };
           }
@@ -158,8 +158,13 @@
             return { scaleFactor: 1 };
           }
 
-          const targetLongestSide = 4.8;
-          const scaleFactor = clamp(targetLongestSide / longestSide, 0.75, 140);
+          const targetLongestSide = config && Number.isFinite(config.targetLongestSide)
+            ? config.targetLongestSide
+            : 4.8;
+          const scaleMultiplier = config && Number.isFinite(config.scaleMultiplier)
+            ? config.scaleMultiplier
+            : 1;
+          const scaleFactor = clamp((targetLongestSide / longestSide) * scaleMultiplier, 0.75, 140);
           viewer.scale = scaleFactor + " " + scaleFactor + " " + scaleFactor;
           if (typeof viewer.updateFraming === "function") {
             viewer.updateFraming();
@@ -199,7 +204,7 @@
 
             await loadPromise;
             await waitForModelLoad();
-            const scaleInfo = normalizeScale();
+            const scaleInfo = normalizeScale(config);
             await settle(12, 180);
             this.currentCarId = config.id;
             return {

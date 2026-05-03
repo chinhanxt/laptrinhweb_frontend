@@ -98,7 +98,7 @@ $(function () {
   }
 
   function getCatalogCars() {
-    return Array.isArray(CARS_DATA) ? CARS_DATA.slice() : [];
+    return typeof getApprovedCars === "function" ? getApprovedCars() : [];
   }
 
   function getCatalogBrands() {

@@ -24,9 +24,14 @@ const CARS = [
     id: "murcielago",
     src: "/assets/model/lambo_lp670.glb",
     exposure: "1.5",
-    baseDistance: "112%",
-    cameraTarget: "0m 0.45m 0m",
-    orbitDistanceMultiplier: 1.2
+    cameraTarget: "0.3m 1m 0m",
+    targetLongestSide: 5.8,
+    presetOverrides: {
+      hero: { cameraOrbit: "320deg 73deg 62%", cameraTarget: "0.34m 1.04m 0m", fieldOfView: "22deg" },
+      front: { cameraOrbit: "0deg 79deg 68%", cameraTarget: "0.34m 1.02m 0m", fieldOfView: "23deg" },
+      rear: { cameraOrbit: "140deg 76deg 69%", cameraTarget: "0.22m 0.98m 0m", fieldOfView: "23deg" },
+      top: { cameraOrbit: "320deg 58deg 74%", cameraTarget: "0.36m 1.08m 0m", fieldOfView: "25deg" }
+    }
   },
   {
     id: "bmw-3-0-csl-hommage",
@@ -93,7 +98,10 @@ function getAvailablePort() {
 }
 
 function buildPresetForCar(car, preset) {
-  const orbitParts = preset.cameraOrbit.split(" ");
+  const presetName = preset.name;
+  const override = presetName && car.presetOverrides ? car.presetOverrides[presetName] : null;
+  const mergedPreset = Object.assign({}, preset, override || {});
+  const orbitParts = mergedPreset.cameraOrbit.split(" ");
   const multiplier = car.orbitDistanceMultiplier || 1;
   const orbitDistance = orbitParts[2];
   const distanceMatch = /^([0-9.]+)(.*)$/.exec(orbitDistance);
@@ -103,9 +111,53 @@ function buildPresetForCar(car, preset) {
 
   return {
     cameraOrbit: orbitParts.slice(0, 2).concat(resolvedDistance).join(" "),
-    cameraTarget: car.cameraTarget || preset.cameraTarget,
-    fieldOfView: preset.fieldOfView
+    cameraTarget: (override && override.cameraTarget) || car.cameraTarget || mergedPreset.cameraTarget,
+    fieldOfView: mergedPreset.fieldOfView
   };
+}
+
+function parseArgs(argv) {
+  const options = {
+    carIds: null
+  };
+
+  argv.forEach((arg) => {
+    if (arg.startsWith("--car=")) {
+      options.carIds = [arg.slice("--car=".length)].filter(Boolean);
+    } else if (arg.startsWith("--cars=")) {
+      options.carIds = arg
+        .slice("--cars=".length)
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
+    }
+  });
+
+  return options;
+}
+
+function getCarsToCapture(options) {
+  if (!options.carIds || options.carIds.length === 0) {
+    return CARS.slice();
+  }
+
+  const requested = {};
+  options.carIds.forEach((id) => {
+    requested[id] = true;
+  });
+
+  const filteredCars = CARS.filter((car) => requested[car.id]);
+  if (filteredCars.length !== options.carIds.length) {
+    const found = {};
+    filteredCars.forEach((car) => {
+      found[car.id] = true;
+    });
+
+    const missing = options.carIds.filter((id) => !found[id]);
+    throw new Error("Unknown car id(s): " + missing.join(", "));
+  }
+
+  return filteredCars;
 }
 
 function startServer(port) {
@@ -334,15 +386,17 @@ async function captureWebp(client, outputPath) {
   fs.writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
 }
 
-async function ensureOutputDirectories() {
+async function ensureOutputDirectories(cars) {
   fs.mkdirSync(OUTPUT_ROOT, { recursive: true });
-  CARS.forEach((car) => {
+  cars.forEach((car) => {
     fs.mkdirSync(path.join(OUTPUT_ROOT, car.id), { recursive: true });
   });
 }
 
 async function main() {
-  await ensureOutputDirectories();
+  const options = parseArgs(process.argv.slice(2));
+  const carsToCapture = getCarsToCapture(options);
+  await ensureOutputDirectories(carsToCapture);
 
   const server = await startServer(PORT);
   const remoteDebuggingPort = await getAvailablePort();
@@ -369,7 +423,7 @@ async function main() {
     await navigation;
     await client.waitForFunction(() => Boolean(window.__stillCapture && window.__stillCapture.ready), 120000);
 
-    for (const car of CARS) {
+    for (const car of carsToCapture) {
       const loadResult = await client.evaluate("window.__stillCapture.loadCar(" + JSON.stringify(car) + ")");
       if (loadResult && loadResult.scaleFactor) {
         console.log(
@@ -387,7 +441,7 @@ async function main() {
       }
 
       for (const [presetName, preset] of Object.entries(CAPTURE_PRESETS)) {
-        const resolvedPreset = buildPresetForCar(car, preset);
+        const resolvedPreset = buildPresetForCar(car, Object.assign({ name: presetName }, preset));
         await client.evaluate(
           "window.__stillCapture.applyPreset(" +
             JSON.stringify(presetName) +

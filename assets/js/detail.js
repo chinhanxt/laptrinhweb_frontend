@@ -22,14 +22,6 @@ $(function () {
   initTabs();
   initAnimations();
 
-  function getApprovedCars() {
-    if (!Array.isArray(CARS_DATA)) return [];
-
-    return CARS_DATA.filter(function (entry) {
-      return entry && typeof entry.id === "string" && entry.id.length > 0;
-    }).slice(0, 6);
-  }
-
   function resolveApprovedCar(id, fallback) {
     if (!id) return fallback;
 

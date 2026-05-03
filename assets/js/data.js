@@ -2,6 +2,15 @@
    SHARED CAR DATA — T.R.Y.P Multi-Brand
    Single source of truth for all views
    ============================================================ */
+var APPROVED_CAR_IDS = [
+  "murcielago",
+  "bmw-3-0-csl-hommage",
+  "ferrari-488-pista-spider",
+  "ferrari-roma",
+  "centenario-roadster",
+  "centenario-lp770"
+];
+
 var CARS_DATA = [
   {
     id: "murcielago",
@@ -27,9 +36,9 @@ var CARS_DATA = [
     },
     model3d: "../model/lambo_lp670.glb",
     modelConfig: {
-      cameraOrbit: "320deg 76deg 112%",
-      cameraTarget: "-0.18m 0.47m -0.01m",
-      fieldOfView: "27deg",
+      cameraOrbit: "322deg 75deg 106%",
+      cameraTarget: "0.12m 0.6m 0m",
+      fieldOfView: "26deg",
       exposure: "1.5"
     }
   },
@@ -191,6 +200,20 @@ function getCarById(id) {
     if (CARS_DATA[i].id === id) return CARS_DATA[i];
   }
   return null;
+}
+
+/* Helper: get approved six cars in the canonical order */
+function getApprovedCars() {
+  var approvedCars = [];
+
+  for (var i = 0; i < APPROVED_CAR_IDS.length; i++) {
+    var car = getCarById(APPROVED_CAR_IDS[i]);
+    if (car) {
+      approvedCars.push(car);
+    }
+  }
+
+  return approvedCars;
 }
 
 /* Helper: get unique brand list */
