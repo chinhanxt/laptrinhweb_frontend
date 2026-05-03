@@ -37,9 +37,9 @@ var CARS_DATA = [
     model3d: "../model/lambo_lp670.glb",
     modelConfig: {
       cameraOrbit: "320deg 72deg 74%",
-      cameraTarget: "0m 0.45m 0m",
+      cameraTarget: "auto auto auto",
       fieldOfView: "24deg",
-      modelScale: "1.35 1.35 1.35",
+      modelScale: "1.2 1.2 1.2",
       exposure: "1.5"
     }
   },
