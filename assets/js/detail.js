@@ -178,12 +178,14 @@ $(function () {
     var target = config.cameraTarget || "0m 0.45m 0m";
     var fov = config.fieldOfView || "24deg";
     var exposure = config.exposure || "1.35";
+    var modelScale = config.modelScale || "1 1 1";
 
     $section.html(
       '<p class="section-kicker">360° View</p>' +
       '<div class="view360-container">' +
         '<model-viewer ' +
           'src="' + car.model3d + '" ' +
+          'scale="' + modelScale + '" ' +
           'camera-controls ' +
           'disable-zoom ' +
           'disable-pan ' +

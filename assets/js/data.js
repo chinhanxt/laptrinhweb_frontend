@@ -36,9 +36,10 @@ var CARS_DATA = [
     },
     model3d: "../model/lambo_lp670.glb",
     modelConfig: {
-      cameraOrbit: "322deg 75deg 106%",
-      cameraTarget: "0.12m 0.6m 0m",
-      fieldOfView: "26deg",
+      cameraOrbit: "320deg 72deg 74%",
+      cameraTarget: "0m 0.45m 0m",
+      fieldOfView: "24deg",
+      modelScale: "1.85 1.85 1.85",
       exposure: "1.5"
     }
   },
@@ -66,9 +67,10 @@ var CARS_DATA = [
     },
     model3d: "../model/2015_bmw_3.0_csl_hommage_concept.glb",
     modelConfig: {
-      cameraOrbit: "318deg 77deg 108%",
+      cameraOrbit: "318deg 72deg 74%",
       cameraTarget: "0m 0.42m 0m",
-      fieldOfView: "28deg",
+      fieldOfView: "24deg",
+      modelScale: "96 96 96",
       exposure: "1.45"
     }
   },
@@ -96,9 +98,10 @@ var CARS_DATA = [
     },
     model3d: "../model/2019_ferrari_488_pista_spider.glb",
     modelConfig: {
-      cameraOrbit: "323deg 78deg 106%",
-      cameraTarget: "0m 0.36m 0m",
-      fieldOfView: "28deg",
+      cameraOrbit: "320deg 72deg 74%",
+      cameraTarget: "0m 0.42m 0m",
+      fieldOfView: "24deg",
+      modelScale: "104 104 104",
       exposure: "1.55"
     }
   },
@@ -126,9 +129,10 @@ var CARS_DATA = [
     },
     model3d: "../model/2020_ferrari_roma.glb",
     modelConfig: {
-      cameraOrbit: "326deg 77deg 108%",
-      cameraTarget: "0m 0.34m 0m",
-      fieldOfView: "28deg",
+      cameraOrbit: "320deg 72deg 74%",
+      cameraTarget: "0m 0.42m 0m",
+      fieldOfView: "24deg",
+      modelScale: "103 103 103",
       exposure: "1.5"
     }
   },
