@@ -194,6 +194,7 @@ $(function () {
           'camera-target="' + target + '" ' +
           'field-of-view="' + fov + '" ' +
           'exposure="' + exposure + '" ' +
+          'tone-mapping="commerce" ' +
           'shadow-intensity="0.2" ' +
           'environment-image="neutral" ' +
           'loading="lazy" ' +

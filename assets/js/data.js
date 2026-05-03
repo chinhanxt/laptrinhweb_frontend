@@ -71,7 +71,7 @@ var CARS_DATA = [
       cameraTarget: "0m 0.42m 0m",
       fieldOfView: "24deg",
       modelScale: "96 96 96",
-      exposure: "1.2"
+      exposure: "1.45"
     }
   },
   {
