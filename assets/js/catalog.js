@@ -7,16 +7,17 @@ $(function () {
   var $empty = $("#catalog-empty");
   var $bookingCar = $("#bookingCar");
   var activeBrand = "all";
+  var catalogCars = getCatalogCars();
 
   function init() {
     renderTabs();
-    renderCards(CARS_DATA);
-    renderBookingOptions();
+    renderCards(catalogCars);
+    renderBookingOptions(catalogCars);
     initDragScroll();
   }
 
   function renderTabs() {
-    var brands = getBrands();
+    var brands = getCatalogBrands();
     var html = '<button class="catalog-tab is-active" data-brand="all">Tất cả</button>';
     for (var i = 0; i < brands.length; i++) {
       html += '<button class="catalog-tab" data-brand="' + brands[i] + '">' + brands[i] + '</button>';
@@ -87,12 +88,31 @@ $(function () {
     $strip[0].scrollLeft = 0;
   }
 
-  function renderBookingOptions() {
+  function renderBookingOptions(cars) {
     var html = '<option value="">Chọn mẫu xe</option>';
-    for (var i = 0; i < CARS_DATA.length; i++) {
-      html += '<option value="' + CARS_DATA[i].id + '">' + CARS_DATA[i].brand + ' ' + CARS_DATA[i].name + '</option>';
+    for (var i = 0; i < cars.length; i++) {
+      html += '<option value="' + cars[i].id + '">' + cars[i].brand + ' ' + cars[i].name + '</option>';
     }
     $bookingCar.html(html);
+  }
+
+  function getCatalogCars() {
+    return Array.isArray(CARS_DATA) ? CARS_DATA.slice() : [];
+  }
+
+  function getCatalogBrands() {
+    var seen = {};
+    var brands = [];
+
+    for (var i = 0; i < catalogCars.length; i++) {
+      var brand = catalogCars[i].brand;
+      if (!seen[brand]) {
+        seen[brand] = true;
+        brands.push(brand);
+      }
+    }
+
+    return brands;
   }
 
   function initDragScroll() {
