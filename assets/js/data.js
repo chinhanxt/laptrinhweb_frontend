@@ -6,15 +6,15 @@ var CARS_DATA = [
   {
     id: "murcielago",
     brand: "Lamborghini",
-    name: "Murcielago LP 670-4 SV",
-    subtitle: "Naturally Aspirated V12",
+    name: "Murciélago",
+    subtitle: "LP 670-4 SuperVeloce",
     specs: {
       year: 2010,
       hp: 670,
       engine: "6.5L V12",
       acceleration: "3.2s",
       topSpeed: "342 km/h",
-      price: "18 ty VND"
+      price: "18 tỷ VND"
     },
     images: {
       hero: "../img/cars/murcielago/hero.webp",
@@ -74,7 +74,7 @@ var CARS_DATA = [
       engine: "3.9L V8",
       acceleration: "2.85s",
       topSpeed: "340 km/h",
-      price: "32 ty VND"
+      price: "32 tỷ VND"
     },
     images: {
       hero: "../img/cars/ferrari-488-pista-spider/hero.webp",
@@ -104,7 +104,7 @@ var CARS_DATA = [
       engine: "3.9L V8",
       acceleration: "3.4s",
       topSpeed: "320 km/h",
-      price: "22 ty VND"
+      price: "22 tỷ VND"
     },
     images: {
       hero: "../img/cars/ferrari-roma/hero.webp",
@@ -134,7 +134,7 @@ var CARS_DATA = [
       engine: "6.5L V12",
       acceleration: "2.9s",
       topSpeed: "350 km/h",
-      price: "48 ty VND"
+      price: "48 tỷ VND"
     },
     images: {
       hero: "../img/cars/centenario-roadster/hero.webp",
@@ -164,7 +164,7 @@ var CARS_DATA = [
       engine: "6.5L V12",
       acceleration: "2.8s",
       topSpeed: "350 km/h",
-      price: "44 ty VND"
+      price: "44 tỷ VND"
     },
     images: {
       hero: "../img/cars/centenario-lp770/hero.webp",
