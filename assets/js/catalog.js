@@ -12,6 +12,7 @@ $(function () {
   function init() {
     renderTabs();
     renderCards(catalogCars);
+    filterCards();
     renderBookingOptions(catalogCars);
     initDragScroll();
   }
