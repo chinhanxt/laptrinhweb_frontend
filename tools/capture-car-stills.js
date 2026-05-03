@@ -24,13 +24,13 @@ const CARS = [
     id: "murcielago",
     src: "/assets/model/lambo_lp670.glb",
     exposure: "1.5",
-    cameraTarget: "0.3m 1m 0m",
-    targetLongestSide: 5.8,
+    cameraTarget: "auto auto auto",
+    targetLongestSide: 4.9,
     presetOverrides: {
-      hero: { cameraOrbit: "320deg 73deg 62%", cameraTarget: "0.34m 1.04m 0m", fieldOfView: "22deg" },
-      front: { cameraOrbit: "0deg 79deg 68%", cameraTarget: "0.34m 1.02m 0m", fieldOfView: "23deg" },
-      rear: { cameraOrbit: "140deg 76deg 69%", cameraTarget: "0.22m 0.98m 0m", fieldOfView: "23deg" },
-      top: { cameraOrbit: "320deg 58deg 74%", cameraTarget: "0.36m 1.08m 0m", fieldOfView: "25deg" }
+      hero: { cameraOrbit: "320deg 73deg 74%", cameraTarget: "auto auto auto", fieldOfView: "24deg" },
+      front: { cameraOrbit: "0deg 79deg 76%", cameraTarget: "auto auto auto", fieldOfView: "24deg" },
+      rear: { cameraOrbit: "140deg 76deg 77%", cameraTarget: "auto auto auto", fieldOfView: "24deg" },
+      top: { cameraOrbit: "320deg 58deg 84%", cameraTarget: "auto auto auto", fieldOfView: "26deg" }
     }
   },
   {
