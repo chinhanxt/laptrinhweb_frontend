@@ -124,18 +124,27 @@ window.LamboGallery = (function () {
     };
   }
 
+  function updateLocalLoadingText(text) {
+    var loadingMessage = document.getElementById("lambo-gallery-loading");
+    if (!loadingMessage) return;
+    var textEl = loadingMessage.querySelector("span:last-child");
+    if (textEl) textEl.textContent = text;
+  }
+
   function setLocalLoading(isLoading) {
     if (!section) return;
     section.classList.toggle("is-loading", isLoading);
     if (isLoading) {
       section.classList.remove("is-ready");
       section.classList.remove("is-error");
+      updateLocalLoadingText("Đang chuẩn bị trải nghiệm Lamborghini");
     }
   }
 
   function markGalleryReady() {
     if (!section) return;
     section.classList.remove("is-loading");
+    section.classList.remove("is-error");
     section.classList.add("is-ready");
   }
 
@@ -144,11 +153,15 @@ window.LamboGallery = (function () {
     section.classList.remove("is-loading");
     section.classList.remove("is-ready");
     section.classList.add("is-error");
-    var loadingMessage = document.getElementById("lambo-gallery-loading");
-    if (loadingMessage) {
-      var textEl = loadingMessage.querySelector("span:last-child");
-      if (textEl) textEl.textContent = "Không thể tải trải nghiệm Lamborghini";
-    }
+    updateLocalLoadingText("Không thể tải trải nghiệm Lamborghini");
+  }
+
+  function markGalleryModelLoadFailed() {
+    if (!section) return;
+    section.classList.remove("is-loading");
+    section.classList.add("is-ready");
+    section.classList.add("is-error");
+    updateLocalLoadingText("Không thể tải mẫu Lamborghini này");
   }
 
   function onResize() {
@@ -398,19 +411,10 @@ window.LamboGallery = (function () {
     );
   }
 
-  function preloadAll(callback) {
-    if (isMobile) {
-      loadModel(0, function (model) { callback(!!model); });
-      return;
-    }
-    var remaining = GALLERY_CARS.length;
-    var allLoaded = true;
+  function preloadRemainingModelsInBackground() {
     GALLERY_CARS.forEach(function (_, i) {
-      loadModel(i, function (model) {
-        if (!model) allLoaded = false;
-        remaining--;
-        if (remaining === 0) callback(allLoaded && !!modelCache[0]);
-      });
+      if (i === currentIndex || modelCache[i]) return;
+      loadModel(i, function () {});
     });
   }
 
@@ -853,10 +857,7 @@ window.LamboGallery = (function () {
   // ----------------------------------------------------------------
   // Navigation — arrow buttons + dot clicks
   // ----------------------------------------------------------------
-  function goToCar(index) {
-    if (transitioning || index < 0 || index >= GALLERY_CARS.length || index === currentIndex) return;
-    transitioning = true;
-
+  function activateGalleryIndex(index) {
     showModel(index);
 
     var preset = getCameraPreset(index);
@@ -867,6 +868,27 @@ window.LamboGallery = (function () {
 
     panelEls.forEach(function (p, i) { p.classList.toggle("is-active", i === index); });
     dotEls.forEach(function (d, i) { d.classList.toggle("is-active", i === index); });
+  }
+
+  function goToCar(index) {
+    if (transitioning || index < 0 || index >= GALLERY_CARS.length || index === currentIndex) return;
+    transitioning = true;
+
+    if (!modelCache[index]) {
+      setLocalLoading(true);
+      loadModel(index, function (model) {
+        if (!model) {
+          transitioning = false;
+          markGalleryModelLoadFailed();
+          return;
+        }
+        markGalleryReady();
+        activateGalleryIndex(index);
+      });
+      return;
+    }
+
+    activateGalleryIndex(index);
   }
 
   function bindNavigation() {
@@ -937,14 +959,15 @@ window.LamboGallery = (function () {
     initStarted = true;
 
     if (!initScene()) {
+      if (section) markGalleryUnavailable();
       settleReady(false);
       return readyPromise;
     }
 
     setLocalLoading(true);
 
-    preloadAll(function (allLoaded) {
-      if (!allLoaded || !modelCache[0]) {
+    loadModel(0, function (model) {
+      if (!model) {
         markGalleryUnavailable();
         settleReady(false);
         return;
@@ -960,6 +983,7 @@ window.LamboGallery = (function () {
       animate();
       markGalleryReady();
       settleReady(true);
+      preloadRemainingModelsInBackground();
     });
 
     return readyPromise;
