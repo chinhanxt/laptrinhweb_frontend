@@ -25,6 +25,7 @@ window.LamboGallery = (function () {
   var scene, camera, renderer, controls;
   var currentIndex = 0;
   var modelCache = {};
+  var modelLoadCallbacks = {};
   var animCache = {};
   var activeModel = null;
   var hitBox = null;
@@ -396,6 +397,22 @@ window.LamboGallery = (function () {
       callback(modelCache[index]);
       return;
     }
+
+    if (modelLoadCallbacks[index]) {
+      modelLoadCallbacks[index].push(callback);
+      return;
+    }
+
+    modelLoadCallbacks[index] = [callback];
+
+    function finishLoad(model) {
+      var callbacks = modelLoadCallbacks[index] || [];
+      delete modelLoadCallbacks[index];
+      callbacks.forEach(function (cb) {
+        cb(model);
+      });
+    }
+
     var loader = new THREE.GLTFLoader();
     loader.load(
       GALLERY_CARS[index].model,
@@ -404,16 +421,16 @@ window.LamboGallery = (function () {
         normalizeModel(root, index);
         modelCache[index] = root;
         animCache[index] = gltf.animations || [];
-        callback(root);
+        finishLoad(root);
       },
       undefined,
-      function () { callback(null); }
+      function () { finishLoad(null); }
     );
   }
 
   function preloadRemainingModelsInBackground() {
     GALLERY_CARS.forEach(function (_, i) {
-      if (i === currentIndex || modelCache[i]) return;
+      if (i === currentIndex || modelCache[i] || modelLoadCallbacks[i]) return;
       loadModel(i, function () {});
     });
   }
@@ -858,6 +875,7 @@ window.LamboGallery = (function () {
   // Navigation — arrow buttons + dot clicks
   // ----------------------------------------------------------------
   function activateGalleryIndex(index) {
+    markGalleryReady();
     showModel(index);
 
     var preset = getCameraPreset(index);
@@ -882,7 +900,6 @@ window.LamboGallery = (function () {
           markGalleryModelLoadFailed();
           return;
         }
-        markGalleryReady();
         activateGalleryIndex(index);
       });
       return;
