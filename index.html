@@ -19,12 +19,6 @@
     <link rel="stylesheet" href="assets/css/home.css" />
     <link rel="preload" as="fetch" href="assets/model/8000_followerstm.glb" crossorigin />
     <link rel="preload" as="fetch" href="assets/model/lambo_lp670.glb" crossorigin />
-    <link rel="preload" as="fetch" href="assets/model/2015_bmw_3.0_csl_hommage_concept.glb" crossorigin />
-    <link rel="preload" as="fetch" href="assets/model/2019_ferrari_488_pista_spider.glb" crossorigin />
-    <link rel="preload" as="fetch" href="assets/model/2020_ferrari_roma.glb" crossorigin />
-    <link rel="preload" as="image" href="assets/media/hero/apex-intro-poster.jpg" />
-    <link rel="preload" as="fetch" href="assets/model/lamborghini_centenario_roadster_sdc.glb" crossorigin />
-    <link rel="preload" as="fetch" href="assets/model/lamborghini_centenario_lp-770_interior_sdc.glb" crossorigin />
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   </head>
   <body>
@@ -77,12 +71,25 @@
           environment-image="neutral"
           style="width:100%;height:100%;background:#050508;"
           loading="eager"
+          reveal="auto"
+          power-preference="high-performance"
+          touch-action="none"
         >
           <div slot="progress-bar"></div>
         </model-viewer>
+        <canvas
+          id="intro-orbit-streak-canvas"
+          class="intro-landing__orbit-streak-canvas"
+          aria-hidden="true"
+        ></canvas>
       </div>
 
       <div id="intro-loading" class="intro-landing__loading">
+        <canvas
+          id="intro-antigravity-canvas"
+          class="intro-landing__antigravity-canvas"
+          aria-hidden="true"
+        ></canvas>
         <div class="intro-landing__welcome">
           <h2 class="intro-landing__welcome-brand" data-text="T.R.Y.P">T.R.Y.P</h2>
           <div class="intro-landing__welcome-bar"></div>
@@ -123,6 +130,41 @@
           <span>Cuộn xuống để khám phá</span>
           <div class="intro-landing__scroll-line"></div>
         </a>
+        <div
+          id="intro-welcome-guide"
+          class="intro-welcome-guide"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="intro-guide-title"
+          aria-describedby="intro-guide-desc"
+          hidden
+        >
+          <div class="intro-welcome-guide__panel">
+            <div class="intro-welcome-guide__halo" aria-hidden="true"></div>
+            <p class="intro-welcome-guide__kicker">T.R.Y.P Experience</p>
+            <h2 id="intro-guide-title" class="intro-welcome-guide__title">Chào Mừng Đến Showroom</h2>
+            <p id="intro-guide-desc" class="intro-welcome-guide__desc">
+              Hãy dành một nhịp để không gian 3D sẵn sàng. Sau đó, bước vào showroom với ba thao tác chính.
+            </p>
+            <div class="intro-welcome-guide__steps" aria-label="Hướng dẫn nhanh">
+              <div class="intro-welcome-guide__step">
+                <span>01</span>
+                <p>Cuộn xuống để mở showroom tương tác.</p>
+              </div>
+              <div class="intro-welcome-guide__step">
+                <span>02</span>
+                <p>Nhấp đúp lên xe để soi từng chi tiết.</p>
+              </div>
+              <div class="intro-welcome-guide__step">
+                <span>03</span>
+                <p>Chọn màu ngoại thất theo phong cách riêng.</p>
+              </div>
+            </div>
+            <button type="button" class="intro-welcome-guide__button" id="intro-guide-ok">
+              Bắt Đầu Khám Phá
+            </button>
+          </div>
+        </div>
         <canvas id="intro-particle-canvas" class="intro-particle-canvas"></canvas>
       </div>
     </section>
@@ -222,7 +264,7 @@
                     </svg>
                   </button>
                   <div class="hero-nav-label">
-                    <span class="hero-nav-label__index" id="hero-nav-index">01 / 06</span>
+                    <span class="hero-nav-label__index" id="hero-nav-index">01 / 04</span>
                     <span class="hero-nav-label__name" id="hero-nav-name">Murciélago</span>
                   </div>
                   <button type="button" class="hero-nav-arrow hero-nav-arrow--next" id="hero-nav-next" aria-label="Next car">
@@ -234,7 +276,7 @@
               </div>
 
               <div id="hero-fallback" class="hero-fallback is-hidden">
-                <img src="assets/images/hero-fallback-poster.svg" alt="Lamborghini 3D showroom fallback poster" />
+                <span>3D showroom unavailable</span>
               </div>
 
               <div id="hero-loading" class="hero-loading">
@@ -305,26 +347,32 @@
 
     <!-- ===== BOOKING MODAL ===== -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content showroom-modal">
           <div class="modal-header showroom-modal__header">
-            <h5 class="modal-title showroom-modal__title" id="bookingModalTitle">Đặt Lịch Lái Thử</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div>
+              <p class="showroom-modal__eyebrow">Private Appointment</p>
+              <h5 class="modal-title showroom-modal__title" id="bookingModalTitle">Đặt Lịch Lái Thử</h5>
+            </div>
+            <button type="button" class="btn-close btn-close-white showroom-modal__close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body showroom-modal__body">
-            <form id="bookingForm">
-              <div class="mb-3">
-                <label for="bookingName" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Họ và tên</label>
-                <input type="text" class="form-control" id="bookingName" style="background:rgba(15,15,20,0.92);border:1px solid var(--color-line);color:var(--color-text);border-radius:0;" placeholder="Nhập họ tên">
+            <p class="showroom-modal__lead">Để lại thông tin, đội ngũ T.R.Y.P sẽ chuẩn bị lịch trải nghiệm riêng và mẫu xe phù hợp nhất với bạn.</p>
+            <form id="bookingForm" class="showroom-modal__form">
+              <div class="showroom-modal__field">
+                <label for="bookingName" class="showroom-modal__label">Họ và tên</label>
+                <input type="text" class="form-control showroom-modal__control" id="bookingName" name="bookingName" autocomplete="name" placeholder="Nguyễn Minh Anh" required>
               </div>
-              <div class="mb-3">
-                <label for="bookingPhone" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Số điện thoại</label>
-                <input type="tel" class="form-control" id="bookingPhone" style="background:rgba(15,15,20,0.92);border:1px solid var(--color-line);color:var(--color-text);border-radius:0;" placeholder="Nhập số điện thoại">
+              <div class="showroom-modal__field">
+                <label for="bookingPhone" class="showroom-modal__label">Số điện thoại</label>
+                <input type="tel" class="form-control showroom-modal__control" id="bookingPhone" name="bookingPhone" autocomplete="tel" inputmode="tel" placeholder="090 000 0000" required>
               </div>
-              <div class="mb-3">
-                <label for="bookingCar" class="form-label" style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-silver);">Mẫu xe quan tâm</label>
-                <select class="form-select catalog-select" id="bookingCar"></select>
+              <div class="showroom-modal__field">
+                <label for="bookingCar" class="showroom-modal__label">Mẫu xe quan tâm</label>
+                <select class="form-select catalog-select" id="bookingCar" name="bookingCar"></select>
+                <p class="showroom-modal__hint">Bạn có thể đổi lựa chọn khi chuyên viên liên hệ xác nhận lịch.</p>
               </div>
+              <p class="showroom-modal__status" id="bookingStatus" aria-live="polite"></p>
             </form>
           </div>
           <div class="modal-footer showroom-modal__footer">

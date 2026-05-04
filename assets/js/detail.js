@@ -198,6 +198,10 @@ $(function () {
           'shadow-intensity="0.2" ' +
           'environment-image="neutral" ' +
           'loading="lazy" ' +
+          'reveal="auto" ' +
+          'power-preference="high-performance" ' +
+          'minimum-render-scale="1" ' +
+          'touch-action="none" ' +
           'style="width:100%;height:100%;background:transparent;">' +
         '</model-viewer>' +
       '</div>'

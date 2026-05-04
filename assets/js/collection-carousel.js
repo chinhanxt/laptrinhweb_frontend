@@ -373,6 +373,10 @@ window.CollectionCarousel = (function () {
     mv.setAttribute("shadow-intensity", "0");
     mv.setAttribute("environment-image", "neutral");
     mv.setAttribute("loading", "lazy");
+    mv.setAttribute("reveal", "auto");
+    mv.setAttribute("power-preference", "high-performance");
+    mv.setAttribute("minimum-render-scale", "1");
+    mv.setAttribute("touch-action", "none");
     mv.style.cssText = "width:100%;height:100%;background:transparent;";
 
     var progressSlot = document.createElement("div");

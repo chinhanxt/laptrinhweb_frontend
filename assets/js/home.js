@@ -54,7 +54,7 @@
       }
     });
 
-    ScrollTrigger.refresh();
+    // ScrollTrigger.refresh() is deferred to finishFirstScreenBoot for performance
   }
 
   function renderHomepageBookingOptions() {
@@ -73,6 +73,7 @@
 
   var lamboGalleryScheduled = false;
   var lamboGalleryStarted = false;
+  var heroSceneStarted = false;
 
   function startLamboGalleryLoad() {
     if (lamboGalleryStarted || !window.LamboGallery || typeof window.LamboGallery.init !== "function") {
@@ -102,13 +103,29 @@
       }, { rootMargin: "1200px 0px", threshold: 0 });
       galleryObserver.observe(gallery);
     } else {
-      window.setTimeout(startLamboGalleryLoad, 900);
+      var checkGalleryNearViewport = function () {
+        var rect = gallery.getBoundingClientRect();
+        if (rect.top <= window.innerHeight + 900 && rect.bottom >= -300) {
+          window.removeEventListener("scroll", checkGalleryNearViewport);
+          window.removeEventListener("resize", checkGalleryNearViewport);
+          startLamboGalleryLoad();
+        }
+      };
+      window.addEventListener("scroll", checkGalleryNearViewport, { passive: true });
+      window.addEventListener("resize", checkGalleryNearViewport);
+      checkGalleryNearViewport();
+    }
+  }
+
+  function startHeroSceneLoad() {
+    if (heroSceneStarted || !window.APEXHero3D || typeof window.APEXHero3D.initHeroScene !== "function") {
+      return;
     }
 
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(startLamboGalleryLoad, { timeout: 2200 });
-    } else {
-      window.setTimeout(startLamboGalleryLoad, 1400);
+    heroSceneStarted = true;
+    var initialized = window.APEXHero3D.initHeroScene();
+    if (initialized) {
+      window.APEXHero3D.animate();
     }
   }
 
@@ -137,15 +154,8 @@
           bootTasks.push(window.APEXHero3D.whenReady());
         }
       } else {
-        var initialized = window.APEXHero3D.initHeroScene();
-        if (initialized) {
-          window.APEXHero3D.animate();
-          if (typeof window.APEXHero3D.whenReady === "function") {
-            bootTasks.push(window.APEXHero3D.whenReady());
-          }
-        } else {
-          bootTasks.push(Promise.resolve(false));
-        }
+        /* PERF: Don't initialize the heavy Three.js scene until the intro is cleared.
+           We skip adding it to bootTasks and manually trigger it later. */
       }
     }
 
@@ -159,11 +169,12 @@
         var heroObserver = new IntersectionObserver(function (entries) {
           var entry = entries[0];
           if (entry.isIntersecting) {
+            startHeroSceneLoad();
             window.APEXHero3D.resume();
           } else {
             window.APEXHero3D.pause();
           }
-        }, { threshold: 0 });
+        }, { threshold: 0.08 });
         heroObserver.observe(heroShell);
       }
     }
@@ -182,6 +193,11 @@
             if (target) target.scrollIntoView();
           });
         }
+
+        /* PERF: Defer ScrollTrigger refresh to avoid layout thrashing during boot */
+        setTimeout(function() {
+          if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+        }, 2000);
 
         scheduleLamboGalleryLoad();
       }
