@@ -36,6 +36,7 @@ window.LamboGallery = (function () {
   var doorOpen = false;
   var mixerClock = null;
   var disposed = false;
+  var galleryLifecycleToken = 0;
   var animLoopId = null;
   var isMobile = false;
 
@@ -893,8 +894,13 @@ window.LamboGallery = (function () {
     transitioning = true;
 
     if (!modelCache[index]) {
+      var navToken = galleryLifecycleToken;
       setLocalLoading(true);
       loadModel(index, function (model) {
+        if (disposed || !scene || navToken !== galleryLifecycleToken) {
+          transitioning = false;
+          return;
+        }
         if (!model) {
           transitioning = false;
           markGalleryModelLoadFailed();
@@ -923,17 +929,20 @@ window.LamboGallery = (function () {
   // Renderer lifecycle — managed by external ScrollTrigger in home.js
   // ----------------------------------------------------------------
   function disposeGallery() {
+    if (!initStarted && !scene && !renderer) return;
     if (disposed) return;
     disposed = true;
+    galleryLifecycleToken++;
+    settleReady(false);
 
     if (animLoopId) { cancelAnimationFrame(animLoopId); animLoopId = null; }
     if (particleAnimId) { cancelAnimationFrame(particleAnimId); particleAnimId = null; }
 
     window.removeEventListener("resize", onResize);
-    if (typeof onSectionMouseEnter === "function") {
+    if (section && typeof onSectionMouseEnter === "function") {
       section.removeEventListener("mouseenter", onSectionMouseEnter);
     }
-    if (typeof onSectionMouseLeave === "function") {
+    if (section && typeof onSectionMouseLeave === "function") {
       section.removeEventListener("mouseleave", onSectionMouseLeave);
     }
 
@@ -942,7 +951,7 @@ window.LamboGallery = (function () {
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
       renderer.dispose(); renderer = null;
     }
-    if (activeModel) { scene.remove(activeModel); activeModel = null; }
+    if (activeModel && scene) { scene.remove(activeModel); activeModel = null; }
 
     scene = null; camera = null;
     neonStreaks = []; lightLines = []; smokes = []; dust = []; windStreaks = [];
@@ -951,6 +960,7 @@ window.LamboGallery = (function () {
   function reinitGallery() {
     if (!disposed) return;
     disposed = false;
+    galleryLifecycleToken++;
     initScene();
     if (modelCache[currentIndex]) {
       showModel(currentIndex);
@@ -978,6 +988,8 @@ window.LamboGallery = (function () {
   function init() {
     if (initStarted) return readyPromise;
     initStarted = true;
+    disposed = false;
+    var initToken = ++galleryLifecycleToken;
 
     if (!initScene()) {
       if (section) markGalleryUnavailable();
@@ -988,6 +1000,9 @@ window.LamboGallery = (function () {
     setLocalLoading(true);
 
     loadModel(0, function (model) {
+      if (disposed || !scene || initToken !== galleryLifecycleToken) {
+        return;
+      }
       if (!model) {
         markGalleryUnavailable();
         settleReady(false);
