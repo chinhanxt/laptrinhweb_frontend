@@ -57,7 +57,15 @@ window.LamboGallery = (function () {
 
   // Ready promise
   var resolveReady;
+  var readySettled = false;
+  var initStarted = false;
   var readyPromise = new Promise(function (resolve) { resolveReady = resolve; });
+
+  function settleReady(value) {
+    if (readySettled) return;
+    readySettled = true;
+    resolveReady(value);
+  }
 
   // ----------------------------------------------------------------
   // Three.js scene
@@ -114,6 +122,20 @@ window.LamboGallery = (function () {
       position: new THREE.Vector3(car.cameraPosition.x, car.cameraPosition.y, car.cameraPosition.z),
       target: new THREE.Vector3(car.cameraTarget.x, car.cameraTarget.y, car.cameraTarget.z)
     };
+  }
+
+  function setLocalLoading(isLoading) {
+    if (!section) return;
+    section.classList.toggle("is-loading", isLoading);
+    if (isLoading) {
+      section.classList.remove("is-ready");
+    }
+  }
+
+  function markGalleryReady() {
+    if (!section) return;
+    section.classList.remove("is-loading");
+    section.classList.add("is-ready");
   }
 
   function onResize() {
@@ -896,10 +918,15 @@ window.LamboGallery = (function () {
   // Public init
   // ----------------------------------------------------------------
   function init() {
+    if (initStarted) return readyPromise;
+    initStarted = true;
+
     if (!initScene()) {
-      resolveReady(false);
-      return;
+      settleReady(false);
+      return readyPromise;
     }
+
+    setLocalLoading(true);
 
     preloadAll(function () {
       showModel(0);
@@ -910,8 +937,11 @@ window.LamboGallery = (function () {
       bindHoverEvents();
       bindNavigation();
       animate();
-      resolveReady(true);
+      markGalleryReady();
+      settleReady(true);
     });
+
+    return readyPromise;
   }
 
   return {
