@@ -930,8 +930,12 @@ window.LamboGallery = (function () {
     if (particleAnimId) { cancelAnimationFrame(particleAnimId); particleAnimId = null; }
 
     window.removeEventListener("resize", onResize);
-    section.removeEventListener("mouseenter", onSectionMouseEnter);
-    section.removeEventListener("mouseleave", onSectionMouseLeave);
+    if (typeof onSectionMouseEnter === "function") {
+      section.removeEventListener("mouseenter", onSectionMouseEnter);
+    }
+    if (typeof onSectionMouseLeave === "function") {
+      section.removeEventListener("mouseleave", onSectionMouseLeave);
+    }
 
     if (controls) { controls.dispose(); controls = null; }
     if (renderer) {
