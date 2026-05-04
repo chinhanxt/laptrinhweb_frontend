@@ -74,12 +74,16 @@ window.APEXIntro = (function () {
     resolveReady(true);
   }
 
-  function dismissLoading() {
-    if (loadingDismissed) return;
+  function dismissLoading(onComplete) {
+    if (loadingDismissed) {
+      if (typeof onComplete === "function") onComplete();
+      return;
+    }
     loadingDismissed = true;
     fadeOutLoading(loadingEl, 1200, function () {
       animateTextReveal();
       document.body.classList.remove("app-is-booting");
+      if (typeof onComplete === "function") onComplete();
     });
   }
 

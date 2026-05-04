@@ -1891,6 +1891,10 @@ body.app-is-booting .intro-landing__loading {
   opacity: 0;
 }
 
+.lambo-gallery.is-error .lambo-gallery__loading {
+  opacity: 1;
+}
+
 .lambo-gallery__loading-line {
   width: 26px;
   height: 1px;
@@ -1906,6 +1910,11 @@ body.app-is-booting .intro-landing__loading {
   height: 100%;
   background: var(--color-gold);
   animation: lamboGalleryLoadingLine 1.2s ease-in-out infinite;
+}
+
+.lambo-gallery.is-error .lambo-gallery__loading-line::after {
+  animation: none;
+  transform: none;
 }
 
 @keyframes lamboGalleryLoadingLine {

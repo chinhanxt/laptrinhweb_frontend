@@ -129,6 +129,7 @@ window.LamboGallery = (function () {
     section.classList.toggle("is-loading", isLoading);
     if (isLoading) {
       section.classList.remove("is-ready");
+      section.classList.remove("is-error");
     }
   }
 
@@ -136,6 +137,18 @@ window.LamboGallery = (function () {
     if (!section) return;
     section.classList.remove("is-loading");
     section.classList.add("is-ready");
+  }
+
+  function markGalleryUnavailable() {
+    if (!section) return;
+    section.classList.remove("is-loading");
+    section.classList.remove("is-ready");
+    section.classList.add("is-error");
+    var loadingMessage = document.getElementById("lambo-gallery-loading");
+    if (loadingMessage) {
+      var textEl = loadingMessage.querySelector("span:last-child");
+      if (textEl) textEl.textContent = "Không thể tải trải nghiệm Lamborghini";
+    }
   }
 
   function onResize() {
@@ -387,14 +400,16 @@ window.LamboGallery = (function () {
 
   function preloadAll(callback) {
     if (isMobile) {
-      loadModel(0, function () { callback(); });
+      loadModel(0, function (model) { callback(!!model); });
       return;
     }
     var remaining = GALLERY_CARS.length;
+    var allLoaded = true;
     GALLERY_CARS.forEach(function (_, i) {
-      loadModel(i, function () {
+      loadModel(i, function (model) {
+        if (!model) allLoaded = false;
         remaining--;
-        if (remaining === 0) callback();
+        if (remaining === 0) callback(allLoaded && !!modelCache[0]);
       });
     });
   }
@@ -928,7 +943,13 @@ window.LamboGallery = (function () {
 
     setLocalLoading(true);
 
-    preloadAll(function () {
+    preloadAll(function (allLoaded) {
+      if (!allLoaded || !modelCache[0]) {
+        markGalleryUnavailable();
+        settleReady(false);
+        return;
+      }
+
       showModel(0);
       if (!isMobile) {
         initParticles();

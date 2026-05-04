@@ -175,21 +175,23 @@
     }
 
     Promise.all(bootTasks).finally(function () {
+      function finishFirstScreenBoot() {
+        if (window.location.hash) {
+          window.requestAnimationFrame(function () {
+            var target = document.querySelector(window.location.hash);
+            if (target) target.scrollIntoView();
+          });
+        }
+
+        scheduleLamboGalleryLoad();
+      }
+
       if (window.APEXIntro && typeof window.APEXIntro.dismissLoading === "function") {
-        window.APEXIntro.dismissLoading();
+        window.APEXIntro.dismissLoading(finishFirstScreenBoot);
       } else {
         document.body.classList.remove("app-is-booting");
+        finishFirstScreenBoot();
       }
-
-
-      if (window.location.hash) {
-        window.requestAnimationFrame(function () {
-          var target = document.querySelector(window.location.hash);
-          if (target) target.scrollIntoView();
-        });
-      }
-
-      scheduleLamboGalleryLoad();
     });
   });
 
