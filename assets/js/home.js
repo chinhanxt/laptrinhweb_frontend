@@ -71,6 +71,47 @@
     select.innerHTML = html;
   }
 
+  var lamboGalleryScheduled = false;
+  var lamboGalleryStarted = false;
+
+  function startLamboGalleryLoad() {
+    if (lamboGalleryStarted || !window.LamboGallery || typeof window.LamboGallery.init !== "function") {
+      return;
+    }
+    lamboGalleryStarted = true;
+    window.LamboGallery.init();
+  }
+
+  function scheduleLamboGalleryLoad() {
+    if (lamboGalleryScheduled || !window.LamboGallery) {
+      return;
+    }
+    lamboGalleryScheduled = true;
+
+    var gallery = document.getElementById("lamborghini-gallery");
+    if (!gallery) {
+      return;
+    }
+
+    if ("IntersectionObserver" in window) {
+      var galleryObserver = new IntersectionObserver(function (entries) {
+        if (entries[0] && entries[0].isIntersecting) {
+          galleryObserver.disconnect();
+          startLamboGalleryLoad();
+        }
+      }, { rootMargin: "1200px 0px", threshold: 0 });
+      galleryObserver.observe(gallery);
+    } else {
+      window.setTimeout(startLamboGalleryLoad, 900);
+    }
+
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(startLamboGalleryLoad, { timeout: 2200 });
+    } else {
+      window.setTimeout(startLamboGalleryLoad, 1400);
+    }
+  }
+
   $(function () {
     document.body.classList.add("app-is-booting");
     renderHomepageBookingOptions();
@@ -108,9 +149,8 @@
       }
     }
 
-    if (window.LamboGallery) {
-      bootTasks.push(window.LamboGallery.whenReady());
-      window.LamboGallery.init();
+    if (window.LamboGallery && typeof window.LamboGallery.whenReady === "function") {
+      window.LamboGallery.whenReady().catch(function () {});
     }
 
     if (!isMobile && window.APEXHero3D) {
@@ -130,6 +170,7 @@
 
     if (!bootTasks.length) {
       document.body.classList.remove("app-is-booting");
+      scheduleLamboGalleryLoad();
       return;
     }
 
@@ -147,6 +188,8 @@
           if (target) target.scrollIntoView();
         });
       }
+
+      scheduleLamboGalleryLoad();
     });
   });
 
