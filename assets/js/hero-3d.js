@@ -5,6 +5,7 @@ window.APEXHero3D = (function () {
   var raycaster = new THREE.Raycaster();
   var pointer = new THREE.Vector2();
   var animationFrameId = null;
+  var dracoLoader = null;
   var paintMeshes = [];
   var originalColors = [];
   var defaultCameraPosition = new THREE.Vector3(3.4, 1.55, 4.8);
@@ -351,7 +352,17 @@ window.APEXHero3D = (function () {
     if (preloadingSet[catalogIndex]) return;
     preloadingSet[catalogIndex] = true;
     var url = CAR_CATALOG[catalogIndex].model;
+    
+    if (!dracoLoader && typeof THREE.DRACOLoader !== 'undefined') {
+      dracoLoader = new THREE.DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    }
+
     var loader = new THREE.GLTFLoader();
+    if (dracoLoader) {
+      loader.setDRACOLoader(dracoLoader);
+    }
+    
     loader.load(
       url,
       function (gltf) {
