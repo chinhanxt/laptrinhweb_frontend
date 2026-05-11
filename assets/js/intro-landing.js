@@ -17,10 +17,9 @@ window.APEXIntro = (function () {
   var loadingDismissed = false;
   var isInView = true;
   var isTabActive = true;
-  var guideEl = null;
-  var guideOkEl = null;
-  var guideVisible = false;
-  var guideShown = false;
+  var loadingDismissed = false;
+  var isInView = true;
+  var isTabActive = true;
   var DEFAULT_ORBIT = "150deg 89deg 44%";
   var ZOOMED_ORBIT = "150deg 89deg 25%";
 
@@ -790,8 +789,6 @@ window.APEXIntro = (function () {
   function init() {
     mvEl = document.getElementById("intro-model");
     loadingEl = document.getElementById("intro-loading");
-    guideEl = document.getElementById("intro-welcome-guide");
-    guideOkEl = document.getElementById("intro-guide-ok");
     var progressEl = document.getElementById("intro-loading-progress");
 
     initAntigravityLoading();
@@ -847,14 +844,8 @@ window.APEXIntro = (function () {
     mvEl.addEventListener("dblclick", handleDoubleClickZoom);
     initOrbitStreaks();
 
-    if (guideOkEl) {
-      guideOkEl.addEventListener("click", hideIntroGuide);
-    }
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && guideVisible) {
-        hideIntroGuide();
-      }
-    });
+    mvEl.addEventListener("dblclick", handleDoubleClickZoom);
+    initOrbitStreaks();
 
     initZoomNavigation();
     setupScrollAnimation();
@@ -990,33 +981,6 @@ window.APEXIntro = (function () {
     }
   }
 
-  function showIntroGuide() {
-    if (!guideEl || guideShown) return;
-    guideShown = true;
-    guideVisible = true;
-    guideEl.hidden = false;
-
-    requestAnimationFrame(function () {
-      guideEl.classList.add("is-visible");
-      if (guideOkEl && !prefersReducedMotion()) {
-        window.setTimeout(function () {
-          guideOkEl.focus({ preventScroll: true });
-        }, 420);
-      }
-    });
-  }
-
-  function hideIntroGuide() {
-    if (!guideEl || !guideVisible) return;
-    guideVisible = false;
-    guideEl.classList.remove("is-visible");
-
-    window.setTimeout(function () {
-      if (!guideVisible && guideEl) {
-        guideEl.hidden = true;
-      }
-    }, prefersReducedMotion() ? 40 : 580);
-  }
 
   function animateTextReveal() {
     var section = document.getElementById("intro-landing");
@@ -1045,7 +1009,6 @@ window.APEXIntro = (function () {
         }
       };
       setTimeout(resumeAuxiliaryMotion, resumeDelay);
-      setTimeout(showIntroGuide, prefersReducedMotion() ? 0 : 1380);
 
       /* Batch DOM cleanup to avoid layout recalculation */
       var els = section.querySelectorAll(
