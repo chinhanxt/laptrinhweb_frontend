@@ -844,9 +844,6 @@ window.APEXIntro = (function () {
     mvEl.addEventListener("dblclick", handleDoubleClickZoom);
     initOrbitStreaks();
 
-    mvEl.addEventListener("dblclick", handleDoubleClickZoom);
-    initOrbitStreaks();
-
     initZoomNavigation();
     setupScrollAnimation();
 
@@ -1441,8 +1438,7 @@ window.APEXIntro = (function () {
         scrub: 0.8
       },
       opacity: 0,
-      y: -80,
-      ease: "none"
+      ease: "power1.inOut"
     });
 
     gsap.to(".intro-landing__content", {

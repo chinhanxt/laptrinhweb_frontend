@@ -424,9 +424,6 @@ window.LamboGallery = (function () {
     if (dracoLoader) {
       loader.setDRACOLoader(dracoLoader);
     }
-    if (typeof MeshoptDecoder !== 'undefined') {
-      loader.setMeshoptDecoder(MeshoptDecoder);
-    }
     
     loader.load(
       GALLERY_CARS[index].model,

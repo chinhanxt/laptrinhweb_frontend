@@ -362,9 +362,6 @@ window.APEXHero3D = (function () {
     if (dracoLoader) {
       loader.setDRACOLoader(dracoLoader);
     }
-    if (typeof MeshoptDecoder !== 'undefined') {
-      loader.setMeshoptDecoder(MeshoptDecoder);
-    }
     
     loader.load(
       url,
