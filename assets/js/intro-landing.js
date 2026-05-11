@@ -4,100 +4,63 @@
    ============================================================ */
 
 window.APEXIntro = (function () {
-  var fanNodes = [];
-  var mvEl = null;
-  var running = false;
-  var isZoomed = false;
-  var loadingEl = null;
-  var resolveReady = function () {};
-  var readyPromise = new Promise(function (resolve) {
-    resolveReady = resolve;
-  });
-  var isReady = false;
-  var loadingDismissed = false;
-  var isInView = true;
-  var isTabActive = true;
-  var loadingDismissed = false;
-  var isInView = true;
-  var isTabActive = true;
-  var DEFAULT_ORBIT = "150deg 89deg 44%";
-  var ZOOMED_ORBIT = "150deg 89deg 25%";
-
-  var zoomTransitioning = false;
-  var charSplitCache = {};
-  var particleCanvas = null;
-  var particleCtx = null;
-  var particles = [];
-  var particleAnimId = null;
+  // --- Elements & Contexts ---
+  var modelViewer = null;
+  var loadingOverlay = null;
+  var orbitStreakCanvas = null;
+  var orbitStreakCtx = null;
   var antigravityCanvas = null;
   var antigravityCtx = null;
+
+  // --- State ---
+  var isReady = false;
+  var loadingDismissed = false;
+  var running = false;
+  var isZoomed = false;
+  var isInView = true;
+  var isTabActive = true;
+  var zoomTransitioning = false;
+  var fanNodes = [];
+
+  // --- Animation State ---
   var antigravityAnimId = null;
   var antigravityParticles = [];
   var antigravityStreaks = [];
   var antigravityResizeBound = false;
-  var antigravityPointer = {
-    x: 0,
-    y: 0,
-    lastX: 0,
-    lastY: 0,
-    speed: 0,
-    active: false,
-    lastMove: 0,
-    lastSpawn: 0
-  };
   var antigravityIdleTimer = null;
-  var orbitStreakCanvas = null;
-  var orbitStreakCtx = null;
+  var antigravityPointer = { x: 0, y: 0, lastX: 0, lastY: 0, speed: 0, active: false, lastMove: 0, lastSpawn: 0 };
+
   var orbitStreakAnimId = null;
   var orbitStreaks = [];
-  var orbitPointer = {
-    active: false,
-    x: 0,
-    y: 0,
-    lastX: 0,
-    lastY: 0,
-    lastSpawn: 0
-  };
+  var orbitPointer = { active: false, x: 0, y: 0, lastX: 0, lastY: 0, lastSpawn: 0 };
+
+  // --- Promises & Constants ---
+  var resolveReady = function () { };
+  var readyPromise = new Promise(function (resolve) { resolveReady = resolve; });
+
+  var DEFAULT_ORBIT = "150deg 89deg 44%";
+  var ZOOMED_ORBIT = "150deg 89deg 25%";
+
   var ORBIT_STREAK_PRESETS = {
     orbit: {
       maxItems: 70,
       core: "224,48,255",
       edge: "128,82,255"
-    },
-    zoom: {
-      maxItems: 140,
-      focusX: 0.58,
-      focusYIn: 0.58,
-      focusYOut: 0.64,
-      rimLeft: 0.12,
-      rimRight: 0.88,
-      rimTop: 0.27,
-      rimBottom: 0.86,
-      core: "240,244,255",
-      edge: "126,137,180",
-      accent: "202,178,255"
     }
   };
-  function getCharRgb(el) {
-    var style = window.getComputedStyle(el.parentElement || el);
-    var c = style.color;
-    var m = c.match(/(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
-    if (m) return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
-    return [255, 255, 255];
-  }
 
   function startEmbeddedAnimation() {
-    if (!mvEl || typeof mvEl.play !== "function") return false;
+    if (!modelViewer || typeof modelViewer.play !== "function") return false;
 
-    var animations = Array.isArray(mvEl.availableAnimations) ? mvEl.availableAnimations.filter(Boolean) : [];
+    var animations = Array.isArray(modelViewer.availableAnimations) ? modelViewer.availableAnimations.filter(Boolean) : [];
     if (!animations.length) return false;
 
-    mvEl.animationName = animations[0];
+    modelViewer.animationName = animations[0];
 
     try {
-      mvEl.play({ repetitions: Infinity });
+      modelViewer.play({ repetitions: Infinity });
     } catch (err) {
-      mvEl.play();
+      modelViewer.play();
     }
 
     return true;
@@ -136,16 +99,12 @@ window.APEXIntro = (function () {
     return true;
   }
 
-  function spawnOrbitEdgeStreaks(speed, mode) {
+  function spawnOrbitEdgeStreaks(speed) {
     if (!ensureOrbitStreakContext()) return;
     var rect = getIntroSceneRect();
     var width = rect.width;
     var height = rect.height;
-    var wind = mode === "wind";
-    if (wind) {
-      spawnZoomWindTunnel(speed);
-      return;
-    }
+    
     var modelBox = {
       left: width * 0.12,
       right: width * 0.88,
@@ -155,8 +114,8 @@ window.APEXIntro = (function () {
     var intensity = Math.min(1, Math.max(0.18, speed / 44));
     var count = 2 + Math.floor(intensity * 5);
     var focus = {
-      x: width * ORBIT_STREAK_PRESETS.zoom.focusX,
-      y: height * (isZoomed ? ORBIT_STREAK_PRESETS.zoom.focusYIn : ORBIT_STREAK_PRESETS.zoom.focusYOut)
+      x: width * 0.58,
+      y: height * (isZoomed ? 0.58 : 0.64)
     };
 
     for (var i = 0; i < count; i++) {
@@ -192,102 +151,6 @@ window.APEXIntro = (function () {
 
     if (orbitStreaks.length > ORBIT_STREAK_PRESETS.orbit.maxItems) {
       orbitStreaks.splice(0, orbitStreaks.length - ORBIT_STREAK_PRESETS.orbit.maxItems);
-    }
-
-    startOrbitStreakLoop();
-  }
-
-  function spawnZoomWindTunnel(speed) {
-    var rect = getIntroSceneRect();
-    var width = rect.width;
-    var height = rect.height;
-    var preset = ORBIT_STREAK_PRESETS.zoom;
-    var focus = {
-      x: width * preset.focusX,
-      y: height * (isZoomed ? preset.focusYIn : preset.focusYOut)
-    };
-    var modelBox = {
-      left: width * preset.rimLeft,
-      right: width * preset.rimRight,
-      top: height * preset.rimTop,
-      bottom: height * preset.rimBottom
-    };
-
-    orbitStreaks.push({
-      x: focus.x,
-      y: focus.y,
-      radius: Math.min(width, height) * 0.06,
-      maxRadius: Math.min(width, height) * (isZoomed ? 0.38 : 0.46),
-      life: 0.78,
-      decay: 1.08,
-      mode: "zoomPulse",
-      depth: 1
-    });
-
-    for (var i = 0; i < 46; i++) {
-      var angle = -Math.PI + Math.random() * Math.PI * 2;
-      var side = Math.random() < 0.5 ? "left" : "right";
-      var sideSign = side === "left" ? -1 : 1;
-      var startX = focus.x + Math.cos(angle) * (28 + Math.random() * 80);
-      var startY = focus.y + Math.sin(angle) * (20 + Math.random() * 62);
-      var endX = side === "left"
-        ? modelBox.left - Math.random() * width * 0.08
-        : modelBox.right + Math.random() * width * 0.08;
-      var endY = modelBox.top + Math.pow(Math.random(), 0.82) * (modelBox.bottom - modelBox.top);
-      var dx = endX - startX;
-      var dy = endY - startY;
-      var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      var velocity = 420 + Math.random() * 760 + speed * 3.2;
-      var depth = 0.45 + Math.random() * 1.15;
-
-      orbitStreaks.push({
-        x: startX,
-        y: startY,
-        vx: (dx / dist) * velocity,
-        vy: (dy / dist) * velocity,
-        length: 140 + Math.random() * 280 + depth * 120,
-        width: (0.45 + Math.random() * 1.15) * depth,
-        angle: Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.045,
-        curve: sideSign * (10 + Math.random() * 34),
-        life: 0.72 + Math.random() * 0.42,
-        decay: 1.2 + Math.random() * 0.55,
-        depth: depth,
-        side: side,
-        mode: "zoomRay"
-      });
-    }
-
-    for (var j = 0; j < 18; j++) {
-      var ribbonSide = j % 2 === 0 ? "left" : "right";
-      var fromLeft = ribbonSide === "left";
-      var y = modelBox.top + Math.random() * (modelBox.bottom - modelBox.top);
-      var x = fromLeft ? modelBox.left - Math.random() * 22 : modelBox.right + Math.random() * 22;
-      var aimX = focus.x + (Math.random() - 0.5) * width * 0.16;
-      var aimY = focus.y + (Math.random() - 0.5) * height * 0.18;
-      var rdx = aimX - x;
-      var rdy = aimY - y;
-      var rdist = Math.sqrt(rdx * rdx + rdy * rdy) || 1;
-      var ribbonVelocity = 260 + Math.random() * 420 + speed * 2.4;
-
-      orbitStreaks.push({
-        x: x,
-        y: y,
-        vx: (rdx / rdist) * ribbonVelocity,
-        vy: (rdy / rdist) * ribbonVelocity,
-        length: 80 + Math.random() * 180,
-        width: 0.5 + Math.random() * 0.7,
-        angle: Math.atan2(rdy, rdx) + (Math.random() - 0.5) * 0.05,
-        curve: (fromLeft ? 1 : -1) * (28 + Math.random() * 54),
-        life: 0.9 + Math.random() * 0.28,
-        decay: 1.45 + Math.random() * 0.42,
-        depth: 0.75 + Math.random() * 0.55,
-        side: ribbonSide,
-        mode: "zoomRibbon"
-      });
-    }
-
-    if (orbitStreaks.length > preset.maxItems) {
-      orbitStreaks.splice(0, orbitStreaks.length - preset.maxItems);
     }
 
     startOrbitStreakLoop();
@@ -338,66 +201,31 @@ window.APEXIntro = (function () {
 
   function drawOrbitStreak(streak) {
     var alpha = Math.pow(Math.max(0, Math.min(1, streak.life)), 1.25);
-    if (streak.mode === "zoomPulse") {
-      drawZoomPulse(streak, alpha);
-      return;
-    }
-
-    var isZoom = streak.mode === "zoomRay" || streak.mode === "zoomRibbon";
-    var isRibbon = streak.mode === "zoomRibbon";
-    var core = isZoom ? ORBIT_STREAK_PRESETS.zoom.core : ORBIT_STREAK_PRESETS.orbit.core;
-    var edge = isZoom ? ORBIT_STREAK_PRESETS.zoom.edge : ORBIT_STREAK_PRESETS.orbit.edge;
+    var core = ORBIT_STREAK_PRESETS.orbit.core;
+    var edge = ORBIT_STREAK_PRESETS.orbit.edge;
 
     orbitStreakCtx.save();
     orbitStreakCtx.translate(streak.x, streak.y);
     orbitStreakCtx.rotate(streak.angle);
     var gradient = orbitStreakCtx.createLinearGradient(-streak.length, 0, streak.length * 0.18, 0);
     gradient.addColorStop(0, "rgba(" + edge + ",0)");
-    gradient.addColorStop(0.35, "rgba(" + edge + "," + ((isZoom ? 0.14 : 0.18) * alpha).toFixed(3) + ")");
-    gradient.addColorStop(0.78, "rgba(" + core + "," + ((isZoom ? 0.5 : 0.72) * alpha).toFixed(3) + ")");
-    gradient.addColorStop(1, "rgba(255,255,255," + ((isZoom ? 0.88 : 0.5) * alpha).toFixed(3) + ")");
+    gradient.addColorStop(0.35, "rgba(" + edge + "," + (0.18 * alpha).toFixed(3) + ")");
+    gradient.addColorStop(0.78, "rgba(" + core + "," + (0.72 * alpha).toFixed(3) + ")");
+    gradient.addColorStop(1, "rgba(255,255,255," + (0.5 * alpha).toFixed(3) + ")");
     orbitStreakCtx.strokeStyle = gradient;
     orbitStreakCtx.lineWidth = streak.width;
     orbitStreakCtx.lineCap = "round";
-    orbitStreakCtx.shadowBlur = (isZoom ? 12 : 18) * (streak.depth || 1);
-    orbitStreakCtx.shadowColor = "rgba(" + core + "," + ((isZoom ? 0.22 : 0.44) * alpha).toFixed(3) + ")";
+    orbitStreakCtx.shadowBlur = 18 * (streak.depth || 1);
+    orbitStreakCtx.shadowColor = "rgba(" + core + "," + (0.44 * alpha).toFixed(3) + ")";
     orbitStreakCtx.beginPath();
     orbitStreakCtx.moveTo(-streak.length, 0);
     orbitStreakCtx.quadraticCurveTo(-streak.length * 0.38, streak.curve || 0, streak.length * 0.18, 0);
-    orbitStreakCtx.stroke();
-
-    if (isZoom && !isRibbon && streak.width > 0.62) {
-      orbitStreakCtx.strokeStyle = "rgba(255,255,255," + (0.2 * alpha).toFixed(3) + ")";
-      orbitStreakCtx.lineWidth = Math.max(0.35, streak.width * 0.26);
-      orbitStreakCtx.shadowBlur = 0;
-      orbitStreakCtx.beginPath();
-      orbitStreakCtx.moveTo(-streak.length * 0.32, 0);
-      orbitStreakCtx.lineTo(streak.length * 0.13, 0);
-      orbitStreakCtx.stroke();
-    }
-    orbitStreakCtx.restore();
-  }
-
-  function drawZoomPulse(streak, alpha) {
-    var progress = 1 - Math.max(0, Math.min(1, streak.life));
-    var radius = streak.radius + (streak.maxRadius - streak.radius) * progress;
-    var ring = orbitStreakCtx.createRadialGradient(streak.x, streak.y, Math.max(1, radius * 0.2), streak.x, streak.y, radius);
-    ring.addColorStop(0, "rgba(255,255,255,0)");
-    ring.addColorStop(0.58, "rgba(" + ORBIT_STREAK_PRESETS.zoom.accent + "," + (0.07 * alpha).toFixed(3) + ")");
-    ring.addColorStop(0.84, "rgba(255,255,255," + (0.18 * alpha).toFixed(3) + ")");
-    ring.addColorStop(1, "rgba(255,255,255,0)");
-
-    orbitStreakCtx.save();
-    orbitStreakCtx.strokeStyle = ring;
-    orbitStreakCtx.lineWidth = 2.4;
-    orbitStreakCtx.beginPath();
-    orbitStreakCtx.ellipse(streak.x, streak.y, radius * 1.45, radius * 0.52, -0.04, 0, Math.PI * 2);
     orbitStreakCtx.stroke();
     orbitStreakCtx.restore();
   }
 
   function onOrbitPointerDown(event) {
-    if (!loadingDismissed || !mvEl) return;
+    if (!loadingDismissed || !modelViewer) return;
     ensureOrbitStreakContext();
     orbitPointer.active = true;
     orbitPointer.lastX = event.clientX || 0;
@@ -418,7 +246,7 @@ window.APEXIntro = (function () {
     orbitPointer.lastX = x;
     orbitPointer.lastY = y;
     if (speed > 1.4 && now - orbitPointer.lastSpawn > 34) {
-      spawnOrbitEdgeStreaks(speed, "orbit");
+      spawnOrbitEdgeStreaks(speed);
       orbitPointer.lastSpawn = now;
     }
   }
@@ -429,17 +257,17 @@ window.APEXIntro = (function () {
 
   function initOrbitStreaks() {
     orbitStreakCanvas = document.getElementById("intro-orbit-streak-canvas");
-    if (!orbitStreakCanvas || !mvEl || prefersReducedMotion()) return;
+    if (!orbitStreakCanvas || !modelViewer || prefersReducedMotion()) return;
 
-    mvEl.addEventListener("pointerdown", onOrbitPointerDown);
+    modelViewer.addEventListener("pointerdown", onOrbitPointerDown);
     window.addEventListener("pointermove", onOrbitPointerMove);
     window.addEventListener("pointerup", onOrbitPointerUp);
     window.addEventListener("pointercancel", onOrbitPointerUp);
   }
 
   function resizeAntigravityCanvas() {
-    if (!antigravityCanvas || !loadingEl) return;
-    var rect = loadingEl.getBoundingClientRect();
+    if (!antigravityCanvas || !loadingOverlay) return;
+    var rect = loadingOverlay.getBoundingClientRect();
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     antigravityCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
     antigravityCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
@@ -451,7 +279,7 @@ window.APEXIntro = (function () {
   }
 
   function ensureAntigravityContext() {
-    if (!antigravityCanvas || !loadingEl || prefersReducedMotion()) return false;
+    if (!antigravityCanvas || !loadingOverlay || prefersReducedMotion()) return false;
     if (!antigravityCtx) {
       antigravityCtx = antigravityCanvas.getContext("2d", { alpha: true });
       if (!antigravityCtx) return false;
@@ -493,8 +321,8 @@ window.APEXIntro = (function () {
   }
 
   function spawnAntigravityStreak(x, y, speed) {
-    if (!loadingEl) return;
-    var rect = loadingEl.getBoundingClientRect();
+    if (!loadingOverlay) return;
+    var rect = loadingOverlay.getBoundingClientRect();
     var intensity = Math.min(1, speed / 46);
     var count = 1 + Math.floor(intensity * 3);
 
@@ -523,9 +351,9 @@ window.APEXIntro = (function () {
   }
 
   function onAntigravityMove(event) {
-    if (!loadingEl || !antigravityCanvas) return;
+    if (!loadingOverlay || !antigravityCanvas) return;
     if (!ensureAntigravityContext()) return;
-    var rect = loadingEl.getBoundingClientRect();
+    var rect = loadingOverlay.getBoundingClientRect();
     var x = event.clientX - rect.left;
     var y = event.clientY - rect.top;
     var now = performance.now();
@@ -557,11 +385,11 @@ window.APEXIntro = (function () {
 
   function initAntigravityLoading() {
     antigravityCanvas = document.getElementById("intro-antigravity-canvas");
-    if (!antigravityCanvas || !loadingEl || prefersReducedMotion()) return;
+    if (!antigravityCanvas || !loadingOverlay || prefersReducedMotion()) return;
 
-    loadingEl.addEventListener("mousemove", onAntigravityMove);
-    loadingEl.addEventListener("mouseleave", onAntigravityLeave);
-    loadingEl.addEventListener("touchmove", function (event) {
+    loadingOverlay.addEventListener("mousemove", onAntigravityMove);
+    loadingOverlay.addEventListener("mouseleave", onAntigravityLeave);
+    loadingOverlay.addEventListener("touchmove", function (event) {
       if (event.touches && event.touches[0]) {
         onAntigravityMove(event.touches[0]);
       }
@@ -592,7 +420,7 @@ window.APEXIntro = (function () {
         return;
       }
 
-      var rect = loadingEl ? loadingEl.getBoundingClientRect() : { width: 0, height: 0 };
+      var rect = loadingOverlay ? loadingOverlay.getBoundingClientRect() : { width: 0, height: 0 };
       var width = rect.width;
       var height = rect.height;
       var dt = Math.min((now - last) / 1000, 0.033);
@@ -722,19 +550,17 @@ window.APEXIntro = (function () {
     function complete() {
       if (completed) return;
       completed = true;
-      window.clearTimeout(revealTimer);
-      window.clearTimeout(completeTimer);
+      clearTimeout(revealTimer);
+      clearTimeout(completeTimer);
       el.removeEventListener("transitionend", onTransitionEnd);
       if (section) section.classList.add("is-loading-complete");
       el.style.pointerEvents = "none";
       stopAntigravityLoading();
-      if (typeof onComplete === "function") onComplete();
+      if (onComplete) onComplete();
     }
 
     function onTransitionEnd(event) {
-      if (event.target === el && event.propertyName === "opacity") {
-        complete();
-      }
+      if (event.target === el && event.propertyName === "opacity") complete();
     }
 
     el.addEventListener("transitionend", onTransitionEnd);
@@ -767,18 +593,18 @@ window.APEXIntro = (function () {
 
     /* PERF: Request model-viewer to pause rendering during text animation
        by temporarily disabling camera-controls events */
-    if (mvEl && mvEl.addEventListener) {
-      mvEl.style.pointerEvents = "none";
+    if (modelViewer && modelViewer.addEventListener) {
+      modelViewer.style.pointerEvents = "none";
     }
 
-    fadeOutLoading(loadingEl, 1180, 190,
+    fadeOutLoading(loadingOverlay, 1180, 190,
       function onReveal() {
         animateTextReveal();
       },
       function onDone() {
         /* Re-enable model-viewer interaction after text animation */
-        if (mvEl && mvEl.style) {
-          mvEl.style.pointerEvents = "auto";
+        if (modelViewer && modelViewer.style) {
+          modelViewer.style.pointerEvents = "auto";
         }
         document.body.classList.remove("app-is-booting");
         if (typeof onComplete === "function") onComplete();
@@ -787,20 +613,13 @@ window.APEXIntro = (function () {
   }
 
   function init() {
-    mvEl = document.getElementById("intro-model");
-    loadingEl = document.getElementById("intro-loading");
+    modelViewer = document.getElementById("intro-model");
+    loadingOverlay = document.getElementById("intro-loading");
     var progressEl = document.getElementById("intro-loading-progress");
 
     initAntigravityLoading();
 
-    particleCanvas = document.getElementById("intro-particle-canvas");
-    if (particleCanvas) {
-      particleCtx = particleCanvas.getContext("2d");
-      resizeParticleCanvas();
-      window.addEventListener("resize", resizeParticleCanvas);
-    }
-
-    if (!mvEl) {
+    if (!modelViewer) {
       markReady();
       return;
     }
@@ -812,13 +631,13 @@ window.APEXIntro = (function () {
       });
     }
 
-    mvEl.addEventListener("progress", function (e) {
+    modelViewer.addEventListener("progress", function (e) {
       if (progressEl && e.detail && typeof e.detail.totalProgress === "number") {
         progressEl.textContent = Math.round(e.detail.totalProgress * 100) + "%";
       }
     });
 
-    mvEl.addEventListener("load", function () {
+    modelViewer.addEventListener("load", function () {
       /* PERF: Defer fan collection but don't start loop yet. */
       setTimeout(function () {
         if (!startEmbeddedAnimation()) {
@@ -832,16 +651,16 @@ window.APEXIntro = (function () {
          3. This ensures all initial GPU spikes, memory allocations, and first frames
             are long gone before the user sees the model.
       */
-      setTimeout(function() {
+      setTimeout(function () {
         markReady();
       }, 2500);
     });
 
-    mvEl.addEventListener("error", function () {
+    modelViewer.addEventListener("error", function () {
       markReady();
     });
 
-    mvEl.addEventListener("dblclick", handleDoubleClickZoom);
+    modelViewer.addEventListener("dblclick", handleDoubleClickZoom);
     initOrbitStreaks();
 
     initZoomNavigation();
@@ -881,13 +700,13 @@ window.APEXIntro = (function () {
      SCENE / FAN HELPERS (unchanged)
      ---------------------------------------------------------- */
   function getInternalScene() {
-    if (!mvEl) return null;
+    if (!modelViewer) return null;
 
-    var symbols = Object.getOwnPropertySymbols(mvEl);
+    var symbols = Object.getOwnPropertySymbols(modelViewer);
     for (var i = 0; i < symbols.length; i++) {
       var desc = symbols[i].description || String(symbols[i]);
       if (desc.indexOf("scene") !== -1) {
-        var val = mvEl[symbols[i]];
+        var val = modelViewer[symbols[i]];
         if (val && typeof val.traverse === "function") return val;
         if (val && val.scene && typeof val.scene.traverse === "function") return val.scene;
         if (val && val.model && typeof val.model.traverse === "function") return val.model;
@@ -896,7 +715,7 @@ window.APEXIntro = (function () {
 
     for (var j = 0; j < symbols.length; j++) {
       try {
-        var v = mvEl[symbols[j]];
+        var v = modelViewer[symbols[j]];
         if (v && typeof v === "object") {
           if (typeof v.traverse === "function") return v;
           var keys = Object.keys(v);
@@ -910,7 +729,7 @@ window.APEXIntro = (function () {
             if (cv && typeof cv.traverse === "function") return cv;
           }
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     return null;
@@ -972,12 +791,7 @@ window.APEXIntro = (function () {
     /* PERF: Pause CPU-heavy loops during text animation
        to dedicate all resources to smooth CSS transitions.*/
     running = false;
-    if (particleAnimId) {
-      cancelAnimationFrame(particleAnimId);
-      particleAnimId = null;
-    }
   }
-
 
   function animateTextReveal() {
     var section = document.getElementById("intro-landing");
@@ -993,9 +807,6 @@ window.APEXIntro = (function () {
         var runAuxiliaryMotion = function () {
           if (fanNodes.length > 0) {
             startFanLoop();
-          }
-          if (particleCanvas && particles.length > 0) {
-            startParticleLoop();
           }
         };
 
@@ -1023,136 +834,6 @@ window.APEXIntro = (function () {
     });
   }
 
-  /* ----------------------------------------------------------
-     CHARACTER SPLIT SYSTEM
-     ---------------------------------------------------------- */
-  function splitTextToChars(el) {
-    var text = el.textContent;
-    if (!text) return [];
-
-    var rect = el.getBoundingClientRect();
-    el.setAttribute("data-original-text", text);
-    el.setAttribute("data-original-style", el.getAttribute("style") || "");
-    el.style.minWidth = rect.width + "px";
-    el.style.minHeight = rect.height + "px";
-    el.style.overflow = "visible";
-    el.style.whiteSpace = "pre";
-
-    if (window.getComputedStyle(el).display === "block") {
-      el.style.display = "flex";
-      el.style.justifyContent = "center";
-      el.style.alignItems = "center";
-    }
-
-    el.textContent = "";
-
-    var chars = [];
-    for (var i = 0; i < text.length; i++) {
-      var span = document.createElement("span");
-      span.className = "char-particle";
-      span.textContent = text[i] === " " ? "\u00A0" : text[i];
-      el.appendChild(span);
-      chars.push(span);
-    }
-
-    return chars;
-  }
-
-  function restoreOriginalText(el) {
-    var original = el.getAttribute("data-original-text");
-    if (original !== null) {
-      el.textContent = original;
-      el.removeAttribute("data-original-text");
-      el.setAttribute("style", el.getAttribute("data-original-style") || "");
-      el.removeAttribute("data-original-style");
-    }
-  }
-
-  /* ----------------------------------------------------------
-     GOLD PARTICLE CANVAS SYSTEM
-     ---------------------------------------------------------- */
-  function resizeParticleCanvas() {
-    if (!particleCanvas) return;
-    var section = document.getElementById("intro-landing");
-    if (!section) return;
-    var dpr = window.devicePixelRatio || 1;
-    particleCanvas.width = section.offsetWidth * dpr;
-    particleCanvas.height = section.offsetHeight * dpr;
-    particleCanvas.style.width = section.offsetWidth + "px";
-    particleCanvas.style.height = section.offsetHeight + "px";
-    if (particleCtx) {
-      particleCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-  }
-
-  function spawnParticlesFromChar(charEl, rgb) {
-    if (!particleCanvas) return;
-    var rect = charEl.getBoundingClientRect();
-    var section = document.getElementById("intro-landing");
-    var sectionRect = section.getBoundingClientRect();
-
-    var cx = rect.left + rect.width / 2 - sectionRect.left;
-    var cy = rect.top + rect.height / 2 - sectionRect.top;
-    var base = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",";
-
-    var count = 3 + Math.floor(Math.random() * 3);
-    for (var i = 0; i < count; i++) {
-      var angle = Math.random() * Math.PI * 2;
-      var speed = 50 + Math.random() * 100;
-      particles.push({
-        x: cx + (Math.random() - 0.5) * rect.width,
-        y: cy + (Math.random() - 0.5) * rect.height,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 40 - Math.random() * 50,
-        size: 0.8 + Math.random() * 2,
-        colorBase: base,
-        life: 1.0,
-        decay: 0.5 + Math.random() * 0.4,
-        gravity: 20 + Math.random() * 20
-      });
-    }
-  }
-
-  function startParticleLoop() {
-    if (particleAnimId) return;
-    var lastTime = performance.now();
-    var cw = particleCanvas.width / (window.devicePixelRatio || 1);
-    var ch = particleCanvas.height / (window.devicePixelRatio || 1);
-
-    function tick(now) {
-      var dt = Math.min((now - lastTime) / 1000, 0.04);
-      lastTime = now;
-
-      particleCtx.clearRect(0, 0, cw, ch);
-
-      var alive = 0;
-      for (var i = 0; i < particles.length; i++) {
-        var p = particles[i];
-        p.life -= p.decay * dt;
-        if (p.life <= 0) continue;
-
-        p.vy += p.gravity * dt;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.vx *= (1 - 2 * dt);
-
-        var a = p.life * p.life;
-        var r = p.size * p.life;
-        particleCtx.fillStyle = p.colorBase + a.toFixed(2) + ")";
-        particleCtx.fillRect(p.x - r * 0.5, p.y - r * 0.5, r, r);
-        alive++;
-      }
-
-      if (alive > 0) {
-        particleAnimId = requestAnimationFrame(tick);
-      } else {
-        particles.length = 0;
-        particleAnimId = null;
-      }
-    }
-
-    particleAnimId = requestAnimationFrame(tick);
-  }
 
   /* ----------------------------------------------------------
      ZOOM TEXT TRANSITIONS
@@ -1297,10 +978,6 @@ window.APEXIntro = (function () {
     var line = document.querySelector(".intro-landing__line");
     var scroll = document.querySelector(".intro-landing__scroll--bottom");
 
-    restoreOriginalText(eyebrow);
-    restoreOriginalText(title);
-    restoreOriginalText(tagline);
-
     if (content) {
       gsap.set(content, { clearProps: "opacity,visibility,filter" });
       gsap.set(content, { opacity: 1, visibility: "visible" });
@@ -1371,8 +1048,8 @@ window.APEXIntro = (function () {
   function tweenZoom(targetOrbit, targetFov, duration) {
     if (zoomTweenId) cancelAnimationFrame(zoomTweenId);
 
-    var currentOrbitStr = mvEl.getAttribute("camera-orbit");
-    var currentFovStr = mvEl.getAttribute("field-of-view");
+    var currentOrbitStr = modelViewer.getAttribute("camera-orbit");
+    var currentFovStr = modelViewer.getAttribute("field-of-view");
     var startOrbit = parseOrbit(currentOrbitStr);
     var endOrbit = parseOrbit(targetOrbit);
     var startFov = parseFloat(currentFovStr);
@@ -1386,8 +1063,8 @@ window.APEXIntro = (function () {
       var o = lerpOrbit(startOrbit, endOrbit, eased);
       var fov = startFov + (endFov - startFov) * eased;
 
-      mvEl.setAttribute("camera-orbit", orbitString(o));
-      mvEl.setAttribute("field-of-view", fov.toFixed(2) + "deg");
+      modelViewer.setAttribute("camera-orbit", orbitString(o));
+      modelViewer.setAttribute("field-of-view", fov.toFixed(2) + "deg");
 
       if (progress < 1) {
         zoomTweenId = requestAnimationFrame(tick);
@@ -1403,20 +1080,19 @@ window.APEXIntro = (function () {
      DOUBLE-CLICK ZOOM HANDLER
      ---------------------------------------------------------- */
   function handleDoubleClickZoom() {
-    if (!mvEl || zoomTransitioning) return;
+    if (!modelViewer || zoomTransitioning) return;
     isZoomed = !isZoomed;
-    spawnOrbitEdgeStreaks(72, "wind");
 
     if (isZoomed) {
-      mvEl.setAttribute("min-camera-orbit", "105deg 89deg 20%");
-      mvEl.setAttribute("max-camera-orbit", "180deg 89deg 44%");
+      modelViewer.setAttribute("min-camera-orbit", "105deg 89deg 20%");
+      modelViewer.setAttribute("max-camera-orbit", "180deg 89deg 44%");
       tweenZoom(ZOOMED_ORBIT, "25deg", 900);
       animateZoomIn();
     } else {
       tweenZoom(DEFAULT_ORBIT, "18deg", 900);
       setTimeout(function () {
-        mvEl.setAttribute("min-camera-orbit", "105deg 89deg 44%");
-        mvEl.setAttribute("max-camera-orbit", "180deg 89deg 44%");
+        modelViewer.setAttribute("min-camera-orbit", "105deg 89deg 44%");
+        modelViewer.setAttribute("max-camera-orbit", "180deg 89deg 44%");
       }, 950);
       animateZoomOut();
     }
@@ -1430,27 +1106,56 @@ window.APEXIntro = (function () {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to("#intro-landing", {
+    gsap.fromTo("#intro-landing", { opacity: 1 }, {
       scrollTrigger: {
+        id: "intro-main-trigger",
         trigger: "#intro-landing",
         start: "top top",
         end: "bottom top",
-        scrub: 0.8
+        scrub: 0.1,
+        invalidateOnRefresh: true,
+        onUpdate: function(self) {
+          if (self.progress < 0.01 && window.pageYOffset < 10) {
+            gsap.set("#intro-landing", { opacity: 1, visibility: "visible" });
+          }
+        }
       },
       opacity: 0,
-      ease: "power1.inOut"
+      ease: "none"
     });
 
-    gsap.to(".intro-landing__content", {
+    gsap.fromTo(".intro-landing__content", { opacity: 1, y: 0 }, {
       scrollTrigger: {
         trigger: "#intro-landing",
         start: "top top",
         end: "60% top",
-        scrub: 0.5
+        scrub: 0.1
       },
-      y: -120,
+      y: -100,
       opacity: 0,
       ease: "none"
+    });
+
+    // Aggressive Safety: ensure intro is visible when at the very top
+    var safetyThrottle = 0;
+    window.addEventListener("scroll", function() {
+      var now = Date.now();
+      if (window.pageYOffset < 5 && now - safetyThrottle > 100) {
+        safetyThrottle = now;
+        gsap.set("#intro-landing", { opacity: 1, visibility: "visible" });
+        gsap.set(".intro-landing__content", { opacity: 1, y: 0, visibility: "visible" });
+        
+        // Ensure model-viewer state is also correct
+        if (modelViewer) {
+          modelViewer.exposure = 0.4;
+          modelViewer.environmentIntensity = 1.0;
+        }
+
+        if (typeof ScrollTrigger !== "undefined") {
+          var st = ScrollTrigger.getById("intro-main-trigger");
+          if (st) st.refresh();
+        }
+      }
     });
   }
 

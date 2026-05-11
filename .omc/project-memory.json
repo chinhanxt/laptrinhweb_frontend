@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1777813243959,
+  "lastScanned": 1778487958177,
   "projectRoot": "/home/chinhan/VS_/laptrinhwev/frontend",
   "techStack": {
     "languages": [
@@ -37,37 +37,57 @@
     "workspaces": [],
     "mainDirectories": [
       "assets",
-      "docs"
+      "docs",
+      "tests"
     ],
     "gitBranches": null
   },
   "customNotes": [],
   "directoryMap": {
+    "2380601523-NguyenChiNhan": {
+      "path": "2380601523-NguyenChiNhan",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1778487958170,
+      "keyFiles": [
+        "Bao_cao.docx",
+        "index.html"
+      ]
+    },
     "assets": {
       "path": "assets",
       "purpose": "Static assets",
       "fileCount": 0,
-      "lastAccessed": 1777813243937,
+      "lastAccessed": 1778487958170,
       "keyFiles": []
     },
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 2,
-      "lastAccessed": 1777813243937,
+      "fileCount": 4,
+      "lastAccessed": 1778487958175,
       "keyFiles": [
+        "Bao_cao.docx",
         "mô tả.md",
-        "note.md"
+        "note.md",
+        "task.md"
       ]
     },
-    "tools": {
-      "path": "tools",
-      "purpose": null,
+    "tests": {
+      "path": "tests",
+      "purpose": "Test files",
       "fileCount": 1,
-      "lastAccessed": 1777813243949,
+      "lastAccessed": 1778487958176,
       "keyFiles": [
-        "capture-video.js"
+        "home-showroom-config.test.js"
       ]
+    },
+    "2380601523-NguyenChiNhan/assets": {
+      "path": "2380601523-NguyenChiNhan/assets",
+      "purpose": "Static assets",
+      "fileCount": 0,
+      "lastAccessed": 1778487958176,
+      "keyFiles": []
     }
   },
   "hotPaths": [
