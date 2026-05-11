@@ -23,6 +23,7 @@ window.LamboGallery = (function () {
   ];
 
   var scene, camera, renderer, controls;
+  var dracoLoader = null;
   var currentIndex = 0;
   var modelCache = {};
   var modelLoadCallbacks = {};
@@ -414,7 +415,16 @@ window.LamboGallery = (function () {
       });
     }
 
+    if (!dracoLoader && typeof THREE.DRACOLoader !== 'undefined') {
+      dracoLoader = new THREE.DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    }
+
     var loader = new THREE.GLTFLoader();
+    if (dracoLoader) {
+      loader.setDRACOLoader(dracoLoader);
+    }
+    
     loader.load(
       GALLERY_CARS[index].model,
       function (gltf) {
