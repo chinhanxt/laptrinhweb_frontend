@@ -1,0 +1,98 @@
+import sys
+import json
+import requests
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from ui.ecc import Ui_MainWindow
+
+
+class MyApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        self.ui.pushButton_3.clicked.connect(self.call_api_gen_keys)
+        self.ui.pushButton.clicked.connect(self.call_api_encrypt)
+        self.ui.pushButton_2.clicked.connect(self.call_api_decrypt)
+
+    def show_message(self, text):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText(text)
+        msg.exec_()
+
+    def call_api_gen_keys(self):
+        url = "http://127.0.0.1:5000/api/ecc/generate_keys"
+
+        try:
+            response = requests.get(url)
+
+            if response.status_code == 200:
+                data = response.json()
+                self.show_message(data["message"])
+            else:
+                self.show_message("Generate keys failed")
+
+        except requests.exceptions.RequestException as e:
+            self.show_message(str(e))
+
+    def call_api_encrypt(self):
+        url = "http://127.0.0.1:5000/api/ecc/encrypt"
+
+        payload = {
+            "message": self.ui.plainTextEdit.toPlainText()
+        }
+
+        try:
+            response = requests.post(url, json=payload)
+
+            if response.status_code == 200:
+                data = response.json()
+
+                result = json.dumps(data, indent=4)
+                self.ui.plainTextEdit_2.setPlainText(result)
+
+                self.show_message("Encrypted Successfully")
+            else:
+                self.show_message("Encrypt failed")
+
+        except requests.exceptions.RequestException as e:
+            self.show_message(str(e))
+
+    def call_api_decrypt(self):
+        url = "http://127.0.0.1:5000/api/ecc/decrypt"
+
+        try:
+            encrypted_json = self.ui.plainTextEdit.toPlainText()
+            data = json.loads(encrypted_json)
+
+            payload = {
+                "ciphertext": data["ciphertext"],
+                "ephemeral_public_key": data["ephemeral_public_key"]
+            }
+
+            response = requests.post(url, json=payload)
+
+            if response.status_code == 200:
+                result = response.json()
+                self.ui.plainTextEdit_2.setPlainText(result["decrypted_message"])
+
+                self.show_message("Decrypted Successfully")
+            else:
+                self.show_message("Decrypt failed")
+
+        except json.JSONDecodeError:
+            self.show_message("Input decrypt phải là JSON ciphertext")
+        except KeyError:
+            self.show_message("Thiếu ciphertext hoặc ephemeral_public_key")
+        except requests.exceptions.RequestException as e:
+            self.show_message(str(e))
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MyApp()
+    window.show()
+    sys.exit(app.exec_())
