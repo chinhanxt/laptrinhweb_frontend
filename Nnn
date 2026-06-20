@@ -1,0 +1,36 @@
+# ECC CIPHER ALGORITHM
+ecc_cipher = ECCCipher()
+
+
+@app.route("/api/ecc/generate_keys", methods=["GET"])
+def ecc_generate_keys():
+    ecc_cipher.generate_keys()
+    return jsonify({"message": "ECC Keys generated successfully"})
+
+
+@app.route("/api/ecc/encrypt", methods=["POST"])
+def ecc_encrypt():
+    data = request.json
+    message = data["message"]
+
+    _, public_key = ecc_cipher.load_keys()
+    encrypted_data = ecc_cipher.encrypt(message, public_key)
+
+    return jsonify(encrypted_data)
+
+
+@app.route("/api/ecc/decrypt", methods=["POST"])
+def ecc_decrypt():
+    data = request.json
+
+    ciphertext = data["ciphertext"]
+    ephemeral_public_key = data["ephemeral_public_key"]
+
+    private_key, _ = ecc_cipher.load_keys()
+    decrypted_message = ecc_cipher.decrypt(
+        ciphertext,
+        ephemeral_public_key,
+        private_key
+    )
+
+    return jsonify({"decrypted_message": decrypted_message})
