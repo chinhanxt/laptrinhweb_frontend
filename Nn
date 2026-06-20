@@ -1,0 +1,78 @@
+import ecdsa
+import os
+import hashlib
+
+
+class ECCCipher:
+    def __init__(self):
+        self.private_key = None
+        self.public_key = None
+
+        self.base_path = os.path.dirname(os.path.abspath(__file__))
+        self.keys_path = os.path.join(self.base_path, "keys")
+
+        if not os.path.exists(self.keys_path):
+            os.makedirs(self.keys_path)
+
+    def generate_keys(self):
+        self.private_key = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)
+        self.public_key = self.private_key.get_verifying_key()
+
+        with open(os.path.join(self.keys_path, "privateKey.pem"), "wb") as f:
+            f.write(self.private_key.to_pem())
+
+        with open(os.path.join(self.keys_path, "publicKey.pem"), "wb") as f:
+            f.write(self.public_key.to_pem())
+
+    def load_keys(self):
+        with open(os.path.join(self.keys_path, "privateKey.pem"), "rb") as f:
+            self.private_key = ecdsa.SigningKey.from_pem(f.read())
+
+        with open(os.path.join(self.keys_path, "publicKey.pem"), "rb") as f:
+            self.public_key = ecdsa.VerifyingKey.from_pem(f.read())
+
+        return self.private_key, self.public_key
+
+    def derive_key_stream(self, shared_secret, length):
+        key_stream = b""
+        counter = 0
+
+        while len(key_stream) < length:
+            counter_bytes = counter.to_bytes(4, "big")
+            key_stream += hashlib.sha256(shared_secret + counter_bytes).digest()
+            counter += 1
+
+        return key_stream[:length]
+
+    def encrypt(self, message, public_key):
+        message_bytes = message.encode("utf-8")
+
+        ephemeral_private_key = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)
+        ephemeral_public_key = ephemeral_private_key.get_verifying_key()
+
+        shared_point = public_key.pubkey.point * ephemeral_private_key.privkey.secret_multiplier
+        shared_secret = int(shared_point.x()).to_bytes(32, "big")
+
+        key_stream = self.derive_key_stream(shared_secret, len(message_bytes))
+        cipher_bytes = bytes([m ^ k for m, k in zip(message_bytes, key_stream)])
+
+        return {
+            "ciphertext": cipher_bytes.hex(),
+            "ephemeral_public_key": ephemeral_public_key.to_string().hex()
+        }
+
+    def decrypt(self, ciphertext_hex, ephemeral_public_key_hex, private_key):
+        cipher_bytes = bytes.fromhex(ciphertext_hex)
+
+        ephemeral_public_key = ecdsa.VerifyingKey.from_string(
+            bytes.fromhex(ephemeral_public_key_hex),
+            curve=ecdsa.SECP256k1
+        )
+
+        shared_point = ephemeral_public_key.pubkey.point * private_key.privkey.secret_multiplier
+        shared_secret = int(shared_point.x()).to_bytes(32, "big")
+
+        key_stream = self.derive_key_stream(shared_secret, len(cipher_bytes))
+        plain_bytes = bytes([c ^ k for c, k in zip(cipher_bytes, key_stream)])
+
+        return plain_bytes.decode("utf-8")
