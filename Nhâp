@@ -1,0 +1,49 @@
+import sys
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+
+from cipher.transposition import TranspositionCipher
+
+
+class TranspositionApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("ui/transposition.ui", self)
+
+        self.cipher = TranspositionCipher()
+
+        self.btnEncrypt.clicked.connect(self.encrypt_text)
+        self.btnDecrypt.clicked.connect(self.decrypt_text)
+
+    def encrypt_text(self):
+        try:
+            plain_text = self.txtInput.toPlainText()
+            key = int(self.txtKey.text())
+
+            result = self.cipher.encrypt(plain_text, key)
+            self.txtOutput.setPlainText(result)
+
+        except ValueError:
+            QMessageBox.warning(self, "Lỗi", "Key phải là số nguyên.")
+        except Exception as e:
+            QMessageBox.critical(self, "Lỗi", str(e))
+
+    def decrypt_text(self):
+        try:
+            cipher_text = self.txtInput.toPlainText()
+            key = int(self.txtKey.text())
+
+            result = self.cipher.decrypt(cipher_text, key)
+            self.txtOutput.setPlainText(result)
+
+        except ValueError:
+            QMessageBox.warning(self, "Lỗi", "Key phải là số nguyên.")
+        except Exception as e:
+            QMessageBox.critical(self, "Lỗi", str(e))
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = TranspositionApp()
+    window.show()
+    sys.exit(app.exec_())
